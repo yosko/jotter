@@ -1,11 +1,10 @@
 <?php
 
 class YosNote {
-    protected $notebooks;
-    protected $notebook;
+    protected $notebooks, $notebooksFile, $notebook;
 
     public function __construct() {
-
+        $this->notebooksFile = ROOT.'/notebooks/notebooks.json.gz';
     }
 
     /**
@@ -14,8 +13,27 @@ class YosNote {
      * @return array           List of notebooks (name + user)
      */
     public function loadNotebooks($userId = -1) {
-        $file = ROOT.'/notebooks/notebooks.json.gz';
-        $this->notebooks = $this->loadFile($file);
+        
+        $this->notebooks = $this->loadFile($this->notebooksFile);
+
+        return $this->notebooks;
+    }
+
+    /**
+     * Create a new notebook
+     * @param string  $name New notebook name
+     * @param integer $user Owner's id
+     */
+    public function addNotebook($name, $user) {
+        //add the new notebook
+        $this->notebooks[$name] = array(
+            'user' => $user
+        );
+
+        //save the list
+        $this->saveFile($this->notebooksFile, $this->notebooks);
+
+        //TODO: create directory and notebook.json.gz file (+ a default empty note?)
 
         return $this->notebooks;
     }
@@ -59,7 +77,7 @@ class YosNote {
      * @param  boolean $compress Compress (or not) file content in gzip
      * @return boolean           true on success
      */
-    private function saveFile($file, $data, $compress = true) {
+    protected function saveFile($file, $data, $compress = true) {
         $fp = fopen( $file, 'w' );
         if($fp) {
             if(version_compare(PHP_VERSION, '5.4.0') >= 0)

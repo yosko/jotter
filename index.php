@@ -21,6 +21,7 @@ require_once( ROOT.'/lib/yosnote.class.php');
 require_once( ROOT.'/lib/easydump.php');
 
 $yosnote = new YosNote();
+$errors = array();
 
 d($_GET, $_POST);
 
@@ -45,6 +46,26 @@ if( !empty($_GET['nb']) ) {
 
 //add a notebook
 } elseif( !empty($_GET['action']) && $_GET['action'] == 'add' ) {
+    // user wants to make a new notebook
+    if(isset($_POST['name'])) {
+        $notebook = array(
+            'name' => $_POST['name'],
+            'user' => 1,
+            'path' => urlencode($_POST['name']),
+        );
+
+        //load the complete list of notebooks
+        $notebooks = $yosnote->loadNotebooks();
+
+        $errors['empty'] = empty($notebook['name']);
+        $errors['alreadyExists'] = isset($notebooks[$notebook['name']]);
+        if(!in_array(true, $errors)) {
+            $notebooks = $yosnote->addNotebook($notebook['name'], $notebook['user']);
+
+            header('Location: '.URL.'?nb='.$notebook['path']);
+            exit;
+        }
+    }
 
     include( ROOT.'/tpl/notebookForm.tpl.php' );
 
