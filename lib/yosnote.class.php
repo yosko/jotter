@@ -1,7 +1,7 @@
 <?php
 
 class YosNote {
-    protected $notebooks, $notebooksFile, $notebook;
+    protected $notebooks, $notebooksFile, $notebook, $notebookFile;
 
     public function __construct() {
         $this->notebooksFile = ROOT.'/notebooks/notebooks.json';
@@ -15,25 +15,47 @@ class YosNote {
     public function loadNotebooks($userId = -1) {
         
         $this->notebooks = $this->loadFile($this->notebooksFile);
+        if(!is_array($this->notebooks))
+            $this->notebooks = array();
 
         return $this->notebooks;
     }
 
     /**
-     * Create a new notebook
-     * @param string  $name New notebook name
-     * @param integer $user Owner's id
+     * Add or Edit a notebook
+     * @param string  $name   New notebook name
+     * @param integer $user   Owner's id (required for new notebook)
+     * @param boolean $public Whether the notebook should be public or private
+     * @return array          List of notebooks
      */
-    public function addNotebook($name, $user) {
-        //add the new notebook
-        $this->notebooks[$name] = array(
-            'user' => $user
-        );
+    public function setNotebook($name, $user = -1, $public = false) {
+        $notebookPath = ROOT.'/notebooks/'.urlencode($name);
+        $this->notebookFile = $notebookPath.'/notebook.json';
 
-        //save the list
+        //add a new notebook
+        if(!isset($this->notebooks[$name])) {
+            $this->notebooks[$name] = array(
+                'user' => $user
+            );
+
+            //create the notebook directory and default note
+            mkdir($notebookPath);
+            touch($notebookPath.'/note.md');
+
+            $this->notebook = array(
+                'created'   => time(),
+                'user'      => $user,
+                'public'    => $public
+            );
+        } else {
+
+        }
+
+        $this->notebook['updated'] = time();
+
+        //save the JSON files (notebooks list, notebook)
         $this->saveFile($this->notebooksFile, $this->notebooks);
-
-        //TODO: create directory and notebook.json.gz file (+ a default empty note?)
+        $this->saveFile($this->notebookFile, $this->notebook);
 
         return $this->notebooks;
     }

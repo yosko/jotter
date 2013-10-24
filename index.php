@@ -60,7 +60,7 @@ if( !empty($_GET['nb']) ) {
         $errors['empty'] = empty($notebook['name']);
         $errors['alreadyExists'] = isset($notebooks[$notebook['name']]);
         if(!in_array(true, $errors)) {
-            $notebooks = $yosnote->addNotebook($notebook['name'], $notebook['user']);
+            $notebooks = $yosnote->setNotebook($notebook['name'], $notebook['user']);
 
             header('Location: '.URL.'?nb='.$notebook['path']);
             exit;

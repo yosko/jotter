@@ -1,3 +1,4 @@
+notebooks/*
 tmp/cache/*
 tmp/logs/*
 tmp/sessions/*
