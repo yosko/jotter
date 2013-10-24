@@ -49,9 +49,8 @@ if( !empty($_GET['nb']) ) {
     // user wants to make a new notebook
     if(isset($_POST['name'])) {
         $notebook = array(
-            'name' => $_POST['name'],
-            'user' => 1,
-            'path' => urlencode($_POST['name']),
+            'name' => urlencode($_POST['name']),
+            'user' => 1
         );
 
         //load the complete list of notebooks
@@ -62,7 +61,7 @@ if( !empty($_GET['nb']) ) {
         if(!in_array(true, $errors)) {
             $notebooks = $yosnote->setNotebook($notebook['name'], $notebook['user']);
 
-            header('Location: '.URL.'?nb='.$notebook['path']);
+            header('Location: '.URL.'?nb='.$notebook['name']);
             exit;
         }
     }

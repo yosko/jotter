@@ -29,7 +29,7 @@ class YosNote {
      * @return array          List of notebooks
      */
     public function setNotebook($name, $user = -1, $public = false) {
-        $notebookPath = ROOT.'/notebooks/'.urlencode($name);
+        $notebookPath = ROOT.'/notebooks/'.$name;
         $this->notebookFile = $notebookPath.'/notebook.json';
 
         //add a new notebook
