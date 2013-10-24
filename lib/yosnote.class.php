@@ -4,7 +4,7 @@ class YosNote {
     protected $notebooks, $notebooksFile, $notebook;
 
     public function __construct() {
-        $this->notebooksFile = ROOT.'/notebooks/notebooks.json.gz';
+        $this->notebooksFile = ROOT.'/notebooks/notebooks.json';
     }
 
     /**
@@ -46,8 +46,7 @@ class YosNote {
      */
     public function loadNotebook($name, $userId = -1) {
         if(strpos($name, '..') !== false) return false;
-        $file = ROOT.'/notebooks/notebooks.json.gz';
-        $this->notebooks = $this->loadFile($file);
+        $this->notebooks = $this->loadFile($this->notebooksFile);
 
         return $this->notebooks;
     }
@@ -58,7 +57,7 @@ class YosNote {
      * @param  boolean $compress If data should be gzip uncompressed before decoding it
      * @return misc              File content decoded
      */
-    protected function loadFile($file, $uncompress = true) {
+    protected function loadFile($file, $uncompress = false) {
         if (file_exists( $file )) {
             $data = file_get_contents($file);
             if($uncompress)
@@ -77,7 +76,7 @@ class YosNote {
      * @param  boolean $compress Compress (or not) file content in gzip
      * @return boolean           true on success
      */
-    protected function saveFile($file, $data, $compress = true) {
+    protected function saveFile($file, $data, $compress = false) {
         $fp = fopen( $file, 'w' );
         if($fp) {
             if(version_compare(PHP_VERSION, '5.4.0') >= 0)
