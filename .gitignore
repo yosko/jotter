@@ -1,0 +1,6 @@
+tmp/cache/*
+tmp/logs/*
+tmp/sessions/*
+TODO.md
+*.sublime-project
+*.sublime-workspace
