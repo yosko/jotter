@@ -1,0 +1,21 @@
+#app {
+    display: flex;
+    flex-flow: row;
+}
+#panel {
+    order: 1;
+    flex: 3 30%;
+    align-self: stretch;
+    overflow: auto;
+    max-width: 20em;
+    white-space: nowrap;
+    background-color: #d3d3d3;
+    border-right: 0.2em solid #7e7e7e;
+}
+#content {
+    order: 2;
+    flex: 7 70%;
+    align-self: stretch;
+    overflow: auto;
+    border-right: 0.2em solid #d3d3d3;
+}

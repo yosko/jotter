@@ -9,15 +9,9 @@
  */
 define( 'VERSION', '0.1' );
 define( 'ROOT', __DIR__ );
-define( 'URL',
-    (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off'?'https':'http')
-    .'://'
-    .$_SERVER['HTTP_HOST']
-    .rtrim(dirname($_SERVER['SCRIPT_NAME']),'/')
-    .'/'
-);
 
 require_once( ROOT.'/lib/yosnote.class.php');
+require_once( ROOT.'/lib/utils.class.php');
 require_once( ROOT.'/lib/easydump.php');
 
 $yosnote = new YosNote();
@@ -27,6 +21,8 @@ d($_GET, $_POST);
 
 //notebook pages
 if( !empty($_GET['nb']) ) {
+    $notebookName = urlencode($_GET['nb']);
+
     // rename current notebook
     
     // delete current notebook
