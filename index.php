@@ -17,14 +17,11 @@ require_once( ROOT.'/lib/easydump.php');
 $yosnote = new YosNote();
 $errors = array();
 
-d($_GET, $_POST);
-
 //notebook pages
 if( !empty($_GET['nb']) ) {
     $notebookName = urlencode($_GET['nb']);
 
     $notebook = $yosnote->loadNotebook($notebookName);
-    d($notebook);
 
     // rename current notebook
     if( !empty($_GET['action']) && $_GET['action'] == 'edit' ) {
