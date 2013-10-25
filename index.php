@@ -44,7 +44,10 @@ if( !empty($_GET['nb']) ) {
     // notebook item
     } elseif( !empty($_GET['item']) ) {
 
-        //TODO get item
+        //TODO check if item contains .. or if it doesn't exist
+
+        $itemPath = $_GET['item'];
+        $item = Utils::getArrayItem($notebook['tree'], $itemPath);
 
         // rename current item
         if( !empty($_GET['action']) && $_GET['action'] == 'rename' ) {
@@ -60,7 +63,12 @@ if( !empty($_GET['nb']) ) {
 
         //show item
         } else {
-            d('show note');
+            if($item == true) {
+                $note = $yosnote->loadNote($notebookName, $_GET['item']);
+                include( ROOT.'/tpl/note.tpl.php' );
+            } else {
+                include( ROOT.'/tpl/notebook.tpl.php' );
+            }
         }
 
     } else {

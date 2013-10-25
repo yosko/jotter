@@ -14,7 +14,7 @@ class YosNote {
      */
     public function loadNotebooks($userId = -1) {
         
-        $this->notebooks = $this->loadFile($this->notebooksFile);
+        $this->notebooks = $this->loadJson($this->notebooksFile);
         if(!is_array($this->notebooks))
             $this->notebooks = array();
 
@@ -48,7 +48,7 @@ class YosNote {
                 'user'      => $user,
                 'public'    => $public,
                 'tree'      => array(
-                    $defaultNote   => ''
+                    $defaultNote   => true
                 )
             );
         } else {
@@ -58,8 +58,8 @@ class YosNote {
         $this->notebook['updated'] = time();
 
         //save the JSON files (notebooks list, notebook)
-        $this->saveFile($this->notebooksFile, $this->notebooks);
-        $this->saveFile($this->notebookFile, $this->notebook);
+        $this->saveJson($this->notebooksFile, $this->notebooks);
+        $this->saveJson($this->notebookFile, $this->notebook);
 
         return $this->notebooks;
     }
@@ -73,27 +73,38 @@ class YosNote {
     public function loadNotebook($name, $userId = -1) {
         if(strpos($name, '..') !== false) return false;
 
-        $this->notebook = $this->loadFile(ROOT.'/notebooks/'.$name.'/notebook.json');
+        $this->notebook = $this->loadJson(ROOT.'/notebooks/'.$name.'/notebook.json');
 
         return $this->notebook;
     }
 
+    public function loadNote($notebook, $path) {
+        return $this->loadFile(ROOT.'/notebooks/'.$notebook.'/'.$path);
+    }
+
+    protected function loadFile($file) {
+        if (file_exists( $file )) {
+            $data = file_get_contents($file);
+            return $data;
+        } else {
+            // touch($file);
+            return false;
+        }
+    }
+
     /**
-     * Load a compressed JSON file
+     * Load a (compressed) JSON file
      * @param  string  $file     Path to file
      * @param  boolean $compress If data should be gzip uncompressed before decoding it
      * @return misc              File content decoded
      */
-    protected function loadFile($file, $uncompress = false) {
-        if (file_exists( $file )) {
-            $data = file_get_contents($file);
+    protected function loadJson($file, $uncompress = false) {
+        if($data = $this->loadFile($file)) {
             if($uncompress)
                 $data = gzinflate($data);
-            return json_decode($data, true);
-        } else {
-            touch($file);
-            return false;
+            $data = json_decode($data, true);
         }
+        return $data;
     }
 
     /**
@@ -103,7 +114,7 @@ class YosNote {
      * @param  boolean $compress Compress (or not) file content in gzip
      * @return boolean           true on success
      */
-    protected function saveFile($file, $data, $compress = false) {
+    protected function saveJson($file, $data, $compress = false) {
         $fp = fopen( $file, 'w' );
         if($fp) {
             if(version_compare(PHP_VERSION, '5.4.0') >= 0)
