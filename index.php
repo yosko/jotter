@@ -24,21 +24,45 @@ if( !empty($_GET['nb']) ) {
     $notebookName = urlencode($_GET['nb']);
 
     // rename current notebook
-    
+    if( !empty($_GET['action']) && $_GET['action'] == 'edit' ) {
+        d('edit notebook');
+
     // delete current notebook
-    
-    // notebook item
-    
-    // rename current item
-    
-    // delete current item
-    
-    // add a note to the current directory
-    
+    } elseif( !empty($_GET['action']) && $_GET['action'] == 'delete' && empty($_GET['item']) ) {
+        d('delete notebook');
+
     // add a subdirectory to the current directory
-    
-    // save current note (via json request?)
-    
+    } elseif( !empty($_GET['action']) && $_GET['action'] == 'adddir' ) {
+        d('add directory to notebook');
+
+    // add a note to the current directory
+    } elseif( !empty($_GET['action']) && $_GET['action'] == 'addnote' ) {
+        d('add note to notebook');
+
+    // notebook item
+    } elseif( !empty($_GET['item']) ) {
+
+        // rename current item
+        if( !empty($_GET['action']) && $_GET['action'] == 'rename' ) {
+            d('rename note');
+
+        // delete current item
+        } elseif( !empty($_GET['action']) && $_GET['action'] == 'delete' ) {
+            d('delete note');
+
+        // save current note (via json request?)
+        } elseif( !empty($_GET['action']) && $_GET['action'] == 'save' ) {
+            d('save note');
+
+        //show item
+        } else {
+            d('show note');
+        }
+
+    } else {
+        d('show notebook (no note selected)');
+    }
+
 
 //add a notebook
 } elseif( !empty($_GET['action']) && $_GET['action'] == 'add' ) {
@@ -66,9 +90,11 @@ if( !empty($_GET['nb']) ) {
 
 //logging out
 } elseif( !empty($_GET['action']) && $_GET['action'] == 'logout' ) {
+    d('log out');
 
 //logging in
 } elseif( !empty($_POST['submitLoginForm']) ) {
+    d('log in');
 
 //homepage: notebooks list
 } else {
