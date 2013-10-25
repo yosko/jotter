@@ -35,6 +35,8 @@ class Utils {
      *                        NULL returned if element not found
      */
     protected static function handleArrayItemFromPath($array, $path, $value, $get = false, $unset = false) {
+        
+
         $nodes = explode('/', $path);
         $previous = null;
         $element = &$array;

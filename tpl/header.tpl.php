@@ -30,11 +30,7 @@ function Tree2Html($tree, $nbName, $selectedPath, $parents = array()) {
         $isNote = substr($key, -3) == '.md';
         if($isArray || $isNote) {
             //path to element
-            $path = '';
-            if(!empty($parents)) {
-                $path = implode('/', $parents).'/';
-            }
-            $path = (!empty($parents)?implode('/', $parents).'/':'').$key.($isArray?'/':'');
+            $path = (!empty($parents)?implode('/', $parents).'/':'').$key;
 
             $html .= str_repeat("\t", $level*2+1)."<li class=\"".($isArray?"directory":"file").($path == $selectedPath?' selected':'')."\">";
             $html .= '<a href="'.URL.'?nb='.$nbName.'&amp;item='.$path.'">';

@@ -42,14 +42,16 @@ if( !empty($_GET['nb']) ) {
                 $path = substr($path, 0, strrpos($_GET['item'], '/'));
 
             $errors['empty'] = empty($item['name']);
-            $errors['alreadyExists'] = !is_null(Utils::getArrayItem($notebook, $path));
+            $errors['alreadyExists'] = !is_null(Utils::getArrayItem($notebook['tree'], $path));
             if(!in_array(true, $errors)) {
-                if($_GET['action'] == 'addnote')
-                    $notebooks = $yosnote->setDirectory($notebook, $path);
-                else
-                    $notebooks = $yosnote->setNote($notebook, $path);
+                if($_GET['action'] == 'addnote') {
+                    $yosnote->setNote($path);
+                }
+                else {
+                    $yosnote->setDirectory($path);
+                }
 
-                header('Location: '.URL.'?nb='.$notebookName.'&amp;item='.$path);
+                header('Location: '.URL.'?nb='.$notebookName.'&item='.$path);
                 exit;
             }
         }
@@ -80,7 +82,7 @@ if( !empty($_GET['nb']) ) {
         //show item
         } else {
             if($item == true) {
-                $note = $yosnote->loadNote($notebookName, $_GET['item']);
+                $note = $yosnote->loadNote($_GET['item']);
                 include( ROOT.'/tpl/note.tpl.php' );
             } else {
                 include( ROOT.'/tpl/notebook.tpl.php' );

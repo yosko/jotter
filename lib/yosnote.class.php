@@ -1,7 +1,12 @@
 <?php
 
 class YosNote {
-    protected $notebooks, $notebooksFile, $notebook, $notebookFile;
+    protected
+        $notebooks,
+        $notebooksFile,
+        $notebook,
+        $notebookFile,
+        $notebookName;
 
     public function __construct() {
         $this->notebooksFile = ROOT.'/notebooks/notebooks.json';
@@ -71,6 +76,7 @@ class YosNote {
      * @return array           Notebook's configuration
      */
     public function loadNotebook($name, $userId = -1) {
+        $this->notebookName = $name;
         if(strpos($name, '..') !== false) return false;
 
         $this->notebook = $this->loadJson(ROOT.'/notebooks/'.$name.'/notebook.json');
@@ -78,8 +84,28 @@ class YosNote {
         return $this->notebook;
     }
 
-    public function loadNote($notebook, $path) {
-        return $this->loadFile(ROOT.'/notebooks/'.$notebook.'/'.$path);
+    public function setDirectory($path, $newName = false) {
+        $absPath = ROOT.'/notebooks/'.$this->notebookName.'/'.$path;
+        if(!file_exists($absPath))
+            mkdir($absPath, 0700, true);
+
+        $notebookPath = ROOT.'/notebooks/'.$this->notebookName;
+        $this->notebookFile = $notebookPath.'/notebook.json';
+
+        $this->notebook['tree'] = Utils::setArrayItem($this->notebook['tree'], $path, array());
+
+        return
+            file_exists($absPath) && is_dir($absPath)
+            && !empty($this->notebook['tree'])
+            && $this->saveJson($this->notebookFile, $this->notebook);
+    }
+
+    public function setNote($path, $newName = false, $data = false) {
+
+    }
+
+    public function loadNote($path) {
+        return $this->loadFile(ROOT.'/notebooks/'.$this->notebookName.'/'.$path);
     }
 
     protected function loadFile($file) {

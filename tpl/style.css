@@ -45,9 +45,8 @@ html, body { margin: 0; height: 100%; }
 /**** TREE PANEL ****/
 
 #panel #root, #panel #root ul { list-style-type: none; padding: 0 0.5em; margin: 0; }
-#panel #root li { background-repeat: no-repeat; line-height: 16px; margin: 0.2em 0; padding-left: 1.4em; }
-#panel #root a { padding: 0.1em 0.2em; }
+#panel #root li { background-repeat: no-repeat; margin: 0.2em 0; padding: 0.1em 0.5em 0.1em 1.4em; background-position: 0.2em center; }
 #panel #root .file { background-image: url('img/document.png'); }
 #panel #root .directory { background-image: url('img/folder.png'); }
 #panel #root .directory.open { background-image: url('img/folder-open.png'); }
-#panel #root .selected a { background-color: #eee; border-radius: 0.2em; }
+#panel #root .selected { background-color: #eee; border-radius: 0.2em; }
