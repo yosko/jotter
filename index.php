@@ -51,7 +51,7 @@ if( !empty($_GET['nb']) ) {
         $item = Utils::getArrayItem($notebook['tree'], $itemPath);
 
         // rename current item
-        if( !empty($_GET['action']) && $_GET['action'] == 'rename' ) {
+        if( !empty($_GET['action']) && $_GET['action'] == 'edit' ) {
             d('rename note');
 
         // delete current item

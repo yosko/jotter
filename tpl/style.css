@@ -22,7 +22,6 @@ html, body { margin: 0; height: 100%; }
     flex: 7 70%;
     align-self: stretch;
     overflow: auto;
-    padding: 0 0.5em;
     background-color: #eee;
 }
 
@@ -48,3 +47,6 @@ html, body { margin: 0; height: 100%; }
 #panel #root .directory { background-image: url('img/folder.png'); }
 #panel #root .directory.open { background-image: url('img/folder-open.png'); }
 #panel #root .selected a { background-color: #eee; border-radius: 0.2em; }
+
+
+#content article { padding: 0.5em; }

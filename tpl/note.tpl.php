@@ -1,5 +1,5 @@
 <?php include PATH_TEMPLATE.'header.tpl.php'; ?>
-    <div>
+    <article>
         <?php echo $note; ?>
-    </div>
+    </article>
 <?php include PATH_TEMPLATE.'footer.tpl.php'; ?>
