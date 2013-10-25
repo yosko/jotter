@@ -19,6 +19,7 @@ $errors = array();
 
 //notebook pages
 if( !empty($_GET['nb']) ) {
+    $itemPath = '';
     $notebookName = urlencode($_GET['nb']);
 
     $notebook = $yosnote->loadNotebook($notebookName);

@@ -1,4 +1,7 @@
 html, body { margin: 0; height: 100%; }
+
+/**** PANEL / FLEX BOXES ****/
+
 #app {
     height: 100%;
     display: flex;
@@ -11,7 +14,6 @@ html, body { margin: 0; height: 100%; }
     overflow: auto;
     max-width: 20em;
     white-space: nowrap;
-    padding: 0 0.5em;
     background-color: #d3d3d3;
     border-right: 0.2em solid #7e7e7e;
 }
@@ -21,10 +23,28 @@ html, body { margin: 0; height: 100%; }
     align-self: stretch;
     overflow: auto;
     padding: 0 0.5em;
-    border-right: 0.2em solid #d3d3d3;
+    background-color: #eee;
 }
+
+/**** ACTIONS LISTS ****/
+
+.actions {
+    background-color: #bbb;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    height: 32px;
+}
+.actions li { float: right; border-left: 0.3em solid #d3d3d3; background-color: #bbb; }
+.actions a { display: block; height: 16px; padding: 8px; text-align: center; }
+.actions a:hover { background-color: #d3d3d3; }
+
+/**** TREE PANEL ****/
+
 #panel #root, #panel #root ul { list-style-type: none; padding: 0; margin: 0; }
 #panel #root li { background-repeat: no-repeat; line-height: 16px; margin: 0.2em 0; padding-left: 1.4em; }
+#panel #root a { padding: 0.1em 0.2em; }
 #panel #root .file { background-image: url('img/document.png'); }
 #panel #root .directory { background-image: url('img/folder.png'); }
-#panel #root .directory.open { background-image: url('img/folder-open.png'); 
+#panel #root .directory.open { background-image: url('img/folder-open.png'); }
+#panel #root .selected a { background-color: #eee; border-radius: 0.2em; }
