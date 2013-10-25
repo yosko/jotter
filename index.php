@@ -32,15 +32,29 @@ if( !empty($_GET['nb']) ) {
     } elseif( !empty($_GET['action']) && $_GET['action'] == 'delete' && empty($_GET['item']) ) {
         d('delete notebook');
 
-    // add a subdirectory to the current directory
-    } elseif( !empty($_GET['action']) && $_GET['action'] == 'adddir' ) {
-        //item is optional
-        d('add directory to notebook');
+    // add a subdirectory or a note to the current directory
+    } elseif( !empty($_GET['action']) && ($_GET['action'] == 'adddir' || $_GET['action'] == 'addnote') ) {
+        if(isset($_POST['name'])) {
+            $item['name'] = $_POST['name'];
+            $path = $item['name'];
 
-    // add a note to the current directory
-    } elseif( !empty($_GET['action']) && $_GET['action'] == 'addnote' ) {
-        //item is optional
-        d('add note to notebook');
+            if(!empty($_GET['item']))
+                $path = substr($path, 0, strrpos($_GET['item'], '/'));
+
+            $errors['empty'] = empty($item['name']);
+            $errors['alreadyExists'] = !is_null(Utils::getArrayItem($notebook, $path));
+            if(!in_array(true, $errors)) {
+                if($_GET['action'] == 'addnote')
+                    $notebooks = $yosnote->setDirectory($notebook, $path);
+                else
+                    $notebooks = $yosnote->setNote($notebook, $path);
+
+                header('Location: '.URL.'?nb='.$notebookName.'&amp;item='.$path);
+                exit;
+            }
+        }
+
+        include( ROOT.'/tpl/itemForm.tpl.php' );
 
     // notebook item
     } elseif( !empty($_GET['item']) ) {
@@ -53,6 +67,7 @@ if( !empty($_GET['nb']) ) {
         // rename current item
         if( !empty($_GET['action']) && $_GET['action'] == 'edit' ) {
             d('rename note');
+            include( ROOT.'/tpl/itemForm.tpl.php' );
 
         // delete current item
         } elseif( !empty($_GET['action']) && $_GET['action'] == 'delete' ) {

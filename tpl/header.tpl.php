@@ -37,7 +37,7 @@ function Tree2Html($tree, $nbName, $selectedPath, $parents = array()) {
             $path = (!empty($parents)?implode('/', $parents).'/':'').$key.($isArray?'/':'');
 
             $html .= str_repeat("\t", $level*2+1)."<li class=\"".($isArray?"directory":"file").($path == $selectedPath?' selected':'')."\">";
-            $html .= '<a href="'.URL.'?nb='.$nbName.'&item='.$path.'">';
+            $html .= '<a href="'.URL.'?nb='.$nbName.'&amp;item='.$path.'">';
             $html .= basename($key, '.md');
             $html .= '</a>';
 
@@ -56,7 +56,7 @@ function Tree2Html($tree, $nbName, $selectedPath, $parents = array()) {
     return $html;
 }
 
-echo Tree2Html($notebook['tree'], $notebookName, $itemPath);
+echo Tree2Html($notebook['tree'], $notebookName, isset($_GET['item'])?$_GET['item']:'');
 
 ?>
 </nav><?php } ?>
