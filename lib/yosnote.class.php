@@ -39,13 +39,17 @@ class YosNote {
             );
 
             //create the notebook directory and default note
+            $defaultNote = 'note.md';
             mkdir($notebookPath);
-            touch($notebookPath.'/note.md');
+            touch($notebookPath.'/'.$defaultNote);
 
             $this->notebook = array(
                 'created'   => time(),
                 'user'      => $user,
-                'public'    => $public
+                'public'    => $public,
+                'tree'      => array(
+                    $defaultNote   => ''
+                )
             );
         } else {
 
