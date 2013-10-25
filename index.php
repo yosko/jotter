@@ -23,6 +23,9 @@ d($_GET, $_POST);
 if( !empty($_GET['nb']) ) {
     $notebookName = urlencode($_GET['nb']);
 
+    $notebook = $yosnote->loadNotebook($notebookName);
+    d($notebook);
+
     // rename current notebook
     if( !empty($_GET['action']) && $_GET['action'] == 'edit' ) {
         d('edit notebook');
@@ -33,14 +36,18 @@ if( !empty($_GET['nb']) ) {
 
     // add a subdirectory to the current directory
     } elseif( !empty($_GET['action']) && $_GET['action'] == 'adddir' ) {
+        //item is optional
         d('add directory to notebook');
 
     // add a note to the current directory
     } elseif( !empty($_GET['action']) && $_GET['action'] == 'addnote' ) {
+        //item is optional
         d('add note to notebook');
 
     // notebook item
     } elseif( !empty($_GET['item']) ) {
+
+        //TODO get item
 
         // rename current item
         if( !empty($_GET['action']) && $_GET['action'] == 'rename' ) {
@@ -60,7 +67,7 @@ if( !empty($_GET['nb']) ) {
         }
 
     } else {
-        d('show notebook (no note selected)');
+        include( ROOT.'/tpl/notebook.tpl.php' );
     }
 
 

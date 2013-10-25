@@ -72,9 +72,10 @@ class YosNote {
      */
     public function loadNotebook($name, $userId = -1) {
         if(strpos($name, '..') !== false) return false;
-        $this->notebooks = $this->loadFile($this->notebooksFile);
 
-        return $this->notebooks;
+        $this->notebook = $this->loadFile(ROOT.'/notebooks/'.$name.'/notebook.json');
+
+        return $this->notebook;
     }
 
     /**
