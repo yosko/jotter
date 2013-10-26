@@ -38,8 +38,17 @@ if( !empty($_GET['nb']) ) {
             $item['name'] = $_POST['name'];
             $path = $item['name'];
 
-            if(!empty($_GET['item']))
-                $path = substr($path, 0, strrpos($_GET['item'], '/'));
+            if(!empty($_GET['item'])) {
+                if(!is_dir(ROOT.'/notebooks/'.$notebookName.'/'.$_GET['item'])) {
+                    if(dirname($_GET['item']) != '.') {
+                        $path = $_GET['item'].'/'.$path;
+                    }
+                } else {
+                    if(!empty($_GET['item'])) {
+                        $path = $_GET['item'].'/'.$path;
+                    }
+                }
+            }
 
             $errors['empty'] = empty($item['name']);
             $errors['alreadyExists'] = !is_null(Utils::getArrayItem($notebook['tree'], $path));

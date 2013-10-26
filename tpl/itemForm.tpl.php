@@ -4,7 +4,7 @@ $editItem = $_GET['action'] == 'edit';
 $isDir = $_GET['action'] == 'adddir';
 ?>
     <h2><?php echo ($editItem?'Edit ':'New ').($isDir?'Directory':'Note'); ?></h2>
-    <form method="post" action="?nb=<?php echo $notebookName; ?>&amp;action=<?php echo $_GET['action']; ?>">
+    <form method="post" action="?nb=<?php echo $notebookName; ?>&amp;action=<?php echo $_GET['action']; ?>&amp;item=<?php echo isset($_GET['item'])?$_GET['item']:''; ?>">
         <label for="name">Name</label>
         <input id="name" name="name" type="text" value="<?php echo isset($item['name'])?$item['name']:''; ?>">
     <?php if(isset($errors['empty']) && $errors['empty']) { ?>
