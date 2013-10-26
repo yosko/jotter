@@ -101,7 +101,25 @@ class YosNote {
     }
 
     public function setNote($path, $newName = false, $data = false) {
+        $path .= '.md';
+        $absPath = ROOT.'/notebooks/'.$this->notebookName.'/'.$path;
 
+        //if necessary, create parent directories
+        if(!file_exists(dirname($absPath)))
+            mkdir(dirname($absPath), 0700, true);
+
+        //create the file
+        touch($absPath);
+
+        $notebookPath = ROOT.'/notebooks/'.$this->notebookName;
+        $this->notebookFile = $notebookPath.'/notebook.json';
+
+        $this->notebook['tree'] = Utils::setArrayItem($this->notebook['tree'], $path, true);
+
+        return
+            file_exists($absPath)
+            && !empty($this->notebook['tree'])
+            && $this->saveJson($this->notebookFile, $this->notebook);
     }
 
     public function loadNote($path) {
