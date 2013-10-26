@@ -43,7 +43,7 @@ if( !empty($_GET['nb']) ) {
             if(!empty($_GET['item'])) {
                 if(!is_dir(ROOT.'/notebooks/'.$notebookName.'/'.$_GET['item'])) {
                     if(dirname($_GET['item']) != '.') {
-                        $path = $_GET['item'].'/'.$path;
+                        $path = dirname($_GET['item']).'/'.$path;
                     }
                 } else {
                     if(!empty($_GET['item'])) {

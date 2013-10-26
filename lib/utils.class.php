@@ -36,12 +36,17 @@ class Utils {
      */
     protected static function handleArrayItemFromPath($array, $path, $value, $get = false, $unset = false) {
         $nodes = explode('/', $path);
+        $null = null;
         $previous = null;
         $element = &$array;
         //get to the level of the given element (and keep its parent)
         foreach($nodes as $node) {
             $previous = &$element;
-            $element = &$element[$node];
+            if(isset($element[$node]))
+                $element = &$element[$node];
+            else {
+                $element = &$null;
+            }
         }
 
         if($unset) {
