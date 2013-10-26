@@ -57,9 +57,17 @@ echo Tree2Html($notebook['tree'], $notebookName, isset($_GET['item'])?$_GET['ite
 ?>
 </nav><?php } ?>
 <section id="content">
-    <ul class="actions">
-        <li class="right"><a href="?nb=<?php echo $notebookName; ?>&amp;item=<?php echo $itemPath; ?>&amp;action=edit" title="Edit (rename) this note"><img src="<?php echo URL; ?>tpl/img/document--pencil.png" alt="Edit note"></a></li>
-        <li class="right"><a href="?nb=<?php echo $notebookName; ?>&amp;item=<?php echo $itemPath; ?>&amp;action=delete" title="Delete this note"><img src="<?php echo URL; ?>tpl/img/document--minus.png" alt="Delete note"></a></li>
-        <li class="right"><a href="?nb=<?php echo $notebookName; ?>&amp;item=<?php echo $itemPath; ?>&amp;action=edit" title="Edit (rename) this directory"><img src="<?php echo URL; ?>tpl/img/folder--pencil.png" alt="Edit directory"></a></li>
-        <li class="right"><a href="?nb=<?php echo $notebookName; ?>&amp;item=<?php echo $itemPath; ?>&amp;action=delete" title="Delete this directory (and all the notes inside it)"><img src="<?php echo URL; ?>tpl/img/folder--minus.png" alt="Delete directory"></a></li>
+    <ul class="actions"><?php if($isNote || $isDir) { ?>
+
+        <li class="right">
+            <a href="?nb=<?php echo $notebookName; ?>&amp;item=<?php echo $itemPath; ?>&amp;action=edit" title="Edit (rename) this <?php echo $isNote?'note':'directory'; ?>">
+                <img src="<?php echo URL; ?>tpl/img/<?php echo $isNote?'document':'folder'; ?>--pencil.png" alt="Edit <?php echo $isNote?'note':'directory'; ?>">
+            </a>
+        </li>
+        <li class="right">
+            <a href="?nb=<?php echo $notebookName; ?>&amp;item=<?php echo $itemPath; ?>&amp;action=delete" title="Delete this <?php echo $isNote?'note':'directory'; ?>">
+                <img src="<?php echo URL; ?>tpl/img/<?php echo $isNote?'document':'folder'; ?>--minus.png" alt="Delete <?php echo $isNote?'note':'directory'; ?>">
+            </a>
+        </li><?php } ?>
+
     </ul>

@@ -20,6 +20,8 @@ $errors = array();
 //notebook pages
 if( !empty($_GET['nb']) ) {
     $itemPath = '';
+    $isNote = false;
+    $isDir = false;
     $notebookName = urlencode($_GET['nb']);
 
     $notebook = $yosnote->loadNotebook($notebookName);
@@ -69,11 +71,15 @@ if( !empty($_GET['nb']) ) {
 
     // notebook item
     } elseif( !empty($_GET['item']) ) {
-
-        //TODO check if item contains .. or if it doesn't exist
-
         $itemPath = $_GET['item'];
-        $item = Utils::getArrayItem($notebook['tree'], $itemPath);
+        if(strpos($itemPath, '..') === false){
+            $item = Utils::getArrayItem($notebook['tree'], $itemPath);
+            $isNote = $item === true;
+            if(!$isNote) {
+                $dirPath = ROOT.'/notebooks/'.$notebookName.'/'.$itemPath;
+                $isDir = file_exists($dirPath) && is_dir($dirPath);
+            }
+        }
 
         // rename current item
         if( !empty($_GET['action']) && $_GET['action'] == 'edit' ) {
@@ -90,11 +96,15 @@ if( !empty($_GET['nb']) ) {
 
         //show item
         } else {
-            if($item == true) {
+            if($isNote) {
+                //we are dealing with a note: load it
                 $note = $yosnote->loadNote($_GET['item']);
                 include( ROOT.'/tpl/note.tpl.php' );
-            } else {
+            } elseif($isDir) {
+                //for a directory, just show the notebook's "hompage"
                 include( ROOT.'/tpl/notebook.tpl.php' );
+            } else {
+                //TODO: show error
             }
         }
 
