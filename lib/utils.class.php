@@ -35,11 +35,10 @@ class Utils {
      *                        NULL returned if element not found
      */
     protected static function handleArrayItemFromPath($array, $path, $value, $get = false, $unset = false) {
-        
-
         $nodes = explode('/', $path);
         $previous = null;
         $element = &$array;
+        //get to the level of the given element (and keep its parent)
         foreach($nodes as $node) {
             $previous = &$element;
             $element = &$element[$node];
@@ -52,6 +51,8 @@ class Utils {
             return $element;
         } else {
             $previous[$node] = $value;
+            //make sure new element is in the right place
+            natcasesort($previous);
             return $array;
         }
     }
