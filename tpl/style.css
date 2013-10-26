@@ -44,6 +44,8 @@ html, body { margin: 0; height: 100%; }
 
 /**** TREE PANEL ****/
 
+#panel h1, #panel h2, #panel h3, #panel h4 { margin: 0; padding: 0.2em 0.5em; }
+
 #panel #root, #panel #root ul { list-style-type: none; padding: 0; margin: 0; }
 #panel #root { padding: 0 0.5em; }
 #panel #root li { background-repeat: no-repeat; margin: 0.2em 0; padding: 0.1em 0.5em 0.1em 1.4em; background-position: 0.2em 0.2em; }
