@@ -79,7 +79,10 @@ class YosNote {
         $this->notebookName = $name;
         if(strpos($name, '..') !== false) return false;
 
-        $this->notebook = $this->loadJson(ROOT.'/notebooks/'.$name.'/notebook.json');
+        $notebookPath = ROOT.'/notebooks/'.$this->notebookName;
+        $this->notebookFile = $notebookPath.'/notebook.json';
+
+        $this->notebook = $this->loadJson($this->notebookFile);
 
         return $this->notebook;
     }
@@ -88,9 +91,6 @@ class YosNote {
         $absPath = ROOT.'/notebooks/'.$this->notebookName.'/'.$path;
         if(!file_exists($absPath))
             mkdir($absPath, 0700, true);
-
-        $notebookPath = ROOT.'/notebooks/'.$this->notebookName;
-        $this->notebookFile = $notebookPath.'/notebook.json';
 
         $this->notebook['tree'] = Utils::setArrayItem($this->notebook['tree'], $path, array());
 
@@ -111,9 +111,6 @@ class YosNote {
         //create the file
         touch($absPath);
 
-        $notebookPath = ROOT.'/notebooks/'.$this->notebookName;
-        $this->notebookFile = $notebookPath.'/notebook.json';
-
         $this->notebook['tree'] = Utils::setArrayItem($this->notebook['tree'], $path, true);
 
         return
@@ -124,6 +121,20 @@ class YosNote {
 
     public function loadNote($path) {
         return $this->loadFile(ROOT.'/notebooks/'.$this->notebookName.'/'.$path);
+    }
+
+    public function unsetNote($path) {
+        $this->notebook['tree'] = Utils::unsetArrayItem($this->notebook['tree'], $path);
+        $this->saveJson($this->notebookFile, $this->notebook);
+    }
+
+    public function unsetDirectory($path) {
+        $this->notebook['tree'] = Utils::unsetArrayItem($this->notebook['tree'], $path);
+        $absPath = ROOT.'/notebooks/'.$this->notebookName.'/'.$path;
+
+        return rmdir($absPath)
+            && $this->saveJson($this->notebookFile, $this->notebook);
+
     }
 
     protected function loadFile($file) {

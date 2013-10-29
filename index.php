@@ -16,12 +16,12 @@ require_once( ROOT.'/lib/easydump.php');
 
 $yosnote = new YosNote();
 $errors = array();
+$isNote = false;
+$isDir = false;
 
 //notebook pages
 if( !empty($_GET['nb']) ) {
     $itemPath = '';
-    $isNote = false;
-    $isDir = false;
     $notebookName = urlencode($_GET['nb']);
 
     $notebook = $yosnote->loadNotebook($notebookName);
@@ -83,12 +83,24 @@ if( !empty($_GET['nb']) ) {
 
         // rename current item
         if( !empty($_GET['action']) && $_GET['action'] == 'edit' ) {
-            d('rename note');
+            d('rename item');
             include( ROOT.'/tpl/itemForm.tpl.php' );
 
         // delete current item
         } elseif( !empty($_GET['action']) && $_GET['action'] == 'delete' ) {
-            d('delete note');
+            //confirmation was sent
+            if(isset($_POST['delete'])) {
+                if($isNote) {
+                    $yosnote->unsetNote($itemPath);
+                } elseif($isDir) {
+                    $yosnote->unsetDirectory($itemPath);
+                }
+
+                header('Location: '.URL.'?nb='.$notebookName.'&item='.(dirname($itemPath)!='.'?dirname($itemPath):''));
+                exit;
+            }
+
+            include( ROOT.'/tpl/itemDelete.tpl.php' );
 
         // save current note (via json request?)
         } elseif( !empty($_GET['action']) && $_GET['action'] == 'save' ) {
