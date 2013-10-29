@@ -101,7 +101,6 @@ class YosNote {
     }
 
     public function setNote($path, $newName = false, $data = false) {
-        $path .= '.md';
         $absPath = ROOT.'/notebooks/'.$this->notebookName.'/'.$path;
 
         //if necessary, create parent directories
@@ -125,7 +124,10 @@ class YosNote {
 
     public function unsetNote($path) {
         $this->notebook['tree'] = Utils::unsetArrayItem($this->notebook['tree'], $path);
-        $this->saveJson($this->notebookFile, $this->notebook);
+        $absPath = ROOT.'/notebooks/'.$this->notebookName.'/'.$path;
+
+        return unlink($absPath)
+            && $this->saveJson($this->notebookFile, $this->notebook);
     }
 
     public function unsetDirectory($path) {
@@ -134,7 +136,6 @@ class YosNote {
 
         return rmdir($absPath)
             && $this->saveJson($this->notebookFile, $this->notebook);
-
     }
 
     protected function loadFile($file) {

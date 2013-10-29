@@ -56,6 +56,7 @@ if( !empty($_GET['nb']) ) {
             $errors['alreadyExists'] = !is_null(Utils::getArrayItem($notebook['tree'], $path));
             if(!in_array(true, $errors)) {
                 if($_GET['action'] == 'addnote') {
+                    $path .= '.md';
                     $yosnote->setNote($path);
                 }
                 else {
