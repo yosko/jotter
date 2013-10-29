@@ -17,7 +17,7 @@ html, body { margin: 0; height: 100%; }
     background-color: #d3d3d3;
     border-right: 0.2em solid #7e7e7e;
 }
-#panel > * { padding: 0.5em; }
+#panel > * { padding: 0 0.5em; }
 #panel > .actions { padding: 0; }
 #content {
     order: 2;
@@ -26,7 +26,7 @@ html, body { margin: 0; height: 100%; }
     overflow: auto;
     background-color: #eee;
 }
-#content > * { padding: 0.5em; }
+#content > * { padding: 0 0.5em; }
 #content > .actions { padding: 0; }
 
 /**** ACTIONS LISTS ****/
@@ -53,3 +53,13 @@ html, body { margin: 0; height: 100%; }
 #panel #root .directory { background-image: url('img/folder.png'); }
 #panel #root .directory.open { background-image: url('img/folder-open.png'); }
 #panel #root .selected { background-color: #eee; border-radius: 0.2em; }
+
+
+/**** CONTENT ****/
+
+.path {
+    font-size: 0.8em;
+    font-style: italic;
+    margin-bottom: 0.5em;
+    text-align: right;
+}

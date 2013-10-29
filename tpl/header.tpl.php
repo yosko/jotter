@@ -70,4 +70,6 @@ echo Tree2Html($notebook['tree'], $notebookName, isset($_GET['item'])?$_GET['ite
             </a>
         </li><?php } ?>
 
-    </ul>
+    </ul><?php if($isNote || $isDir) { ?>
+
+    <header class="path"><?php echo $_GET['item']; ?></header><?php } ?>
