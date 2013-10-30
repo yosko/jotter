@@ -27,7 +27,7 @@ if( !empty($_GET['nb']) ) {
     $notebook = $yosnote->loadNotebook($notebookName);
 
     // rename current notebook
-    if( !empty($_GET['action']) && $_GET['action'] == 'edit' ) {
+    if( !empty($_GET['action']) && $_GET['action'] == 'edit' && empty($_GET['item']) ) {
         d('edit notebook');
 
     // delete current notebook
@@ -74,8 +74,8 @@ if( !empty($_GET['nb']) ) {
     } elseif( !empty($_GET['item']) ) {
         $itemPath = $_GET['item'];
         if(strpos($itemPath, '..') === false){
-            $item = Utils::getArrayItem($notebook['tree'], $itemPath);
-            $isNote = $item === true;
+            $itemData = Utils::getArrayItem($notebook['tree'], $itemPath);
+            $isNote = $itemData === true;
             if(!$isNote) {
                 $dirPath = ROOT.'/notebooks/'.$notebookName.'/'.$itemPath;
                 $isDir = file_exists($dirPath) && is_dir($dirPath);
@@ -84,7 +84,29 @@ if( !empty($_GET['nb']) ) {
 
         // rename current item
         if( !empty($_GET['action']) && $_GET['action'] == 'edit' ) {
-            d('rename item');
+            //confirmation was sent
+            if(isset($_POST['name'])) {
+                $item['name'] = $_POST['name'];
+                $path = $item['name'];
+                $path = dirname($itemPath).'/'.$path;
+
+                $errors['empty'] = empty($item['name']);
+                $errors['alreadyExists'] = !is_null(Utils::getArrayItem($notebook['tree'], $path));
+
+                if(!in_array(true, $errors)) {
+                    if($isNote) {
+                        $path .= '.md';
+                        $item['name'] .= '.md';
+                        $yosnote->setNote($itemPath, $item['name']);
+                    }
+                    elseif($isDir) {
+                        $yosnote->setDirectory($itemPath, $item['name']);
+                    }
+
+                    header('Location: '.URL.'?nb='.$notebookName.'&item='.$path);
+                    exit;
+                }
+            }
             include( ROOT.'/tpl/itemForm.tpl.php' );
 
         // delete current item

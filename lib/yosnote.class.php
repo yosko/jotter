@@ -107,13 +107,33 @@ class YosNote {
         if(!file_exists(dirname($absPath)))
             mkdir(dirname($absPath), 0700, true);
 
-        //create the file
-        touch($absPath);
+        //rename file
+        if($newName !== false) {
+            rename($absPath, dirname($absPath).'/'.$newName);
+            $item = Utils::getArrayItem(
+                $this->notebook['tree'],
+                $path
+            );
+            $this->notebook['tree'] = Utils::setArrayItem(
+                $this->notebook['tree'],
+                (dirname($path)!='.'?dirname($path).'/':'').$newName,
+                $item
+            );
+            $this->notebook['tree'] = Utils::unsetArrayItem(
+                $this->notebook['tree'],
+                $path
+            );
 
-        $this->notebook['tree'] = Utils::setArrayItem($this->notebook['tree'], $path, true);
+        //create the file
+        } else {
+            touch($absPath);
+            $this->notebook['tree'] = Utils::setArrayItem($this->notebook['tree'], $path, true);
+        }
+
 
         return
-            file_exists($absPath)
+            !file_exists($absPath)
+            && file_exists(dirname($absPath).'/'.$newName)
             && !empty($this->notebook['tree'])
             && $this->saveJson($this->notebookFile, $this->notebook);
     }
