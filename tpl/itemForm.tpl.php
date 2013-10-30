@@ -1,7 +1,8 @@
 <?php
 include PATH_TEMPLATE.'header.tpl.php';
 $editItem = $_GET['action'] == 'edit';
-$isDir = $_GET['action'] == 'adddir';
+if(!isset($isDir))
+    $isDir = $_GET['action'] == 'adddir';
 ?>
     <h2><?php echo ($editItem?'Edit ':'New ').($isDir?'Directory':'Note'); ?></h2>
     <form method="post" action="?nb=<?php echo $notebookName; ?>&amp;action=<?php echo $_GET['action']; ?>&amp;item=<?php echo isset($_GET['item'])?$_GET['item']:''; ?>">
