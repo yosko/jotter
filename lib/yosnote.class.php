@@ -5,6 +5,7 @@ class YosNote {
         $notebooks,
         $notebooksFile,
         $notebook,
+        $notebookPath,
         $notebookFile,
         $notebookName;
 
@@ -34,8 +35,7 @@ class YosNote {
      * @return array          List of notebooks
      */
     public function setNotebook($name, $user = -1, $public = false) {
-        $notebookPath = ROOT.'/notebooks/'.$name;
-        $this->notebookFile = $notebookPath.'/notebook.json';
+        $this->notebookFile = $this->notebookPath.'/notebook.json';
 
         //add a new notebook
         if(!isset($this->notebooks[$name])) {
@@ -45,8 +45,8 @@ class YosNote {
 
             //create the notebook directory and default note
             $defaultNote = 'note.md';
-            mkdir($notebookPath);
-            touch($notebookPath.'/'.$defaultNote);
+            mkdir($this->notebookPath);
+            touch($this->notebookPath.'/'.$defaultNote);
 
             $this->notebook = array(
                 'created'   => time(),
@@ -79,8 +79,7 @@ class YosNote {
         $this->notebookName = $name;
         if(strpos($name, '..') !== false) return false;
 
-        $notebookPath = ROOT.'/notebooks/'.$this->notebookName;
-        $this->notebookFile = $notebookPath.'/notebook.json';
+        $this->notebookFile = $this->notebookPath.'/notebook.json';
 
         $this->notebook = $this->loadJson($this->notebookFile);
 
