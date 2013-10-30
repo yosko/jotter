@@ -196,7 +196,7 @@ class YosNote {
         $this->notebook['tree'] = Utils::unsetArrayItem($this->notebook['tree'], $path);
         $absPath = ROOT.'/notebooks/'.$this->notebookName.'/'.$path;
 
-        return rmdir($absPath)
+        return $this->rmdirRecursive($absPath)
             && $this->saveJson($this->notebookFile, $this->notebook);
     }
 
@@ -250,6 +250,23 @@ class YosNote {
             fclose($fp);
         }
         return $fp !== false;
+    }
+
+    /**
+     * Recursive directory remove
+     * taken from http://www.php.net/manual/en/function.rmdir.php#110489
+     * @param  string $dir path to directory
+     * @return boolean     true on success
+     */
+    public static function rmdirRecursive($dir) {
+        $files = array_diff(scandir($dir), array('.','..'));
+        foreach ($files as $file) {
+            if(is_dir("$dir/$file"))
+                rmdirRecursive("$dir/$file");
+            else
+                unlink("$dir/$file");
+        }
+        return rmdir($dir);
     }
 }
 
