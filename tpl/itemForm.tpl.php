@@ -9,6 +9,8 @@ $isDir = $_GET['action'] == 'adddir';
         <input id="name" name="name" type="text" value="<?php echo isset($item['name'])?$item['name']:''; ?>">
     <?php if(isset($errors['empty']) && $errors['empty']) { ?>
         <div class="error">Please enter a name for your new item.</div>
+    <?php } elseif(isset($errors['sameName']) && $errors['sameName']) { ?>
+        <div class="error">The item already has that name.</div>
     <?php } elseif(isset($errors['alreadyExists']) && $errors['alreadyExists']) { ?>
         <div class="error">An item already exists with this name in this directory. Please enter another one.</div>
     <?php } ?>

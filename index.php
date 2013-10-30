@@ -91,6 +91,7 @@ if( !empty($_GET['nb']) ) {
                 $path = dirname($itemPath).'/'.$path;
 
                 $errors['empty'] = empty($item['name']);
+                $errors['sameName'] = $itemPath == $path.'.md';
                 $errors['alreadyExists'] = !is_null(Utils::getArrayItem($notebook['tree'], $path));
 
                 if(!in_array(true, $errors)) {

@@ -35,6 +35,7 @@ class YosNote {
      * @return array          List of notebooks
      */
     public function setNotebook($name, $user = -1, $public = false) {
+        if(strpos($name, '..') !== false) return false;
         $this->notebookFile = $this->notebookPath.'/notebook.json';
 
         //add a new notebook
@@ -76,39 +77,38 @@ class YosNote {
      * @return array           Notebook's configuration
      */
     public function loadNotebook($name, $userId = -1) {
-        $this->notebookName = $name;
         if(strpos($name, '..') !== false) return false;
 
+        $this->notebookName = $name;
+        $this->notebookPath = ROOT.'/notebooks/'.$this->notebookName;
         $this->notebookFile = $this->notebookPath.'/notebook.json';
-
         $this->notebook = $this->loadJson($this->notebookFile);
 
         return $this->notebook;
     }
 
-    public function setDirectory($path, $newName = false) {
+    /**
+     * Add or edit (rename) an item (note or directory)
+     * @param string   $path    Relative path to item
+     * @param boolean  $isDir   False for notes, true for directories
+     * @param string   $newName New name for item, false if not needed
+     * @param boolean  $data    Data to keep inside JSON array for notes (unused)
+     * @return boolean          True on success
+     */
+    public function setItem($path, $isDir = true, $newName = false, $data = false) {
+        $success = true;
         $absPath = ROOT.'/notebooks/'.$this->notebookName.'/'.$path;
-        if(!file_exists($absPath))
-            mkdir($absPath, 0700, true);
-
-        $this->notebook['tree'] = Utils::setArrayItem($this->notebook['tree'], $path, array());
-
-        return
-            file_exists($absPath) && is_dir($absPath)
-            && !empty($this->notebook['tree'])
-            && $this->saveJson($this->notebookFile, $this->notebook);
-    }
-
-    public function setNote($path, $newName = false, $data = false) {
-        $absPath = ROOT.'/notebooks/'.$this->notebookName.'/'.$path;
+        $dirPath = $isDir?$absPath:dirname($absPath);
 
         //if necessary, create parent directories
         if(!file_exists(dirname($absPath)))
-            mkdir(dirname($absPath), 0700, true);
+            $success = mkdir(dirname($absPath), 0700, true);
 
-        //rename file
-        if($newName !== false) {
-            rename($absPath, dirname($absPath).'/'.$newName);
+        if($success && $newName !== false) {
+            //rename item
+            $success = rename($absPath, dirname($absPath).'/'.$newName);
+
+            //change corresponding key in tree array
             $item = Utils::getArrayItem(
                 $this->notebook['tree'],
                 $path
@@ -123,24 +123,62 @@ class YosNote {
                 $path
             );
 
-        //create the file
-        } else {
-            touch($absPath);
-            $this->notebook['tree'] = Utils::setArrayItem($this->notebook['tree'], $path, true);
+        //create the item
+        } elseif($success) {
+            if($isDir) {
+                $success = mkdir($absPath, 0700, true);
+                $value = array();
+            } else {
+                $success = touch($absPath);
+                $value = true;
+            }
+
+            $this->notebook['tree'] = Utils::setArrayItem($this->notebook['tree'], $path, $value);
         }
 
+        //save notebook.json file
+        if($success) {
+            $this->notebook['updated'] = time();
+            $success = $this->saveJson($this->notebookFile, $this->notebook);
+        }
 
-        return
-            !file_exists($absPath)
-            && file_exists(dirname($absPath).'/'.$newName)
-            && !empty($this->notebook['tree'])
-            && $this->saveJson($this->notebookFile, $this->notebook);
+        return $success;
     }
 
+    /**
+     * Add or edit (rename) a directory
+     * @param string $path    Relative path to directory
+     * @param string $newName New name for directory, false if not needed
+     * @return boolean        True on success
+     */
+    public function setDirectory($path, $newName = false) {
+        return $this->setItem($path, true, $newName);
+    }
+
+    /**
+     * Add or edit (rename) a note
+     * @param string $path    Relative path to note (with extension)
+     * @param string $newName New name for note (with extension), false if not needed
+     * @return boolean        True on success
+     */
+    public function setNote($path, $newName = false, $data = false) {
+        return $this->setItem($path, false, $newName, $data);
+    }
+
+    /**
+     * Load (and return) a note content
+     * @param  string $path relative path to note
+     * @return string       note content
+     */
     public function loadNote($path) {
         return $this->loadFile(ROOT.'/notebooks/'.$this->notebookName.'/'.$path);
     }
 
+    /**
+     * Delete a note (file and occurence in json)
+     * @param  string  $path relative path to note
+     * @return boolean       true on success
+     */
     public function unsetNote($path) {
         $this->notebook['tree'] = Utils::unsetArrayItem($this->notebook['tree'], $path);
         $absPath = ROOT.'/notebooks/'.$this->notebookName.'/'.$path;
@@ -149,6 +187,11 @@ class YosNote {
             && $this->saveJson($this->notebookFile, $this->notebook);
     }
 
+    /**
+     * Delete a directory (file and occurence in json) and everything in it
+     * @param  string  $path relative path to directory
+     * @return boolean       true on success
+     */
     public function unsetDirectory($path) {
         $this->notebook['tree'] = Utils::unsetArrayItem($this->notebook['tree'], $path);
         $absPath = ROOT.'/notebooks/'.$this->notebookName.'/'.$path;
@@ -157,6 +200,11 @@ class YosNote {
             && $this->saveJson($this->notebookFile, $this->notebook);
     }
 
+    /**
+     * Load a text file
+     * @param  string $file path to file
+     * @return string       file content
+     */
     protected function loadFile($file) {
         if (file_exists( $file )) {
             $data = file_get_contents($file);
