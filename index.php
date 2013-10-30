@@ -71,15 +71,14 @@ if( !empty($_GET['nb']) ) {
         include( ROOT.'/tpl/itemForm.tpl.php' );
 
     // notebook item
-    } elseif( !empty($_GET['item']) ) {
+    } elseif( !empty($_GET['item']) && strpos($itemPath, '..') === false ) {
         $itemPath = $_GET['item'];
-        if(strpos($itemPath, '..') === false){
-            $itemData = Utils::getArrayItem($notebook['tree'], $itemPath);
-            $isNote = $itemData === true;
-            if(!$isNote) {
-                $dirPath = ROOT.'/notebooks/'.$notebookName.'/'.$itemPath;
-                $isDir = file_exists($dirPath) && is_dir($dirPath);
-            }
+
+        $itemData = Utils::getArrayItem($notebook['tree'], $itemPath);
+        $isNote = $itemData === true;
+        if(!$isNote) {
+            $dirPath = ROOT.'/notebooks/'.$notebookName.'/'.$itemPath;
+            $isDir = file_exists($dirPath) && is_dir($dirPath);
         }
 
         // rename current item
