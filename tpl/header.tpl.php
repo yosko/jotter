@@ -65,7 +65,7 @@ echo Tree2Html($notebook['tree'], $notebookName, isset($_GET['item'])?$_GET['ite
 </nav>
 <?php } ?>
 <section id="content">
-    <ul class="actions" id="item-toolbar">
+    <ul class="actions" id="item-toolbar" data-role="editor-toolbar" data-target="#editor">
 <?php if($isNote || $isDir) { ?>
 
         <li>
@@ -79,54 +79,69 @@ echo Tree2Html($notebook['tree'], $notebookName, isset($_GET['item'])?$_GET['ite
             </a>
         </li>
 <?php if($isNote) { ?>
-        <li>
+        <li class="secondary">
             <a href="?nb=<?php echo $notebookName; ?>&amp;item=<?php echo $itemPath; ?>&amp;action=save" title="Save this note">
                 <img src="<?php echo URL; ?>tpl/img/disk-black.png" alt="Save note">
             </a>
         </li>
         <li class="secondary">
-            <a href="#" class="ajax-formatter" data-tag="justifyleft" title="Align left selected text">
+            <a href="#" class="ajax-formatter" data-edit="justifyleft" title="Align left (Ctrl+L)">
                 <img src="<?php echo URL; ?>tpl/img/edit-alignment.png" alt="Align left">
             </a>
         </li>
         <li class="secondary">
-            <a href="#" class="ajax-formatter" data-tag="justifycenter" title="Align center selected text">
+            <a href="#" class="ajax-formatter" data-edit="justifycenter" title="Align center (Ctrl+E)">
                 <img src="<?php echo URL; ?>tpl/img/edit-alignment-center.png" alt="Align center">
             </a>
         </li>
         <li class="secondary">
-            <a href="#" class="ajax-formatter" data-tag="justifyright" title="Align right selected text">
+            <a href="#" class="ajax-formatter" data-edit="justifyright" title="Align right (Ctrl+R)">
                 <img src="<?php echo URL; ?>tpl/img/edit-alignment-right.png" alt="Align right">
             </a>
         </li>
         <li class="secondary">
-            <a href="#" class="ajax-formatter" data-tag="justifyfull" title="Justify selected text">
+            <a href="#" class="ajax-formatter" data-edit="justifyfull" title="Justify text (Ctrl+J)">
                 <img src="<?php echo URL; ?>tpl/img/edit-alignment-justify.png" alt="Justify">
             </a>
         </li>
         <li class="secondary">
-            <a href="#" class="ajax-formatter" data-tag="bold" title="Toggle bold for selected text">
+            <a href="#" class="ajax-formatter" data-edit="bold" title="Toggle bold (Ctrl+B)">
                 <img src="<?php echo URL; ?>tpl/img/edit-bold.png" alt="Bold">
             </a>
         </li>
         <li class="secondary">
-            <a href="#" class="ajax-formatter" data-tag="italic" title="Toggle italic for selected text">
+            <a href="#" class="ajax-formatter" data-edit="italic" title="Toggle italic (Ctrl+I)">
                 <img src="<?php echo URL; ?>tpl/img/edit-italic.png" alt="Italic">
             </a>
         </li>
         <li class="secondary">
-            <a href="#" class="ajax-formatter" data-tag="underline" title="Toggle underline for selected text">
+            <a href="#" class="ajax-formatter" data-edit="underline" title="Toggle underline (Ctrl+U)">
                 <img src="<?php echo URL; ?>tpl/img/edit-underline.png" alt="Underline">
             </a>
         </li>
         <li class="secondary">
-            <a href="#" class="ajax-formatter" data-tag="insertUnorderedList" title="Toggle list for selected text">
+            <a href="#" class="ajax-formatter" data-edit="strikethrough" title="Toggle strike">
+                <img src="<?php echo URL; ?>tpl/img/edit-strike.png" alt="Strike">
+            </a>
+        </li>
+        <li class="secondary">
+            <a href="#" class="ajax-formatter" data-edit="insertunorderedlist" title="Insert list">
                 <img src="<?php echo URL; ?>tpl/img/edit-list.png" alt="List">
             </a>
         </li>
         <li class="secondary">
-            <a href="#" class="ajax-formatter" data-tag="insertOrderedList" title="Toggle ordered list for selected text">
+            <a href="#" class="ajax-formatter" data-edit="insertorderedlist" title="Insert ordered list">
                 <img src="<?php echo URL; ?>tpl/img/edit-list-order.png" alt="Ordered List">
+            </a>
+        </li>
+        <li class="secondary">
+            <a href="#" class="ajax-formatter" data-edit="indent" title="Indent text (Tab)">
+                <img src="<?php echo URL; ?>tpl/img/edit-indent.png" alt="Indent">
+            </a>
+        </li>
+        <li class="secondary">
+            <a href="#" class="ajax-formatter" data-edit="outdent" title="Outdent text (Shift+Tab)">
+                <img src="<?php echo URL; ?>tpl/img/edit-outdent.png" alt="Outdent">
             </a>
         </li>
         <li class="secondary">
@@ -135,12 +150,17 @@ echo Tree2Html($notebook['tree'], $notebookName, isset($_GET['item'])?$_GET['ite
             </a>
         </li>
         <li class="secondary">
-            <a href="#" class="ajax-formatter" data-tag="createLink" title="Insert link on selected text">
-                Link
+            <a href="#" class="ajax-formatter" data-tag="createLink" title="Insert link">
+                <img src="<?php echo URL; ?>tpl/img/chain--plus.png" alt="Link">
             </a>
         </li>
         <li class="secondary">
-            <a href="#" class="ajax-source" title="View source">
+            <a href="#" class="ajax-formatter" data-tag="unlink" title="Remove link">
+                <img src="<?php echo URL; ?>tpl/img/chain--minus.png" alt="Remove link">
+            </a>
+        </li>
+        <li class="secondary">
+            <a href="#" id="source-button" title="View source">
                 <img src="<?php echo URL; ?>tpl/img/edit-code.png" alt="Source">
             </a>
         </li>

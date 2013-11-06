@@ -37,11 +37,11 @@ html, body { margin: 0; height: 100%; }
     list-style-type: none;
     margin: 0;
     padding: 0;
-    height: 32px;
+    height: 24px;
 }
 .actions li { float: right; border-left: 0.2em solid #d3d3d3; background-color: #bbb; }
 .actions li.secondary { float: left; border-right: 0.2em solid #d3d3d3; border-left: none; }
-.actions a { display: block; height: 16px; padding: 8px; text-align: center; background-color: #bbb; }
+.actions a { display: block; height: 16px; padding: 4px; text-align: center; background-color: #bbb; }
 .actions li.active a { background-color: #c8c8c8; }
 .actions a:hover { background-color: #d3d3d3; }
 
