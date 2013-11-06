@@ -67,10 +67,10 @@ echo Tree2Html($notebook['tree'], $notebookName, isset($_GET['item'])?$_GET['ite
 </nav>
 <?php } ?>
 <section id="content">
-    <div class="toolbar">
+    <div class="toolbar" id="item-toolbar" data-role="editor-toolbar" data-target="#editor">
 <?php if($isNote || $isDir) { ?>
 
-        <ul class="actions btn-info" id="item-toolbar" data-role="editor-toolbar" data-target="#editor">
+        <ul class="actions btn-info">
             <li>
                 <a href="?nb=<?php echo $notebookName; ?>&amp;item=<?php echo $itemPath; ?>&amp;action=edit" title="Edit (rename) this <?php echo $isNote?'note':'directory'; ?>">
                     <img src="<?php echo URL; ?>tpl/img/<?php echo $isNote?'document':'folder'; ?>--pencil.png" alt="Edit <?php echo $isNote?'note':'directory'; ?>">
@@ -83,7 +83,7 @@ echo Tree2Html($notebook['tree'], $notebookName, isset($_GET['item'])?$_GET['ite
             </li>
 <?php if($isNote) { ?>
             <li class="secondary">
-                <a href="?nb=<?php echo $notebookName; ?>&amp;item=<?php echo $itemPath; ?>&amp;action=save" title="Save this note">
+                <a href="?nb=<?php echo $notebookName; ?>&amp;item=<?php echo $itemPath; ?>&amp;action=save" id="save-button" title="Save this note">
                     <img src="<?php echo URL; ?>tpl/img/disk-black.png" alt="Save note">
                 </a>
             </li>
