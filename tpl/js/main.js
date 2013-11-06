@@ -4,12 +4,13 @@ $(function(){
 
     $('#editor').wysiwyg().focus();
 
-    $('#source-button').click(function(){
+    $('#source-button').click(function(e){
         if($('#html').length == 0) {
             $('#editor').after( '<pre id="html" style="">'+htmlEncode( $('#editor').html() )+'</pre>' );
         } else {
             $('#html').remove();
         }
+        e.preventDefault();
     });
 });
 

@@ -103,11 +103,12 @@
 				input.data(options.selectionMarker, color);
 			},
 			bindToolbar = function (toolbar, options) {
-				toolbar.find(toolbarBtnSelector).click(function () {
+				toolbar.find(toolbarBtnSelector).click(function (e) {
 					restoreSelection();
 					editor.focus();
 					execCommand($(this).data(options.commandRole));
 					saveSelection();
+					e.preventDefault(); //added by Yosko 2013-11-06
 				});
 				toolbar.find('[data-toggle=dropdown]').click(restoreSelection);
 
