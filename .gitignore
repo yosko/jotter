@@ -2,6 +2,7 @@ notebooks/*
 tmp/cache/*
 tmp/logs/*
 tmp/sessions/*
+tpl/js/ext/external/*
 TODO.md
 *.sublime-project
 *.sublime-workspace

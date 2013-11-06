@@ -1,0 +1,3 @@
+$(function(){
+    $('#editor').wysiwyg().focus();
+});

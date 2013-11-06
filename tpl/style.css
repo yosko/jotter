@@ -25,6 +25,7 @@ html, body { margin: 0; height: 100%; }
     align-self: stretch;
     overflow: auto;
     background-color: #eee;
+    position: relative;
 }
 #content > * { padding: 0 0.5em; }
 #content > .actions { padding: 0; }
@@ -38,8 +39,10 @@ html, body { margin: 0; height: 100%; }
     padding: 0;
     height: 32px;
 }
-.actions li { float: right; border-left: 0.3em solid #d3d3d3; background-color: #bbb; }
-.actions a { display: block; height: 16px; padding: 8px; text-align: center; }
+.actions li { float: right; border-left: 0.2em solid #d3d3d3; background-color: #bbb; }
+.actions li.secondary { float: left; border-right: 0.2em solid #d3d3d3; border-left: none; }
+.actions a { display: block; height: 16px; padding: 8px; text-align: center; background-color: #bbb; }
+.actions li.active a { background-color: #c8c8c8; }
 .actions a:hover { background-color: #d3d3d3; }
 
 /**** TREE PANEL ****/
@@ -62,4 +65,14 @@ html, body { margin: 0; height: 100%; }
     font-style: italic;
     margin-bottom: 0.5em;
     text-align: right;
+    clear: both;
+    background-color: #d3d3d3;
+}
+
+#editor {
+    min-height: 1em;
+    border-bottom: 1px dotted #bbb;
+    margin-bottom: 1em;
+    padding-bottom: 1em;
+    outline: 0;
 }

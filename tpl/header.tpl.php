@@ -4,6 +4,13 @@
     <meta charset="utf-8">
     <title>YosNote - Notebook Manager</title>
     <link rel="stylesheet" href="<?php echo URL; ?>tpl/style.css">
+<?php if($isNote) { ?>
+    <script src="<?php echo URL; ?>tpl/js/ext/jquery-2.0.3.min.js"></script>
+    <script src="<?php echo URL; ?>tpl/js/ext/jquery.hotkeys.js"></script>
+    <script src="<?php echo URL; ?>tpl/js/ext/bootstrap.min.js"></script>
+    <script src="<?php echo URL; ?>tpl/js/ext/bootstrap-wysiwyg.js"></script>
+    <script src="<?php echo URL; ?>tpl/js/main.js"></script>
+<?php } ?>
 </head>
 <body>
 <div id="app">
@@ -55,20 +62,92 @@ function Tree2Html($tree, $nbName, $selectedPath, $parents = array()) {
 echo Tree2Html($notebook['tree'], $notebookName, isset($_GET['item'])?$_GET['item']:'');
 
 ?>
-</nav><?php } ?>
+</nav>
+<?php } ?>
 <section id="content">
-    <ul class="actions"><?php if($isNote || $isDir) { ?>
+    <ul class="actions" id="item-toolbar">
+<?php if($isNote || $isDir) { ?>
 
-        <li class="right">
+        <li>
             <a href="?nb=<?php echo $notebookName; ?>&amp;item=<?php echo $itemPath; ?>&amp;action=edit" title="Edit (rename) this <?php echo $isNote?'note':'directory'; ?>">
                 <img src="<?php echo URL; ?>tpl/img/<?php echo $isNote?'document':'folder'; ?>--pencil.png" alt="Edit <?php echo $isNote?'note':'directory'; ?>">
             </a>
         </li>
-        <li class="right">
+        <li>
             <a href="?nb=<?php echo $notebookName; ?>&amp;item=<?php echo $itemPath; ?>&amp;action=delete" title="Delete this <?php echo $isNote?'note':'directory'; ?>">
                 <img src="<?php echo URL; ?>tpl/img/<?php echo $isNote?'document':'folder'; ?>--minus.png" alt="Delete <?php echo $isNote?'note':'directory'; ?>">
             </a>
-        </li><?php } ?>
+        </li>
+<?php if($isNote) { ?>
+        <li>
+            <a href="?nb=<?php echo $notebookName; ?>&amp;item=<?php echo $itemPath; ?>&amp;action=save" title="Save this note">
+                <img src="<?php echo URL; ?>tpl/img/disk-black.png" alt="Save note">
+            </a>
+        </li>
+        <li class="secondary">
+            <a href="#" class="ajax-formatter" data-tag="justifyleft" title="Align left selected text">
+                <img src="<?php echo URL; ?>tpl/img/edit-alignment.png" alt="Align left">
+            </a>
+        </li>
+        <li class="secondary">
+            <a href="#" class="ajax-formatter" data-tag="justifycenter" title="Align center selected text">
+                <img src="<?php echo URL; ?>tpl/img/edit-alignment-center.png" alt="Align center">
+            </a>
+        </li>
+        <li class="secondary">
+            <a href="#" class="ajax-formatter" data-tag="justifyright" title="Align right selected text">
+                <img src="<?php echo URL; ?>tpl/img/edit-alignment-right.png" alt="Align right">
+            </a>
+        </li>
+        <li class="secondary">
+            <a href="#" class="ajax-formatter" data-tag="justifyfull" title="Justify selected text">
+                <img src="<?php echo URL; ?>tpl/img/edit-alignment-justify.png" alt="Justify">
+            </a>
+        </li>
+        <li class="secondary">
+            <a href="#" class="ajax-formatter" data-tag="bold" title="Toggle bold for selected text">
+                <img src="<?php echo URL; ?>tpl/img/edit-bold.png" alt="Bold">
+            </a>
+        </li>
+        <li class="secondary">
+            <a href="#" class="ajax-formatter" data-tag="italic" title="Toggle italic for selected text">
+                <img src="<?php echo URL; ?>tpl/img/edit-italic.png" alt="Italic">
+            </a>
+        </li>
+        <li class="secondary">
+            <a href="#" class="ajax-formatter" data-tag="underline" title="Toggle underline for selected text">
+                <img src="<?php echo URL; ?>tpl/img/edit-underline.png" alt="Underline">
+            </a>
+        </li>
+        <li class="secondary">
+            <a href="#" class="ajax-formatter" data-tag="insertUnorderedList" title="Toggle list for selected text">
+                <img src="<?php echo URL; ?>tpl/img/edit-list.png" alt="List">
+            </a>
+        </li>
+        <li class="secondary">
+            <a href="#" class="ajax-formatter" data-tag="insertOrderedList" title="Toggle ordered list for selected text">
+                <img src="<?php echo URL; ?>tpl/img/edit-list-order.png" alt="Ordered List">
+            </a>
+        </li>
+        <li class="secondary">
+            <a href="#" class="ajax-formatter" data-tag="formatblock" data-value="blockquote" title="Toggle quotation for selected text">
+                <img src="<?php echo URL; ?>tpl/img/edit-quotation.png" alt="Quotation">
+            </a>
+        </li>
+        <li class="secondary">
+            <a href="#" class="ajax-formatter" data-tag="createLink" title="Insert link on selected text">
+                Link
+            </a>
+        </li>
+        <li class="secondary">
+            <a href="#" class="ajax-source" title="View source">
+                <img src="<?php echo URL; ?>tpl/img/edit-code.png" alt="Source">
+            </a>
+        </li>
+<?php
+    } // $isNote
+} // $isNote || $isDir
+?>
 
     </ul><?php if($isNote || $isDir) { ?>
 
