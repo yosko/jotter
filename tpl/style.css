@@ -41,12 +41,28 @@ html, body { margin: 0; height: 100%; }
     border-left: 0.2em solid #d3d3d3;
     border-right: 0.2em solid #d3d3d3;
 }
-.actions li { float: right; border-left: 0.2em solid #d3d3d3; background-color: #bbb; }
+.actions li {
+    float: right;
+    border-left: 0.2em solid #d3d3d3;
+    background-color: #bbb;
+}
 .actions li.secondary { float: left; border-right: 0.2em solid #d3d3d3; border-left: none; }
-.actions a { display: block; height: 16px; padding: 4px; text-align: center; background-color: #bbb; }
+.actions a {
+    display: block;
+    height: 16px;
+    padding: 4px;
+    text-align: center;
+    background-color: #bbb;
+    text-decoration: none;
+    color: #000;
+    font-size: 0.5em;
+    line-height: 16px;
+    vertical-align: baseline;
+}
 .actions a.disabled { background-color: #d3d3d3; }
 .actions li.active a { background-color: #c8c8c8; }
 .actions a:hover { background-color: #d3d3d3; }
+.actions img { vertical-align: middle; }
 
 /**** TREE PANEL ****/
 
@@ -75,8 +91,9 @@ html, body { margin: 0; height: 100%; }
 #editor {
     min-height: 1em;
     border-bottom: 1px dotted #bbb;
-    margin: 1em;
-    padding-bottom: 1em;
+    margin: 0.5em;
+    padding: 0.5em;
     outline: 0;
 }
+#editor p { text-indent: 1em; }
 pre { white-space: pre-wrap; word-wrap: break-word; }

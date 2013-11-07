@@ -3,16 +3,17 @@ $(function(){
 
     //doesn't seem to work in firefox, which still use <br>
     document.execCommand('defaultParagraphSeparator', false, 'p');
+    
 
     //init editor
     $('#editor').wysiwyg().bind('input', function(e){
-        var editor = $('#save-button');
+        var button = $('#save-button');
         var image = $('#save-button img');
 
         unsavedContent = true;
 
-        editor.removeClass('disabled');
-        editor.attr('title', 'Save changes');
+        button.removeClass('disabled');
+        button.attr('title', 'Save changes');
         image.changeImageFile('disk.png');
     }).focus();
 
