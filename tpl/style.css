@@ -79,6 +79,4 @@ html, body { margin: 0; height: 100%; }
     padding-bottom: 1em;
     outline: 0;
 }
-#editor {
-
-}
+pre { white-space: pre-wrap; word-wrap: break-word; }
