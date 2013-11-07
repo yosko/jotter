@@ -1,12 +1,12 @@
 $(function(){
+    var editor = $('#editor');
     var unsavedContent  = false;
 
     //doesn't seem to work in firefox, which still use <br>
     document.execCommand('defaultParagraphSeparator', false, 'p');
-    
 
     //init editor
-    $('#editor').wysiwyg().bind('input', function(e){
+    editor.wysiwyg().bind('input', function(e){
         var button = $('#save-button');
         var image = $('#save-button img');
 
@@ -15,7 +15,14 @@ $(function(){
         button.removeClass('disabled');
         button.attr('title', 'Save changes');
         image.changeImageFile('disk.png');
+
+        //when user delete everything inside the editor, make sure there is still a <p>
+        editorNeverEmpty();
+
     }).focus();
+
+    //if note is empty on load, add a <p>
+    editorNeverEmpty();
 
     $('#save-button').click(function(e){
         if(unsavedContent)
@@ -102,6 +109,16 @@ function htmlDecode(value) {
         return $('<div />').html(value).text();
     } else {
         return '';
+    }
+}
+
+function editorNeverEmpty() {
+    var content = $('#editor').html().trim();
+    if(content == '' || content == '<br>' || '<p><br></p>') {
+        //majke sure it is completely empty
+        $('#editor').empty().focus();
+        //now make the paragraph on the cursor position
+        document.execCommand('formatBlock', false, 'p');
     }
 }
 
