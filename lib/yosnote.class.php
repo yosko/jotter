@@ -162,9 +162,21 @@ class YosNote {
      * @return boolean        True on success
      */
     public function setNote($path, $newName = false, $data = false) {
+        return $this->setItem($path, false, $newName, $data);
+    }
+
+    /**
+     * Set the text of a note
+     * @param string $path Relative path to note (with extension)
+     * @return boolean     True on success
+     */
+    public function setNoteText($path, $text) {
+        $absPath = ROOT.'/notebooks/'.$this->notebookName.'/'.$path;
+
         //TODO convert HTML to Markdown
         //https://github.com/nickcernis/html-to-markdown
-        return $this->setItem($path, false, $newName, $data);
+
+        return $this->saveFile($absPath, $text);
     }
 
     /**
@@ -220,6 +232,24 @@ class YosNote {
     }
 
     /**
+     * Save a text file
+     * @param  string $file    path to file
+     * @param  string $content file content
+     * @return boolean         true on success
+     */
+    protected function saveFile($file, $content) {
+        if (!file_exists( $file )) {
+            touch($file);
+        }
+        $fp = fopen( $file, 'w' );
+        if($fp) {
+            fwrite($fp, $content);
+            fclose($fp);
+        }
+        return $fp !== false;
+    }
+
+    /**
      * Load a (compressed) JSON file
      * @param  string  $file     Path to file
      * @param  boolean $compress If data should be gzip uncompressed before decoding it
@@ -242,18 +272,15 @@ class YosNote {
      * @return boolean           true on success
      */
     protected function saveJson($file, $data, $compress = false) {
-        $fp = fopen( $file, 'w' );
-        if($fp) {
-            if(version_compare(PHP_VERSION, '5.4.0') >= 0)
-                $json = json_encode($data, JSON_PRETTY_PRINT);
-            else
-                $json = json_encode($data);
-            if($compress)
-                $json = gzdeflate($json);
-            fwrite($fp, $json);
-            fclose($fp);
-        }
-        return $fp !== false;
+        if(version_compare(PHP_VERSION, '5.4.0') >= 0)
+            $json = json_encode($data, JSON_PRETTY_PRINT);
+        else
+            $json = json_encode($data);
+
+        if($compress)
+            $json = gzdeflate($json);
+
+        return $this->saveFile($file, $json);
     }
 
     /**

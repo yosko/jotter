@@ -125,9 +125,24 @@ if( !empty($_GET['nb']) ) {
 
             include( ROOT.'/tpl/itemDelete.tpl.php' );
 
-        // save current note (via json request?)
+        // save current note (via json request)
         } elseif( !empty($_GET['action']) && $_GET['action'] == 'save' ) {
-            echo $_POST['text'];
+            $success = false;
+
+            if($isNote && isset($_POST['text'])) {
+                //save the note
+                $success = $yosnote->setNoteText($itemPath, $_POST['text']);
+
+                //reload it (to get the result of transform HTML -> Markdown -> HTML)
+                if($success) {
+                    $result = $yosnote->loadNote($itemPath);
+                    $success = $result !== false;
+                }
+            }
+
+            header('Content-type: application/json');
+            echo json_encode($success?$result:false);
+            exit;
 
         //show item
         } else {

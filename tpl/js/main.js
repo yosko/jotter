@@ -8,13 +8,12 @@ $(function(){
     $('#editor').wysiwyg().bind('input', function(e){
         var editor = $('#save-button');
         var image = $('#save-button img');
-        var src = image.attr("src").replace("disk-black.png", "disk.png");
 
         unsavedContent = true;
 
         editor.removeClass('disabled');
         editor.attr('title', 'Save changes');
-        image.attr('src', src);
+        image.changeImageFile('disk.png');
     }).focus();
 
     $('#save-button').click(function(e){
@@ -35,9 +34,8 @@ $(function(){
     function saveNote() {
         var button = $('#save-button');
         var image = $('#save-button img');
-        var src = image.attr("src").replace("disk.png", "ajax-loader.gif");
         button.attr('title', 'Saving...');
-        image.attr('src', src);
+        image.changeImageFile('ajax-loader.gif');
 
         getParam=getUrlVars();
         var data=new Object();
@@ -48,17 +46,22 @@ $(function(){
             url: '?action=save&nb='+getParam['nb']+'&item='+getParam['item'],
             data: data,
             success: function(response){
+                //the note was saved
+                if(response != false) {
+                    image.changeImageFile('disk-black.png');
+                    
+                    button.addClass('disabled');
+                    button.attr('title', 'Nothing to save');
 
-                alert(response);
+                    unsavedContent = false;
 
-                src = image.attr("src").replace("ajax-loader.gif", "disk-black.png");
-                image.attr('src', src);
-                
-                button.addClass('disabled');
-                button.attr('title', 'Nothing to save');
-
-                unsavedContent = false;
-            }
+                //error, the note wasn't saved
+                } else {
+                    image.changeImageFile('disk--exclamation.png');
+                    button.attr('title', 'Error: couldn\'t save this note.');
+                }
+            },
+            dataType: 'json'
         });
     }
 
@@ -99,4 +102,9 @@ function htmlDecode(value) {
     } else {
         return '';
     }
+}
+
+$.fn.changeImageFile = function(newFileName) {
+    var dirPath = this.attr('src').substring(0,this.attr('src').lastIndexOf('/') +1 );
+    this.attr('src', dirPath+'/'+newFileName);
 }
