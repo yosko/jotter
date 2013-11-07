@@ -83,7 +83,7 @@ echo Tree2Html($notebook['tree'], $notebookName, isset($_GET['item'])?$_GET['ite
             </li>
 <?php if($isNote) { ?>
             <li class="secondary">
-                <a href="?nb=<?php echo $notebookName; ?>&amp;item=<?php echo $itemPath; ?>&amp;action=save" id="save-button" class="disabled" title="Save this note">
+                <a href="#" id="save-button" class="disabled" title="Save this note">
                     <img src="<?php echo URL; ?>tpl/img/disk-black.png" alt="Save note">
                 </a>
             </li>

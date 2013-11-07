@@ -162,6 +162,8 @@ class YosNote {
      * @return boolean        True on success
      */
     public function setNote($path, $newName = false, $data = false) {
+        //TODO convert HTML to Markdown
+        //https://github.com/nickcernis/html-to-markdown
         return $this->setItem($path, false, $newName, $data);
     }
 
@@ -171,6 +173,8 @@ class YosNote {
      * @return string       note content
      */
     public function loadNote($path) {
+        //TODO convert Markdown to HTML
+        //https://github.com/michelf/php-markdown
         return $this->loadFile(ROOT.'/notebooks/'.$this->notebookName.'/'.$path);
     }
 

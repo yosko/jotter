@@ -127,7 +127,7 @@ if( !empty($_GET['nb']) ) {
 
         // save current note (via json request?)
         } elseif( !empty($_GET['action']) && $_GET['action'] == 'save' ) {
-            d('save note');
+            echo $_POST['text'];
 
         //show item
         } else {
