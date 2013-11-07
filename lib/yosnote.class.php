@@ -185,9 +185,10 @@ class YosNote {
      * @return string       note content
      */
     public function loadNote($path) {
-        //TODO convert Markdown to HTML
-        //https://github.com/michelf/php-markdown
-        return $this->loadFile(ROOT.'/notebooks/'.$this->notebookName.'/'.$path);
+        $content = $this->loadFile(ROOT.'/notebooks/'.$this->notebookName.'/'.$path);
+
+        //convert Markdown to HTML
+        return \Michelf\MarkdownExtra::defaultTransform($content);
     }
 
     /**

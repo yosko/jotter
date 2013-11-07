@@ -12,7 +12,11 @@ define( 'ROOT', __DIR__ );
 
 require_once( ROOT.'/lib/yosnote.class.php');
 require_once( ROOT.'/lib/utils.class.php');
-require_once( ROOT.'/lib/easydump.php');
+
+// external libraries
+require_once( ROOT.'/lib/ext/easydump.php');
+require_once( ROOT.'/lib/ext/Markdown.php');
+require_once( ROOT.'/lib/ext/MarkdownExtra.php');
 
 $yosnote = new YosNote();
 $errors = array();
