@@ -173,10 +173,10 @@ class YosNote {
     public function setNoteText($path, $text) {
         $absPath = ROOT.'/notebooks/'.$this->notebookName.'/'.$path;
 
-        //TODO convert HTML to Markdown
-        //https://github.com/nickcernis/html-to-markdown
+        //convert HTML to Markdown
+        $markdown = new HTML_To_Markdown($text);
 
-        return $this->saveFile($absPath, $text);
+        return $this->saveFile($absPath, $markdown);
     }
 
     /**

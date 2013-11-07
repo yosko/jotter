@@ -17,6 +17,7 @@ require_once( ROOT.'/lib/utils.class.php');
 require_once( ROOT.'/lib/ext/easydump.php');
 require_once( ROOT.'/lib/ext/Markdown.php');
 require_once( ROOT.'/lib/ext/MarkdownExtra.php');
+require_once( ROOT.'/lib/ext/HTML_To_Markdown.php');
 
 $yosnote = new YosNote();
 $errors = array();
