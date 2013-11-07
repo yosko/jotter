@@ -1,22 +1,32 @@
 $(function(){
+    var unsavedContent  = false;
+
     //doesn't seem to work in firefox, which still use <br>
     document.execCommand('defaultParagraphSeparator', false, 'p');
 
     //init editor
     $('#editor').wysiwyg().bind('input', function(e){
-        //TODO: turn save button to unsaved status
-        $(this).removeClass('disabled');
-        $(this).attr('title', 'Save changes');
-        var src = $('#save-button img').attr("src").replace("disk-black.png", "disk.png");
-        $('#save-button img').attr('src', src);
+        var editor = $('#save-button');
+        var image = $('#save-button img');
+        var src = image.attr("src").replace("disk-black.png", "disk.png");
+
+        unsavedContent = true;
+
+        editor.removeClass('disabled');
+        editor.attr('title', 'Save changes');
+        image.attr('src', src);
     }).focus();
 
     $('#save-button').click(function(e){
-        //TODO: turn save button to saved status
-        $(this).addClass('disabled');
-        $(this).attr('title', 'Nothing to save');
-        var src = $('#save-button img').attr("src").replace("disk.png", "disk-black.png");
-        $('#save-button img').attr('src', src);
+        var editor = $('#save-button');
+        var image = $('#save-button img');
+        var src = image.attr("src").replace("disk.png", "disk-black.png");
+
+        unsavedContent = false;
+
+        editor.addClass('disabled');
+        editor.attr('title', 'Nothing to save');
+        image.attr('src', src);
         e.preventDefault();
     });
 
@@ -28,6 +38,14 @@ $(function(){
         }
         e.preventDefault();
     });
+
+    function checkIsUnsaved() {
+        //for now: ask the user 
+        //TODO: auto save
+        if(unsavedContent)
+            return "There is unsaved content. Do you still wish to leave this page?";
+    }
+    window.onbeforeunload = checkIsUnsaved;
 });
 
 function htmlEncode(value){
