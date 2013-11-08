@@ -172,6 +172,11 @@ echo Tree2Html($notebook['tree'], $notebookName, isset($_GET['item'])?$_GET['ite
                 </a>
             </li>
             <li class="secondary">
+                <a href="#" class="ajax-formatter" id="mdash-button" title="Insert em dash">
+                    &mdash;
+                </a>
+            </li>
+            <li class="secondary">
                 <a href="#" class="ajax-formatter" id="source-button" title="View source">
                     <img src="<?php echo URL; ?>tpl/img/edit-code.png" alt="Source">
                 </a>

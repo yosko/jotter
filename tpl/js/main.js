@@ -10,6 +10,15 @@ $(function(){
     //init editor
     editor.wysiwyg().focus();
 
+    //bind save to shortcut Ctrl+S
+    $(window).keypress(function(event) {
+        if (!(event.which == 115 && event.ctrlKey) && !(event.which == 19)) return true;
+        if(unsavedContent)
+            saveNote();
+        event.preventDefault();
+        return false;
+    });
+
     //if note is empty on load, add a <p>
     editorNeverEmpty();
 
@@ -27,6 +36,12 @@ $(function(){
     $('#save-button').click(function(e){
         if(unsavedContent)
             saveNote();
+        e.preventDefault();
+    });
+
+    //insert an em dash
+    $('#mdash-button').click(function(e){
+        document.execCommand('insertHTML', false, '&nbsp;&mdash;&nbsp;');
         e.preventDefault();
     });
 

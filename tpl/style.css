@@ -49,6 +49,7 @@ html, body { margin: 0; height: 100%; }
 .actions a {
     display: block;
     height: 16px;
+    min-width: 16px;
     padding: 4px;
     text-align: center;
     background-color: #bbb;
