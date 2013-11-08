@@ -36,6 +36,7 @@ class YosNote {
      */
     public function setNotebook($name, $user = -1, $public = false) {
         if(strpos($name, '..') !== false) return false;
+        $this->notebookPath = ROOT.'/notebooks/'.$name;
         $this->notebookFile = $this->notebookPath.'/notebook.json';
 
         //add a new notebook
