@@ -95,7 +95,7 @@ if( !empty($_GET['nb']) ) {
             if(isset($_POST['name'])) {
                 $item['name'] = $_POST['name'];
                 $path = $item['name'];
-                $path = dirname($itemPath).'/'.$path;
+                $path = (dirname($itemPath)!='.'?dirname($itemPath).'/':'').$path;
 
                 $errors['empty'] = empty($item['name']);
                 $errors['sameName'] = $itemPath == $path.'.md';
