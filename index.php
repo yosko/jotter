@@ -140,16 +140,10 @@ if( !empty($_GET['nb']) ) {
             if($isNote && isset($_POST['text'])) {
                 //save the note
                 $success = $yosnote->setNoteText($itemPath, $_POST['text']);
-
-                //reload it (to get the result of transform HTML -> Markdown -> HTML)
-                if($success) {
-                    $result = $yosnote->loadNote($itemPath);
-                    $success = $result !== false;
-                }
             }
 
             header('Content-type: application/json');
-            echo json_encode($success?$result:false);
+            echo json_encode($success);
             exit;
 
         //show item

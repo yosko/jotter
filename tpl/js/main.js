@@ -48,7 +48,7 @@ $(function(){
             data: data,
             success: function(response){
                 //the note was saved
-                if(response != false) {
+                if(response !== false) {
                     setUnsavedStatus(false);
 
                 //error, the note wasn't saved
@@ -137,6 +137,18 @@ function editorNeverEmpty() {
             setUnsavedStatus(false);
         }
     }
+}
+
+function moveCursorToTop() {
+    var pressHome = jQuery.Event("keypress");
+    pressHome.ctrlKey = false;
+    pressHome.which = 36;   //"home" key
+
+    var pressEnd = jQuery.Event("keypress");
+    pressEnd.ctrlKey = false;
+    pressEnd.which = 35;   //"home" key
+
+    $('#editor').trigger(pressEnd).trigger(pressHome);
 }
 
 $.fn.changeImageFile = function(newFileName) {
