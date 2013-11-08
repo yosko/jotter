@@ -14,9 +14,11 @@
 </head>
 <body>
 <div id="app">
-<?php if(isset($notebook['tree'])) { ?><nav id="panel">
+<nav id="panel">
     <div class="toolbar">
         <ul class="actions">
+<?php if(isset($notebook['tree'])) { ?>
+
             <li>
                 <a href="<?php echo URL; ?>?nb=<?php echo $notebookName; ?>&amp;item=<?php echo $itemPath; ?>&amp;action=addnote" title="Add a new note inside the current directory">
                     <img src="<?php echo URL; ?>tpl/img/document--plus.png" alt="Add note">
@@ -27,6 +29,8 @@
                     <img src="<?php echo URL; ?>tpl/img/folder--plus.png" alt="Add directory">
                 </a>
             </li>
+<?php } ?>
+
             <li class="secondary">
                 <a href="<?php echo URL; ?>" title="List of notebooks">
                     <img src="<?php echo URL; ?>tpl/img/folders-stack.png" alt="Notebooks">
@@ -34,6 +38,8 @@
             </li>
         </ul>
     </div>
+<?php if(isset($notebook['tree'])) { ?>
+
     <h1><a href="?nb=<?php echo $notebookName; ?>"><?php echo urldecode($notebookName); ?></a></h1>
 <?php
 
@@ -77,8 +83,8 @@ function Tree2Html($tree, $nbName, $selectedPath, $parents = array()) {
 echo Tree2Html($notebook['tree'], $notebookName, isset($_GET['item'])?$_GET['item']:'');
 
 ?>
-</nav>
 <?php } ?>
+</nav>
 <section id="content">
     <div class="toolbar" id="item-toolbar" data-role="editor-toolbar" data-target="#editor">
         <ul class="actions btn-info">
