@@ -17,8 +17,21 @@
 <?php if(isset($notebook['tree'])) { ?><nav id="panel">
     <div class="toolbar">
         <ul class="actions">
-            <li><a href="<?php echo URL; ?>?nb=<?php echo $notebookName; ?>&amp;item=<?php echo $itemPath; ?>&amp;action=addnote" title="Add a new note inside the current directory"><img src="<?php echo URL; ?>tpl/img/document--plus.png" alt="Add note"></a></li>
-            <li><a href="<?php echo URL; ?>?nb=<?php echo $notebookName; ?>&amp;item=<?php echo $itemPath; ?>&amp;action=adddir" title="Add a new directory inside the current directory"><img src="<?php echo URL; ?>tpl/img/folder--plus.png" alt="Add directory"></a></li>
+            <li>
+                <a href="<?php echo URL; ?>?nb=<?php echo $notebookName; ?>&amp;item=<?php echo $itemPath; ?>&amp;action=addnote" title="Add a new note inside the current directory">
+                    <img src="<?php echo URL; ?>tpl/img/document--plus.png" alt="Add note">
+                </a>
+            </li>
+            <li>
+                <a href="<?php echo URL; ?>?nb=<?php echo $notebookName; ?>&amp;item=<?php echo $itemPath; ?>&amp;action=adddir" title="Add a new directory inside the current directory">
+                    <img src="<?php echo URL; ?>tpl/img/folder--plus.png" alt="Add directory">
+                </a>
+            </li>
+            <li class="secondary">
+                <a href="<?php echo URL; ?>" title="List of notebooks">
+                    <img src="<?php echo URL; ?>tpl/img/folders-stack.png" alt="Notebooks">
+                </a>
+            </li>
         </ul>
     </div>
     <h1><a href="?nb=<?php echo $notebookName; ?>"><?php echo urldecode($notebookName); ?></a></h1>
@@ -68,9 +81,9 @@ echo Tree2Html($notebook['tree'], $notebookName, isset($_GET['item'])?$_GET['ite
 <?php } ?>
 <section id="content">
     <div class="toolbar" id="item-toolbar" data-role="editor-toolbar" data-target="#editor">
+        <ul class="actions btn-info">
 <?php if($isNote || $isDir) { ?>
 
-        <ul class="actions btn-info">
             <li>
                 <a href="?nb=<?php echo $notebookName; ?>&amp;item=<?php echo $itemPath; ?>&amp;action=edit" title="Edit (rename) this <?php echo $isNote?'note':'directory'; ?>">
                     <img src="<?php echo URL; ?>tpl/img/<?php echo $isNote?'document':'folder'; ?>--pencil.png" alt="Edit <?php echo $isNote?'note':'directory'; ?>">
@@ -157,7 +170,10 @@ echo Tree2Html($notebook['tree'], $notebookName, isset($_GET['item'])?$_GET['ite
                     <img src="<?php echo URL; ?>tpl/img/edit-code.png" alt="Source">
                 </a>
             </li>
-<?php } // $isNote ?>
+<?php
+    } // $isNote
+} // $isNote || $isDir
+?>
 
         </ul>
 <?php if($isNote) { ?>
@@ -225,6 +241,9 @@ echo Tree2Html($notebook['tree'], $notebookName, isset($_GET['item'])?$_GET['ite
             </li>
         </ul>
 <?php } // $isNote ?>
+
     </div>
+<?php if($isNote || $isDir) { ?>
+
     <header class="path"><?php echo $_GET['item']; ?></header>
 <?php } // $isNote || $isDir ?>
