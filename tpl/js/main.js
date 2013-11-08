@@ -114,9 +114,10 @@ function htmlDecode(value) {
 
 function editorNeverEmpty() {
     var content = $('#editor').html().trim();
-    if(content == '' || content == '<br>' || '<p><br></p>') {
-        //majke sure it is completely empty
-        $('#editor').empty().focus();
+    if(content == '' || content == '<br>') {
+        //make sure it is completely empty
+        $('#editor').empty();
+
         //now make the paragraph on the cursor position
         document.execCommand('formatBlock', false, 'p');
     }
