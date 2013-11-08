@@ -1,4 +1,5 @@
 var unsavedContent  = false;
+var currentlySaving = false;
 
 $(function(){
     var editor = $('#editor');
@@ -17,6 +18,12 @@ $(function(){
         setUnsavedStatus(true);
     });
 
+    //auto save every 30 seconds
+    setInterval(function(){
+        if(unsavedContent && !currentlySaving)
+            saveNote();
+    }, 30000);
+
     $('#save-button').click(function(e){
         if(unsavedContent)
             saveNote();
@@ -33,6 +40,7 @@ $(function(){
     });
 
     function saveNote() {
+        currentlySaving = true;
         var button = $('#save-button');
         var image = $('#save-button img');
         button.attr('title', 'Saving...');
@@ -56,6 +64,7 @@ $(function(){
                     image.changeImageFile('disk--exclamation.png');
                     button.attr('title', 'Error: couldn\'t save this note.');
                 }
+                currentlySaving = false;
             },
             dataType: 'json'
         });
