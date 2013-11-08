@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <title>YosNote - Notebook Manager</title>
     <link rel="stylesheet" href="<?php echo URL; ?>tpl/style.css">
-<?php if($isNote) { ?>
+<?php if($isNote && $isEditMode) { ?>
     <script src="<?php echo URL; ?>tpl/js/ext/jquery-2.0.3.min.js"></script>
     <script src="<?php echo URL; ?>tpl/js/ext/jquery.hotkeys.js"></script>
     <script src="<?php echo URL; ?>tpl/js/ext/bootstrap.min.js"></script>
@@ -100,7 +100,7 @@ echo Tree2Html($notebook['tree'], $notebookName, isset($_GET['item'])?$_GET['ite
                     <img src="<?php echo URL; ?>tpl/img/<?php echo $isNote?'document':'folder'; ?>--minus.png" alt="Delete <?php echo $isNote?'note':'directory'; ?>">
                 </a>
             </li>
-<?php if($isNote) { ?>
+<?php if($isNote && $isEditMode) { ?>
             <li class="secondary">
                 <a href="#" id="save-button" class="disabled" title="Save this note">
                     <img src="<?php echo URL; ?>tpl/img/disk-black.png" alt="Save note">
@@ -182,7 +182,7 @@ echo Tree2Html($notebook['tree'], $notebookName, isset($_GET['item'])?$_GET['ite
 ?>
 
         </ul>
-<?php if($isNote) { ?>
+<?php if($isNote && $isEditMode) { ?>
         <div id="insertLink">
             <input placeholder="http://" type="text" data-edit="createLink"/>
             <button type="button">Add</button>

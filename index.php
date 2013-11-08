@@ -25,6 +25,7 @@ require_once( ROOT.'/lib/ext/HTML_To_Markdown.php');
 $yosnote = new YosNote();
 $errors = array();
 $isNote = false;
+$isEditMode = false;
 $isDir = false;
 
 //notebook pages
@@ -151,6 +152,10 @@ if( !empty($_GET['nb']) ) {
             if($isNote) {
                 //we are dealing with a note: load it
                 $note = $yosnote->loadNote($_GET['item']);
+
+                // show editor toolbar
+                $isEditMode = true;
+
                 include( ROOT.'/tpl/note.tpl.php' );
             } elseif($isDir) {
                 //for a directory, just show the notebook's "hompage"
