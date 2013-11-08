@@ -1,28 +1,21 @@
+var unsavedContent  = false;
+
 $(function(){
     var editor = $('#editor');
-    var unsavedContent  = false;
 
     //doesn't seem to work in firefox, which still use <br>
     document.execCommand('defaultParagraphSeparator', false, 'p');
 
     //init editor
-    editor.wysiwyg().bind('input', function(e){
-        var button = $('#save-button');
-        var image = $('#save-button img');
-
-        unsavedContent = true;
-
-        button.removeClass('disabled');
-        button.attr('title', 'Save changes');
-        image.changeImageFile('disk.png');
-
-        //when user delete everything inside the editor, make sure there is still a <p>
-        editorNeverEmpty();
-
-    }).focus();
+    editor.wysiwyg().focus();
 
     //if note is empty on load, add a <p>
     editorNeverEmpty();
+
+    //set status to unsaved on input
+    editor.bind('input', function(e){
+        setUnsavedStatus(true);
+    });
 
     $('#save-button').click(function(e){
         if(unsavedContent)
@@ -56,12 +49,7 @@ $(function(){
             success: function(response){
                 //the note was saved
                 if(response != false) {
-                    image.changeImageFile('disk-black.png');
-                    
-                    button.addClass('disabled');
-                    button.attr('title', 'Nothing to save');
-
-                    unsavedContent = false;
+                    setUnsavedStatus(false);
 
                 //error, the note wasn't saved
                 } else {
@@ -112,14 +100,42 @@ function htmlDecode(value) {
     }
 }
 
+function setUnsavedStatus(status) {
+    var button = $('#save-button');
+    var image = $('#save-button img');
+
+    unsavedContent = status;
+
+    if(unsavedContent) {
+
+        unsavedContent = true;
+
+        button.removeClass('disabled');
+        button.attr('title', 'Save changes');
+        image.changeImageFile('disk.png');
+
+        //when user delete everything inside the editor, make sure there is still a <p>
+        editorNeverEmpty();
+    } else {
+        image.changeImageFile('disk-black.png');
+        
+        button.addClass('disabled');
+        button.attr('title', 'Nothing to save');
+    }
+}
+
 function editorNeverEmpty() {
     var content = $('#editor').html().trim();
+    var previousState = unsavedContent;
     if(content == '' || content == '<br>') {
         //make sure it is completely empty
         $('#editor').empty();
 
         //now make the paragraph on the cursor position
         document.execCommand('formatBlock', false, 'p');
+        if(previousState == false) {
+            setUnsavedStatus(false);
+        }
     }
 }
 
