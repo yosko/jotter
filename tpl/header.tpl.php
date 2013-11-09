@@ -36,6 +36,14 @@
                     <img src="<?php echo URL; ?>tpl/img/folders-stack.png" alt="Notebooks">
                 </a>
             </li>
+<?php if($user['isLoggedIn']) { ?>
+
+            <li class="secondary">
+                <a href="<?php echo URL; ?>?action=logout" title="Log out">
+                    <img src="<?php echo URL; ?>tpl/img/door-open-out.png" alt="Logout">
+                </a>
+            </li>
+<?php } ?>
         </ul>
     </div>
 <?php if(isset($notebook['tree'])) { ?>
