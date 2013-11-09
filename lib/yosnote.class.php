@@ -177,6 +177,9 @@ class YosNote {
         //convert HTML to Markdown
         $markdown = new HTML_To_Markdown($text);
 
+        //turn every remaining tag to html entities
+        $markdown = htmlspecialchars($markdown, ENT_QUOTES);
+
         return $this->saveFile($absPath, $markdown);
     }
 
