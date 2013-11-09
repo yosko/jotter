@@ -10,9 +10,6 @@
 define( 'VERSION', '0.1' );
 define( 'ROOT', __DIR__ );
 
-require_once( ROOT.'/lib/yosnote.class.php');
-require_once( ROOT.'/lib/utils.class.php');
-
 // external libraries
 // https://github.com/yosko/easydump
 require_once( ROOT.'/lib/ext/easydump.php');
@@ -21,6 +18,15 @@ require_once( ROOT.'/lib/ext/Markdown.php');
 require_once( ROOT.'/lib/ext/MarkdownExtra.php');
 // https://github.com/nickcernis/html-to-markdown
 require_once( ROOT.'/lib/ext/HTML_To_Markdown.php');
+// https://github.com/GeorgeArgyros/Secure-random-bytes-in-PHP/
+require_once( ROOT.'/lib/ext/srand.php');
+// https://github.com/yosko/yoslogin/
+require_once( ROOT.'/lib/ext/yoslogin.class.php');
+
+//yosnote libraries
+require_once( ROOT.'/lib/utils.class.php');
+require_once( ROOT.'/lib/yosnote.class.php');
+require_once( ROOT.'/lib/yosnotelogin.class.php');
 
 $yosnote = new YosNote();
 $errors = array();
@@ -28,8 +34,31 @@ $isNote = false;
 $isEditMode = false;
 $isDir = false;
 
+//check if user is logged in
+$logger = new YosNoteLogin( 'yosnote' );
+
+//user is trying to log in
+if( !empty($_POST['submitLoginForm']) ) {
+    $user = $logger->logIn(
+        htmlspecialchars(trim($_POST['login'])),
+        htmlspecialchars(trim($_POST['password'])),
+        isset($_POST['remember'])
+    );
+
+//logging out
+} elseif( !empty($_GET['action']) && $_GET['action'] == 'logout' ) {
+    $logger->logOut();
+} else {
+    $user = $logger->authUser();
+}
+
+
+//login form
+if(!$user['isLoggedIn']) {
+    include( ROOT.'/tpl/loginForm.tpl.php' );
+
 //notebook pages
-if( !empty($_GET['nb']) ) {
+} elseif( !empty($_GET['nb']) ) {
     $itemPath = '';
     $notebookName = urlencode($_GET['nb']);
 
@@ -193,14 +222,6 @@ if( !empty($_GET['nb']) ) {
     }
 
     include( ROOT.'/tpl/notebookForm.tpl.php' );
-
-//logging out
-} elseif( !empty($_GET['action']) && $_GET['action'] == 'logout' ) {
-    d('log out');
-
-//logging in
-} elseif( !empty($_POST['submitLoginForm']) ) {
-    d('log in');
 
 //homepage: notebooks list
 } else {

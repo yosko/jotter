@@ -98,3 +98,5 @@ html, body { margin: 0; height: 100%; }
 }
 #editor p { text-indent: 1em; }
 pre { white-space: pre-wrap; word-wrap: break-word; }
+
+label { display: inline-block; width: 8em; }

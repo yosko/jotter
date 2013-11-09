@@ -73,6 +73,90 @@ class Utils {
     public static function unsetArrayItem($array, $path) {
         return self::handleArrayItemFromPath($array, $path, null, false, true);
     }
+
+    /**
+     * Load a text file
+     * @param  string $file path to file
+     * @return string       file content
+     */
+    public function loadFile($file) {
+        if (file_exists( $file )) {
+            $data = file_get_contents($file);
+            return $data;
+        } else {
+            // touch($file);
+            return false;
+        }
+    }
+
+    /**
+     * Save a text file
+     * @param  string $file    path to file
+     * @param  string $content file content
+     * @return boolean         true on success
+     */
+    public function saveFile($file, $content) {
+        if (!file_exists( $file )) {
+            touch($file);
+        }
+        $fp = fopen( $file, 'w' );
+        if($fp) {
+            fwrite($fp, $content);
+            fclose($fp);
+        }
+        return $fp !== false;
+    }
+
+    /**
+     * Load a (compressed) JSON file
+     * @param  string  $file     Path to file
+     * @param  boolean $compress If data should be gzip uncompressed before decoding it
+     * @return misc              File content decoded
+     */
+    public function loadJson($file, $uncompress = false) {
+        if($data = self::loadFile($file)) {
+            if($uncompress)
+                $data = gzinflate($data);
+            $data = json_decode($data, true);
+        }
+        return $data;
+    }
+
+    /**
+     * Save data into a compressed JSON file
+     * @param  string  $file     Path to file
+     * @param  misc    $data     Content to save into file
+     * @param  boolean $compress Compress (or not) file content in gzip
+     * @return boolean           true on success
+     */
+    public function saveJson($file, $data, $compress = false) {
+        if(version_compare(PHP_VERSION, '5.4.0') >= 0)
+            $json = json_encode($data, JSON_PRETTY_PRINT);
+        else
+            $json = json_encode($data);
+
+        if($compress)
+            $json = gzdeflate($json);
+
+        return self::saveFile($file, $json);
+    }
+
+    /**
+     * Recursive directory remove
+     * taken from http://www.php.net/manual/en/function.rmdir.php#110489
+     * @param  string $dir path to directory
+     * @return boolean     true on success
+     */
+    public static function rmdirRecursive($dir) {
+        $files = array_diff(scandir($dir), array('.','..'));
+        foreach ($files as $file) {
+            if(is_dir("$dir/$file"))
+                self::rmdirRecursive("$dir/$file");
+            else
+                unlink("$dir/$file");
+        }
+        return rmdir($dir);
+    }
 }
 
 ?>

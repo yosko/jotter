@@ -20,7 +20,7 @@ class YosNote {
      */
     public function loadNotebooks($userId = -1) {
         
-        $this->notebooks = $this->loadJson($this->notebooksFile);
+        $this->notebooks = Utils::loadJson($this->notebooksFile);
         if(!is_array($this->notebooks))
             $this->notebooks = array();
 
@@ -65,8 +65,8 @@ class YosNote {
         $this->notebook['updated'] = time();
 
         //save the JSON files (notebooks list, notebook)
-        $this->saveJson($this->notebooksFile, $this->notebooks);
-        $this->saveJson($this->notebookFile, $this->notebook);
+        Utils::saveJson($this->notebooksFile, $this->notebooks);
+        Utils::saveJson($this->notebookFile, $this->notebook);
 
         return $this->notebooks;
     }
@@ -83,7 +83,7 @@ class YosNote {
         $this->notebookName = $name;
         $this->notebookPath = ROOT.'/notebooks/'.$this->notebookName;
         $this->notebookFile = $this->notebookPath.'/notebook.json';
-        $this->notebook = $this->loadJson($this->notebookFile);
+        $this->notebook = Utils::loadJson($this->notebookFile);
 
         return $this->notebook;
     }
@@ -140,7 +140,7 @@ class YosNote {
         //save notebook.json file
         if($success) {
             $this->notebook['updated'] = time();
-            $success = $this->saveJson($this->notebookFile, $this->notebook);
+            $success = Utils::saveJson($this->notebookFile, $this->notebook);
         }
 
         return $success;
@@ -180,7 +180,7 @@ class YosNote {
         //turn every remaining tag to html entities
         $markdown = htmlspecialchars($markdown, ENT_QUOTES);
 
-        return $this->saveFile($absPath, $markdown);
+        return Utils::saveFile($absPath, $markdown);
     }
 
     /**
@@ -189,7 +189,7 @@ class YosNote {
      * @return string       note content
      */
     public function loadNote($path) {
-        $content = $this->loadFile(ROOT.'/notebooks/'.$this->notebookName.'/'.$path);
+        $content = Utils::loadFile(ROOT.'/notebooks/'.$this->notebookName.'/'.$path);
 
         //convert Markdown to HTML
         return \Michelf\MarkdownExtra::defaultTransform($content);
@@ -205,7 +205,7 @@ class YosNote {
         $absPath = ROOT.'/notebooks/'.$this->notebookName.'/'.$path;
 
         return unlink($absPath)
-            && $this->saveJson($this->notebookFile, $this->notebook);
+            && Utils::saveJson($this->notebookFile, $this->notebook);
     }
 
     /**
@@ -217,92 +217,8 @@ class YosNote {
         $this->notebook['tree'] = Utils::unsetArrayItem($this->notebook['tree'], $path);
         $absPath = ROOT.'/notebooks/'.$this->notebookName.'/'.$path;
 
-        return $this->rmdirRecursive($absPath)
-            && $this->saveJson($this->notebookFile, $this->notebook);
-    }
-
-    /**
-     * Load a text file
-     * @param  string $file path to file
-     * @return string       file content
-     */
-    protected function loadFile($file) {
-        if (file_exists( $file )) {
-            $data = file_get_contents($file);
-            return $data;
-        } else {
-            // touch($file);
-            return false;
-        }
-    }
-
-    /**
-     * Save a text file
-     * @param  string $file    path to file
-     * @param  string $content file content
-     * @return boolean         true on success
-     */
-    protected function saveFile($file, $content) {
-        if (!file_exists( $file )) {
-            touch($file);
-        }
-        $fp = fopen( $file, 'w' );
-        if($fp) {
-            fwrite($fp, $content);
-            fclose($fp);
-        }
-        return $fp !== false;
-    }
-
-    /**
-     * Load a (compressed) JSON file
-     * @param  string  $file     Path to file
-     * @param  boolean $compress If data should be gzip uncompressed before decoding it
-     * @return misc              File content decoded
-     */
-    protected function loadJson($file, $uncompress = false) {
-        if($data = $this->loadFile($file)) {
-            if($uncompress)
-                $data = gzinflate($data);
-            $data = json_decode($data, true);
-        }
-        return $data;
-    }
-
-    /**
-     * Save data into a compressed JSON file
-     * @param  string  $file     Path to file
-     * @param  misc    $data     Content to save into file
-     * @param  boolean $compress Compress (or not) file content in gzip
-     * @return boolean           true on success
-     */
-    protected function saveJson($file, $data, $compress = false) {
-        if(version_compare(PHP_VERSION, '5.4.0') >= 0)
-            $json = json_encode($data, JSON_PRETTY_PRINT);
-        else
-            $json = json_encode($data);
-
-        if($compress)
-            $json = gzdeflate($json);
-
-        return $this->saveFile($file, $json);
-    }
-
-    /**
-     * Recursive directory remove
-     * taken from http://www.php.net/manual/en/function.rmdir.php#110489
-     * @param  string $dir path to directory
-     * @return boolean     true on success
-     */
-    public static function rmdirRecursive($dir) {
-        $files = array_diff(scandir($dir), array('.','..'));
-        foreach ($files as $file) {
-            if(is_dir("$dir/$file"))
-                rmdirRecursive("$dir/$file");
-            else
-                unlink("$dir/$file");
-        }
-        return rmdir($dir);
+        return Utils::rmdirRecursive($absPath)
+            && Utils::saveJson($this->notebookFile, $this->notebook);
     }
 }
 
