@@ -97,6 +97,9 @@ class Utils {
      */
     public function saveFile($file, $content) {
         if (!file_exists( $file )) {
+            //in case the directory doesn't yet exist
+            $success = mkdir(dirname($file), 0700, true);
+            //create file
             touch($file);
         }
         $fp = fopen( $file, 'w' );

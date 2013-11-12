@@ -1,7 +1,22 @@
 <?php
 include PATH_TEMPLATE.'header.tpl.php';
 ?>
-    <h2>Login</h2>
+    <h2><?php echo $appInstalled?'Login':'Install'; ?></h2>
+<?php if(!$appInstalled) { ?>
+    <p>You are about to install Jotter and create your first user account.</p>
+    <p>Checking requirements:</p>
+    <ul>
+        <li class="<?php echo $phpMinVersion?'success':'error'; ?>">
+            PHP <?php echo PHP_VERSION; ?> installed (required at least PHP <?php echo $phpMinVersion; ?>):
+            <?php echo $phpMinVersion?'OK':'KO'; ?>
+        </li>
+        <li class="<?php echo $isWritable?'success':'error'; ?>">
+            Write access to create <code>notebooks/</code> directory:
+            <?php echo $isWritable?'OK':'KO'; ?>
+        </li>
+    </ul>
+    <p>Enter the desired login and password. You will be immediatly logged in:</p>
+<?php } // if !$appInstalled ?>
     <form id="loginForm" method="post" action="">
         <p>
             <label for="login">Login</label>

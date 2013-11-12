@@ -100,3 +100,6 @@ html, body { margin: 0; height: 100%; }
 pre { white-space: pre-wrap; word-wrap: break-word; }
 
 label { display: inline-block; width: 8em; }
+
+.success { color: blue; }
+.error { color: red; }

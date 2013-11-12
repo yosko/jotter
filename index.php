@@ -33,6 +33,7 @@ $errors = array();
 $isNote = false;
 $isEditMode = false;
 $isDir = false;
+$appInstalled = file_exists(ROOT.'/notebooks/users.json');
 
 //check if user is logged in
 $logger = new JotterLogin( 'jotter' );
@@ -55,6 +56,14 @@ if( !empty($_POST['submitLoginForm']) ) {
 
 //login form
 if(!$user['isLoggedIn']) {
+    //display form as an installation process
+    if(!$appInstalled) {
+        $notebooksPath = ROOT.'/notebooks/';
+        $phpMinVersion = '5.3';
+        $phpIsMinVersion = (version_compare(PHP_VERSION, $phpMinVersion) >= 0);
+        $isWritable = (file_exists($notebooksPath) && is_writable($notebooksPath)) || is_writable(dirname($notebooksPath));
+    }
+
     include( ROOT.'/tpl/loginForm.tpl.php' );
 
 //notebook pages
