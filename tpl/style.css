@@ -1,4 +1,5 @@
 html, body { margin: 0; height: 100%; }
+img { border: none; }
 
 /**** PANEL / FLEX BOXES ****/
 
@@ -62,7 +63,6 @@ html, body { margin: 0; height: 100%; }
 .actions a.disabled { background-color: #d3d3d3; }
 .actions li.active a { background-color: #c8c8c8; }
 .actions a:hover { background-color: #d3d3d3; }
-.actions img { vertical-align: middle; }
 
 /**** TREE PANEL ****/
 
