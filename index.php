@@ -40,6 +40,14 @@ $logger = new JotterLogin( 'jotter' );
 
 //user is trying to log in
 if( !empty($_POST['submitLoginForm']) ) {
+    //install app and create first user
+    if(!$appInstalled) {
+        $logger->createUser(
+            trim($_POST['login']),
+            trim($_POST['password'])
+        );
+    }
+
     $user = $logger->logIn(
         htmlspecialchars(trim($_POST['login'])),
         htmlspecialchars(trim($_POST['password'])),

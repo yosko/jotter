@@ -3,22 +3,23 @@
 class JotterLogin extends YosLogin {
     protected $users;
 
+    public function createUser($login, $password) {
+        $userFile = ROOT.'/notebooks/users.json';
+        $users = array(
+            array(
+                'login' => $login,
+                'password' => YosLoginTools::hashPassword($password),
+            )
+        );
+        Utils::saveJson($userFile, $users);
+    }
+
     protected function getUser($login) {
         $foundUser = false;
 
         if(!isset($users)) {
             $userFile = ROOT.'/notebooks/users.json';
             $users = Utils::loadJson($userFile);
-            if($users == false) {
-                $users = array(
-                    array(
-                        'id' => 1,
-                        'login' => 'default',
-                        'password' => YosLoginTools::hashPassword('default'),
-                    )
-                );
-                Utils::saveJson($userFile, $users);
-            }
         }
 
         foreach($users as $user) {
