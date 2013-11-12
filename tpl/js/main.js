@@ -45,12 +45,33 @@ $(function(){
         e.preventDefault();
     });
 
+    //display html source
     $('#source-button').click(function(e){
         if($('#html').length == 0) {
             $('#editor').after( '<pre id="html" style="">'+htmlEncode( $('#editor').html() )+'</pre>' );
         } else {
             $('#html').remove();
         }
+        e.preventDefault();
+    });
+
+    //show/hide subtoolbars
+    $('#insertLink').hide();
+    $('#linkDropdown').click(function(e){
+        $('#insertLink').toggle();
+        e.preventDefault();
+    });
+    $('#insertLink').focusout(function(e){
+        $('#insertLink').hide();
+        e.preventDefault();
+    });
+    $('#headingButtons').hide();
+    $('#headingDropDown').click(function(e){
+        $('#headingButtons').toggle();
+        e.preventDefault();
+    });
+    $('#headingButtons a').click(function(e){
+        $('#headingButtons').hide();
         e.preventDefault();
     });
 

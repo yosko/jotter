@@ -115,15 +115,15 @@ echo Tree2Html($notebook['tree'], $notebookName, isset($_GET['item'])?$_GET['ite
                 </a>
             </li>
             <li class="secondary">
-                <a href="#" class="ajax-formatter" data-toggle="dropdown" title="Title">
-                    <img src="<?php echo URL; ?>tpl/img/edit-heading.png" alt="Link"> &#x25BC;
+                <a href="#" id="headingDropDown" class="ajax-formatter" data-toggle="dropdown" title="Title">
+                    <img src="<?php echo URL; ?>tpl/img/edit-heading.png" alt="Link">
                 </a>
             </li>
-            <li class="secondary">
+            <!-- <li class="secondary">
                 <a href="#" class="ajax-formatter" data-toggle="dropdown" title="Alignement">
                     <img src="<?php echo URL; ?>tpl/img/edit-alignment.png" alt="Align"> &#x25BC;
                 </a>
-            </li>
+            </li> -->
             <li class="secondary">
                 <a href="#" class="ajax-formatter" data-edit="bold" title="Bold (Ctrl+B)">
                     <img src="<?php echo URL; ?>tpl/img/edit-bold.png" alt="Bold">
@@ -134,7 +134,7 @@ echo Tree2Html($notebook['tree'], $notebookName, isset($_GET['item'])?$_GET['ite
                     <img src="<?php echo URL; ?>tpl/img/edit-italic.png" alt="Italic">
                 </a>
             </li>
-            <li class="secondary">
+            <!-- <li class="secondary">
                 <a href="#" class="ajax-formatter" data-edit="underline" title="Underline (Ctrl+U)">
                     <img src="<?php echo URL; ?>tpl/img/edit-underline.png" alt="Underline">
                 </a>
@@ -143,7 +143,7 @@ echo Tree2Html($notebook['tree'], $notebookName, isset($_GET['item'])?$_GET['ite
                 <a href="#" class="ajax-formatter" data-edit="strikethrough" title="Strike">
                     <img src="<?php echo URL; ?>tpl/img/edit-strike.png" alt="Strike">
                 </a>
-            </li>
+            </li> -->
             <li class="secondary">
                 <a href="#" class="ajax-formatter" data-edit="insertunorderedlist" title="List">
                     <img src="<?php echo URL; ?>tpl/img/edit-list.png" alt="List">
@@ -154,7 +154,7 @@ echo Tree2Html($notebook['tree'], $notebookName, isset($_GET['item'])?$_GET['ite
                     <img src="<?php echo URL; ?>tpl/img/edit-list-order.png" alt="Ordered List">
                 </a>
             </li>
-            <li class="secondary">
+            <!-- <li class="secondary">
                 <a href="#" class="ajax-formatter" data-edit="indent" title="Indent text (Tab)">
                     <img src="<?php echo URL; ?>tpl/img/edit-indent.png" alt="Indent">
                 </a>
@@ -163,9 +163,9 @@ echo Tree2Html($notebook['tree'], $notebookName, isset($_GET['item'])?$_GET['ite
                 <a href="#" class="ajax-formatter" data-edit="outdent" title="Outdent text (Shift+Tab)">
                     <img src="<?php echo URL; ?>tpl/img/edit-outdent.png" alt="Outdent">
                 </a>
-            </li>
+            </li> -->
             <li class="secondary">
-                <a href="#" class="ajax-formatter" data-toggle="dropdown" title="Link">
+                <a href="#" id="linkDropdown" class="ajax-formatter" data-toggle="dropdown" title="Link">
                     <img src="<?php echo URL; ?>tpl/img/chain--plus.png" alt="Link">
                 </a>
             </li>
@@ -200,7 +200,7 @@ echo Tree2Html($notebook['tree'], $notebookName, isset($_GET['item'])?$_GET['ite
             <input placeholder="http://" type="text" data-edit="createLink"/>
             <button type="button">Add</button>
         </div>
-        <ul class="actions">
+        <ul class="actions" id="headingButtons">
             <li class="secondary">
                 <a href="#" class="ajax-formatter" data-edit="formatBlock h1" title="Title level 1">
                     <img src="<?php echo URL; ?>tpl/img/edit-heading-1.png" alt="Level 1">
@@ -237,7 +237,7 @@ echo Tree2Html($notebook['tree'], $notebookName, isset($_GET['item'])?$_GET['ite
                 </a>
             </li>
         </ul>
-        <ul class="actions">
+        <!-- <ul class="actions">
             <li class="secondary">
                 <a href="#" class="ajax-formatter" data-edit="justifyleft" title="Align left (Ctrl+L)">
                     <img src="<?php echo URL; ?>tpl/img/edit-alignment.png" alt="Align left">
@@ -258,7 +258,7 @@ echo Tree2Html($notebook['tree'], $notebookName, isset($_GET['item'])?$_GET['ite
                     <img src="<?php echo URL; ?>tpl/img/edit-alignment-justify.png" alt="Justify">
                 </a>
             </li>
-        </ul>
+        </ul> -->
 <?php } // $isNote ?>
 
     </div>
