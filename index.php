@@ -1,11 +1,11 @@
 <?php
 /**
- * YosNote - open-source organized note-taking web app
+ * Jotter - open-source organized note-taking web app
  *
  * @license     LGPL v3 (http://www.gnu.org/licenses/lgpl.html)
  * @author      Yosko <webmaster@yosko.net>
  * @version     v0.1
- * @link        https://github.com/yosko/yosnote
+ * @link        https://github.com/yosko/jotter
  */
 define( 'VERSION', '0.1' );
 define( 'ROOT', __DIR__ );
@@ -23,19 +23,19 @@ require_once( ROOT.'/lib/ext/srand.php');
 // https://github.com/yosko/yoslogin/
 require_once( ROOT.'/lib/ext/yoslogin.class.php');
 
-//yosnote libraries
+//Jotter libraries
 require_once( ROOT.'/lib/utils.class.php');
-require_once( ROOT.'/lib/yosnote.class.php');
-require_once( ROOT.'/lib/yosnotelogin.class.php');
+require_once( ROOT.'/lib/jotter.class.php');
+require_once( ROOT.'/lib/jotterlogin.class.php');
 
-$yosnote = new YosNote();
+$jotter = new Jotter();
 $errors = array();
 $isNote = false;
 $isEditMode = false;
 $isDir = false;
 
 //check if user is logged in
-$logger = new YosNoteLogin( 'yosnote' );
+$logger = new JotterLogin( 'jotter' );
 
 //user is trying to log in
 if( !empty($_POST['submitLoginForm']) ) {
@@ -62,7 +62,7 @@ if(!$user['isLoggedIn']) {
     $itemPath = '';
     $notebookName = urlencode($_GET['nb']);
 
-    $notebook = $yosnote->loadNotebook($notebookName);
+    $notebook = $jotter->loadNotebook($notebookName);
 
     // rename current notebook
     if( !empty($_GET['action']) && $_GET['action'] == 'edit' && empty($_GET['item']) ) {
@@ -95,10 +95,10 @@ if(!$user['isLoggedIn']) {
             if(!in_array(true, $errors)) {
                 if($_GET['action'] == 'addnote') {
                     $path .= '.md';
-                    $yosnote->setNote($path);
+                    $jotter->setNote($path);
                 }
                 else {
-                    $yosnote->setDirectory($path);
+                    $jotter->setDirectory($path);
                 }
 
                 header('Location: '.URL.'?nb='.$notebookName.'&item='.$path);
@@ -135,10 +135,10 @@ if(!$user['isLoggedIn']) {
                     if($isNote) {
                         $path .= '.md';
                         $item['name'] .= '.md';
-                        $yosnote->setNote($itemPath, $item['name']);
+                        $jotter->setNote($itemPath, $item['name']);
                     }
                     elseif($isDir) {
-                        $yosnote->setDirectory($itemPath, $item['name']);
+                        $jotter->setDirectory($itemPath, $item['name']);
                     }
 
                     header('Location: '.URL.'?nb='.$notebookName.'&item='.$path);
@@ -152,9 +152,9 @@ if(!$user['isLoggedIn']) {
             //confirmation was sent
             if(isset($_POST['delete'])) {
                 if($isNote) {
-                    $yosnote->unsetNote($itemPath);
+                    $jotter->unsetNote($itemPath);
                 } elseif($isDir) {
-                    $yosnote->unsetDirectory($itemPath);
+                    $jotter->unsetDirectory($itemPath);
                 }
 
                 header('Location: '.URL.'?nb='.$notebookName.'&item='.(dirname($itemPath)!='.'?dirname($itemPath):''));
@@ -169,7 +169,7 @@ if(!$user['isLoggedIn']) {
 
             if($isNote && isset($_POST['text'])) {
                 //save the note
-                $success = $yosnote->setNoteText($itemPath, $_POST['text']);
+                $success = $jotter->setNoteText($itemPath, $_POST['text']);
             }
 
             header('Content-type: application/json');
@@ -180,7 +180,7 @@ if(!$user['isLoggedIn']) {
         } else {
             if($isNote) {
                 //we are dealing with a note: load it
-                $note = $yosnote->loadNote($_GET['item']);
+                $note = $jotter->loadNote($_GET['item']);
 
                 // show editor toolbar
                 $isEditMode = true;
@@ -209,12 +209,12 @@ if(!$user['isLoggedIn']) {
         );
 
         //load the complete list of notebooks
-        $notebooks = $yosnote->loadNotebooks();
+        $notebooks = $jotter->loadNotebooks();
 
         $errors['empty'] = empty($notebook['name']);
         $errors['alreadyExists'] = isset($notebooks[$notebook['name']]);
         if(!in_array(true, $errors)) {
-            $notebooks = $yosnote->setNotebook($notebook['name'], $notebook['user']);
+            $notebooks = $jotter->setNotebook($notebook['name'], $notebook['user']);
 
             header('Location: '.URL.'?nb='.$notebook['name']);
             exit;
@@ -225,7 +225,7 @@ if(!$user['isLoggedIn']) {
 
 //homepage: notebooks list
 } else {
-    $notebooks = $yosnote->loadNotebooks();
+    $notebooks = $jotter->loadNotebooks();
     include( ROOT.'/tpl/notebooks.tpl.php' );
 }
 

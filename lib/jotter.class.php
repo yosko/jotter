@@ -1,6 +1,6 @@
 <?php
 
-class YosNote {
+class Jotter {
     protected
         $notebooks,
         $notebooksFile,

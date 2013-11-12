@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>YosNote - Notebook Manager</title>
+    <title>Jotter - Notebook Manager</title>
     <link rel="stylesheet" href="<?php echo URL; ?>tpl/style.css">
 <?php if($isNote && $isEditMode) { ?>
     <script src="<?php echo URL; ?>tpl/js/ext/jquery-2.0.3.min.js"></script>

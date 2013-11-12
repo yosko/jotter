@@ -1,6 +1,6 @@
 <?php
 
-class YosNoteLogin extends YosLogin {
+class JotterLogin extends YosLogin {
     protected $users;
 
     protected function getUser($login) {
