@@ -1,4 +1,4 @@
-html, body { margin: 0; height: 100%; }
+html, body { margin: 0; height: 100%; font-size: 12px; font-family: Verdana, Helvetica, Arial, sans-serif; }
 img { border: none; }
 
 /**** PANEL / FLEX BOXES ****/
@@ -70,7 +70,8 @@ img { border: none; }
 
 #panel #root, #panel #root ul { list-style-type: none; padding: 0; margin: 0; }
 #panel #root { padding: 0 0.5em; }
-#panel #root li { background-repeat: no-repeat; margin: 0.2em 0; padding: 0.1em 0.5em 0.1em 1.4em; background-position: 0.2em 0.2em; }
+#panel #root li { background-repeat: no-repeat; margin: 0.2em 0; padding: 0.1em 0.5em 0.1em 1.6em;  background-position: 0.2em 0.2em; }
+#panel #root .file, #panel #root .directory { height: 1.5em; line-height: 1.3em; }
 #panel #root .file { background-image: url('img/document.png'); }
 #panel #root .directory { background-image: url('img/folder.png'); }
 #panel #root .directory.open { background-image: url('img/folder-open.png'); }
