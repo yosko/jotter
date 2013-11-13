@@ -1,4 +1,4 @@
-<?php include PATH_TEMPLATE.'header.tpl.php'; ?>
+<?php include DIR_TPL.'header.tpl.php'; ?>
 
     <article id="editor"><?php echo $note; ?></article>
-<?php include PATH_TEMPLATE.'footer.tpl.php'; ?>
+<?php include DIR_TPL.'footer.tpl.php'; ?>

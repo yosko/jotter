@@ -1,5 +1,5 @@
 <?php
-include PATH_TEMPLATE.'header.tpl.php';
+include DIR_TPL.'header.tpl.php';
 $editItem = $_GET['action'] == 'edit';
 if(!isset($isDir))
     $isDir = $_GET['action'] == 'adddir';
@@ -16,4 +16,4 @@ if(!isset($isDir))
         <div class="error">An item already exists with this name in this directory. Please enter another one.</div>
     <?php } ?>
     </form>
-<?php include PATH_TEMPLATE.'footer.tpl.php'; ?>
+<?php include DIR_TPL.'footer.tpl.php'; ?>

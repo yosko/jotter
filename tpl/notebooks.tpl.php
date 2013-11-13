@@ -1,4 +1,4 @@
-<?php include PATH_TEMPLATE.'header.tpl.php'; ?>
+<?php include DIR_TPL.'header.tpl.php'; ?>
     <h2>Notebooks</h2>
     <ul>
 <?php
@@ -12,4 +12,4 @@ foreach($notebooks as $name => $notebook) {
 
         <li><a href="?action=add">Start a new notebook</a></li>
     </ul>
-<?php include PATH_TEMPLATE.'footer.tpl.php'; ?>
+<?php include DIR_TPL.'footer.tpl.php'; ?>

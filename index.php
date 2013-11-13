@@ -8,25 +8,35 @@
  * @link        https://github.com/yosko/jotter
  */
 define( 'VERSION', '0.1' );
-define( 'ROOT', __DIR__ );
+define( 'ROOT', __DIR__.'/' );
+define( 'DIR_DATA', ROOT.'data/' );
+define( 'DIR_TPL', ROOT.'tpl/' );
+define( 'URL',
+    (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off'?'https':'http')
+    .'://'
+    .$_SERVER['HTTP_HOST']
+    .rtrim(dirname($_SERVER['SCRIPT_NAME']),'/')
+    .'/'
+);
+define( 'URL_TPL', URL.'tpl/' );
 
 // external libraries
 // https://github.com/yosko/easydump
-require_once( ROOT.'/lib/ext/easydump.php');
+require_once( ROOT.'lib/ext/easydump.php');
 // https://github.com/michelf/php-markdown/
-require_once( ROOT.'/lib/ext/Markdown.php');
-require_once( ROOT.'/lib/ext/MarkdownExtra.php');
+require_once( ROOT.'lib/ext/Markdown.php');
+require_once( ROOT.'lib/ext/MarkdownExtra.php');
 // https://github.com/nickcernis/html-to-markdown
-require_once( ROOT.'/lib/ext/HTML_To_Markdown.php');
+require_once( ROOT.'lib/ext/HTML_To_Markdown.php');
 // https://github.com/GeorgeArgyros/Secure-random-bytes-in-PHP/
-require_once( ROOT.'/lib/ext/srand.php');
+require_once( ROOT.'lib/ext/srand.php');
 // https://github.com/yosko/yoslogin/
-require_once( ROOT.'/lib/ext/yoslogin.class.php');
+require_once( ROOT.'lib/ext/yoslogin.class.php');
 
 //Jotter libraries
-require_once( ROOT.'/lib/utils.class.php');
-require_once( ROOT.'/lib/jotter.class.php');
-require_once( ROOT.'/lib/login.class.php');
+require_once( ROOT.'lib/utils.class.php');
+require_once( ROOT.'lib/jotter.class.php');
+require_once( ROOT.'lib/login.class.php');
 
 $jotter = new Jotter();
 $errors = array();
@@ -34,7 +44,7 @@ $isNote = false;
 $isConfigMode = false;
 $isEditMode = false;
 $isDir = false;
-$appInstalled = file_exists(ROOT.'/notebooks/users.json');
+$appInstalled = file_exists(DIR_DATA.'users.json');
 
 //check if user is logged in
 $logger = new Login( 'jotter' );
@@ -67,13 +77,12 @@ if( !empty($_POST['submitLoginForm']) ) {
 if(!$user['isLoggedIn']) {
     //display form as an installation process
     if(!$appInstalled) {
-        $notebooksPath = ROOT.'/notebooks/';
         $phpMinVersion = '5.3';
         $phpIsMinVersion = (version_compare(PHP_VERSION, $phpMinVersion) >= 0);
-        $isWritable = (file_exists($notebooksPath) && is_writable($notebooksPath)) || is_writable(dirname($notebooksPath));
+        $isWritable = (file_exists(DIR_DATA) && is_writable(DIR_DATA)) || is_writable(dirname(DIR_DATA));
     }
 
-    include( ROOT.'/tpl/loginForm.tpl.php' );
+    include( DIR_TPL.'loginForm.tpl.php' );
 
 //notebook pages
 } elseif( !empty($_GET['nb']) ) {
@@ -91,7 +100,7 @@ if(!$user['isLoggedIn']) {
 
     // notebook wasn't loaded
     if($notebook == false) {
-        include( ROOT.'/tpl/error.tpl.php' );
+        include( DIR_TPL.'error.tpl.php' );
 
     // rename current notebook
     } elseif( !empty($_GET['action']) && $_GET['action'] == 'edit' && empty($_GET['item']) ) {
@@ -108,7 +117,7 @@ if(!$user['isLoggedIn']) {
             $path = $item['name'];
 
             if(!empty($_GET['item'])) {
-                if(!is_dir(ROOT.'/notebooks/'.$notebookName.'/'.$_GET['item'])) {
+                if(!is_dir(DIR_DATA.$notebookName.'/'.$_GET['item'])) {
                     if(dirname($_GET['item']) != '.') {
                         $path = dirname($_GET['item']).'/'.$path;
                     }
@@ -135,7 +144,7 @@ if(!$user['isLoggedIn']) {
             }
         }
 
-        include( ROOT.'/tpl/itemForm.tpl.php' );
+        include( DIR_TPL.'itemForm.tpl.php' );
 
     // notebook item
     } elseif( !empty($_GET['item']) && strpos($itemPath, '..') === false ) {
@@ -144,7 +153,7 @@ if(!$user['isLoggedIn']) {
         $itemData = Utils::getArrayItem($notebook['tree'], $itemPath);
         $isNote = $itemData === true;
         if(!$isNote) {
-            $dirPath = ROOT.'/notebooks/'.$notebookName.'/'.$itemPath;
+            $dirPath = DIR_DATA.$notebookName.'/'.$itemPath;
             $isDir = file_exists($dirPath) && is_dir($dirPath);
         }
 
@@ -174,7 +183,7 @@ if(!$user['isLoggedIn']) {
                     exit;
                 }
             }
-            include( ROOT.'/tpl/itemForm.tpl.php' );
+            include( DIR_TPL.'itemForm.tpl.php' );
 
         // delete current item
         } elseif( !empty($_GET['action']) && $_GET['action'] == 'delete' ) {
@@ -190,7 +199,7 @@ if(!$user['isLoggedIn']) {
                 exit;
             }
 
-            include( ROOT.'/tpl/itemDelete.tpl.php' );
+            include( DIR_TPL.'itemDelete.tpl.php' );
 
         // save current note (via json request)
         } elseif( !empty($_GET['action']) && $_GET['action'] == 'save' ) {
@@ -214,17 +223,17 @@ if(!$user['isLoggedIn']) {
                 // show editor toolbar
                 $isEditMode = true;
 
-                include( ROOT.'/tpl/note.tpl.php' );
+                include( DIR_TPL.'note.tpl.php' );
             } elseif($isDir) {
                 //for a directory, just show the notebook's "hompage"
-                include( ROOT.'/tpl/notebook.tpl.php' );
+                include( DIR_TPL.'notebook.tpl.php' );
             } else {
                 //TODO: show error
             }
         }
 
     } else {
-        include( ROOT.'/tpl/notebook.tpl.php' );
+        include( DIR_TPL.'notebook.tpl.php' );
     }
 
 //add a notebook
@@ -246,7 +255,7 @@ if(!$user['isLoggedIn']) {
         }
     }
 
-    include( ROOT.'/tpl/notebookForm.tpl.php' );
+    include( DIR_TPL.'notebookForm.tpl.php' );
 
 //configuration page
 } elseif( !empty($_GET['action']) && $_GET['action'] == 'config' ) {
@@ -295,13 +304,13 @@ if(!$user['isLoggedIn']) {
 
     }
 
-    include( ROOT.'/tpl/config.tpl.php' );
+    include( DIR_TPL.'config.tpl.php' );
 
 
 //homepage: notebooks list
 } else {
     $notebooks = $jotter->loadNotebooks();
-    include( ROOT.'/tpl/notebooks.tpl.php' );
+    include( DIR_TPL.'notebooks.tpl.php' );
 }
 
 ?>

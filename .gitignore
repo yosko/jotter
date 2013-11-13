@@ -1,9 +1,4 @@
-notebooks/*
-!notebooks/.htaccess
-tmp/cache/*
-tmp/logs/*
-tmp/sessions/*
-tpl/js/ext/external/*
-TODO.md
+data/*
+!data/.htaccess
 *.sublime-project
 *.sublime-workspace

@@ -1,5 +1,5 @@
 <?php
-include PATH_TEMPLATE.'header.tpl.php';
+include DIR_TPL.'header.tpl.php';
 
 if($option == 'myPassword') { ?>
     <h2>Change my password</h2>
@@ -46,5 +46,5 @@ if($option == 'myPassword') { ?>
 <?php
 }
 
-include PATH_TEMPLATE.'footer.tpl.php';
+include DIR_TPL.'footer.tpl.php';
 ?>

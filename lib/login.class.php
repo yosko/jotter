@@ -9,7 +9,7 @@ class Login extends YosLogin {
      */
     public function loadUsers() {
         if(!isset($this->users)) {
-            $userFile = ROOT.'/notebooks/users.json';
+            $userFile = ROOT.'/data/users.json';
             $this->users = Utils::loadJson($userFile);
         }
 
@@ -24,7 +24,7 @@ class Login extends YosLogin {
      * @return boolean           exec status
      */
     public function setUser($login, $password) {
-        $userFile = ROOT.'/notebooks/users.json';
+        $userFile = ROOT.'/data/users.json';
         $newUser = array(
             'login' => $login,
             'password' => YosLoginTools::hashPassword($password)

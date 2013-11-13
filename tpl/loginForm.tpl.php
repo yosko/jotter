@@ -1,5 +1,5 @@
 <?php
-include PATH_TEMPLATE.'header.tpl.php';
+include DIR_TPL.'header.tpl.php';
 ?>
     <h2><?php echo $appInstalled?'Login':'Install'; ?></h2>
 <?php if(!$appInstalled) { ?>
@@ -11,7 +11,7 @@ include PATH_TEMPLATE.'header.tpl.php';
             <?php echo $phpMinVersion?'OK':'KO'; ?>
         </li>
         <li class="<?php echo $isWritable?'success':'error'; ?>">
-            Write access to create <code>notebooks/</code> directory:
+            Write access to create <code>data/</code> directory:
             <?php echo $isWritable?'OK':'KO'; ?>
         </li>
     </ul>
@@ -41,4 +41,4 @@ include PATH_TEMPLATE.'header.tpl.php';
 
         <input type="submit" name="submitLoginForm" id="submitLoginForm" value="Se connecter" />
     </form>
-<?php include PATH_TEMPLATE.'footer.tpl.php'; ?>
+<?php include DIR_TPL.'footer.tpl.php'; ?>

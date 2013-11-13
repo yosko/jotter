@@ -10,7 +10,7 @@ class Jotter {
         $notebookName;
 
     public function __construct() {
-        $this->notebooksFile = ROOT.'/notebooks/notebooks.json';
+        $this->notebooksFile = ROOT.'/data/notebooks.json';
     }
 
     /**
@@ -37,7 +37,7 @@ class Jotter {
         if(strpos($name, '..') !== false) return false;
 
         $this->loadNotebooks();
-        $this->notebookPath = ROOT.'/notebooks/'.$name;
+        $this->notebookPath = ROOT.'/data/'.$name;
         $this->notebookFile = $this->notebookPath.'/notebook.json';
 
         //add a new notebook
@@ -81,7 +81,7 @@ class Jotter {
         if(strpos($name, '..') !== false) return false;
 
         $this->notebookName = $name;
-        $this->notebookPath = ROOT.'/notebooks/'.$this->notebookName;
+        $this->notebookPath = ROOT.'/data/'.$this->notebookName;
         $this->notebookFile = $this->notebookPath.'/notebook.json';
         $this->notebook = Utils::loadJson($this->notebookFile);
 
@@ -98,7 +98,7 @@ class Jotter {
      */
     public function setItem($path, $isDir = true, $newName = false, $data = false) {
         $success = true;
-        $absPath = ROOT.'/notebooks/'.$this->notebookName.'/'.$path;
+        $absPath = ROOT.'/data/'.$this->notebookName.'/'.$path;
         $dirPath = $isDir?$absPath:dirname($absPath);
 
         //if necessary, create parent directories
@@ -172,7 +172,7 @@ class Jotter {
      * @return boolean     True on success
      */
     public function setNoteText($path, $text) {
-        $absPath = ROOT.'/notebooks/'.$this->notebookName.'/'.$path;
+        $absPath = ROOT.'/data/'.$this->notebookName.'/'.$path;
 
         //convert HTML to Markdown
         $markdown = new HTML_To_Markdown($text);
@@ -189,7 +189,7 @@ class Jotter {
      * @return string       note content
      */
     public function loadNote($path) {
-        $content = Utils::loadFile(ROOT.'/notebooks/'.$this->notebookName.'/'.$path);
+        $content = Utils::loadFile(ROOT.'/data/'.$this->notebookName.'/'.$path);
 
         //convert Markdown to HTML
         return \Michelf\MarkdownExtra::defaultTransform($content);
@@ -202,7 +202,7 @@ class Jotter {
      */
     public function unsetNote($path) {
         $this->notebook['tree'] = Utils::unsetArrayItem($this->notebook['tree'], $path);
-        $absPath = ROOT.'/notebooks/'.$this->notebookName.'/'.$path;
+        $absPath = ROOT.'/data/'.$this->notebookName.'/'.$path;
 
         return unlink($absPath)
             && Utils::saveJson($this->notebookFile, $this->notebook);
@@ -215,7 +215,7 @@ class Jotter {
      */
     public function unsetDirectory($path) {
         $this->notebook['tree'] = Utils::unsetArrayItem($this->notebook['tree'], $path);
-        $absPath = ROOT.'/notebooks/'.$this->notebookName.'/'.$path;
+        $absPath = ROOT.'/data/'.$this->notebookName.'/'.$path;
 
         return Utils::rmdirRecursive($absPath)
             && Utils::saveJson($this->notebookFile, $this->notebook);

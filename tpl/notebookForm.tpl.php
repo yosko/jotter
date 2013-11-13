@@ -1,5 +1,5 @@
 <?php
-include PATH_TEMPLATE.'header.tpl.php';
+include DIR_TPL.'header.tpl.php';
 $editNotebook = isset($notebook);
 ?>
     <h2><?php echo $editNotebook?'Edit Notebook':'New Notebook'; ?></h2>
@@ -12,4 +12,4 @@ $editNotebook = isset($notebook);
         <div class="error">A notebook already exists with this name. Please enter another one.</div>
     <?php } ?>
     </form>
-<?php include PATH_TEMPLATE.'footer.tpl.php'; ?>
+<?php include DIR_TPL.'footer.tpl.php'; ?>
