@@ -17,7 +17,27 @@ if($option == 'myPassword') { ?>
     </form>
     
 <?php } elseif($option == 'addUser') { ?>
-    
+    <form id="userForm" method="post" action="">
+        <p>
+            <label for="login">Login</label>
+            <input type="text" autofocus="autofocus" name="login" id="login" value="<?php echo isset($_POST['login'])?$_POST['login']:''; ?>">
+<?php if(isset($errors['emptyLogin']) && $errors['emptyLogin']) { ?>
+            <span class="error">Login must not be empty</span>
+<?php } elseif(isset($errors['notAvailable']) && $errors['notAvailable']) { ?>
+            <span class="error">Login not available</span>
+<?php } ?>
+        </p>
+
+        <p>
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password">
+<?php if(isset($errors['emptyPassword']) && $errors['emptyPassword']) { ?>
+            <span class="error">Password must not be empty</span>
+<?php } ?>
+        </p>
+
+        <input type="submit" name="submitUserForm" id="submitUserForm" value="Save user" />
+    </form>
 <?php } elseif($option == 'editUser') { ?>
     
 <?php } else { ?>

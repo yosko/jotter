@@ -255,7 +255,7 @@ if(!$user['isLoggedIn']) {
     $option = isset($_GET['option'])?$_GET['option']:false;
 
     if($option == 'myPassword') {
-        if (isset($_POST["submitNewPassword"])) {
+        if (isset($_POST['password'])) {
             $password = htmlspecialchars(trim($_POST['password']));
             $errors['emptyPassword'] = (!isset($_POST['password']) || trim($_POST['password']) == "");
 
@@ -269,6 +269,25 @@ if(!$user['isLoggedIn']) {
         }
         
     } elseif($option == 'addUser') {
+        if (isset($_POST['login']) && isset($_POST['password'])) {
+            $login = htmlspecialchars(trim($_POST['login']));
+            $password = htmlspecialchars(trim($_POST['password']));
+
+            $errors['emptyLogin'] = $login == '';
+            $errors['emptyPassword'] = $password == '';
+            $errors['notAvailable'] = false;
+            foreach ($users as $key => $value) {
+                if($value['login'] == $login)
+                    $errors['notAvailable'] = true;
+            }
+
+            if(!in_array(true, $errors)) {
+                $logger->createUser($login, $password);
+
+                header('Location: '.URL.'?action=config');
+                exit;
+            }
+        }
         
     } elseif($option == 'editUser') {
         
