@@ -65,7 +65,7 @@ class Login extends YosLogin {
      * @param  string $login login
      * @return array         user
      */
-    protected function getUser($login) {
+    public function getUser($login) {
         $foundUser = false;
         $this->loadUsers();
 
@@ -76,6 +76,14 @@ class Login extends YosLogin {
         }
 
         return $foundUser;
+    }
+
+    /**
+     * Return the complete list of users
+     * @return array users list
+     */
+    public function getUsers() {
+        return $this->users;
     }
 
     protected function setLTSession($login, $sid, $value) {

@@ -251,6 +251,7 @@ if(!$user['isLoggedIn']) {
 //configuration page
 } elseif( !empty($_GET['action']) && $_GET['action'] == 'config' ) {
     $isConfigMode = true;
+    $users = $logger->getUsers();
     $option = isset($_GET['option'])?$_GET['option']:false;
 
     if($option == 'myPassword') {

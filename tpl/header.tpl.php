@@ -100,13 +100,15 @@ echo Tree2Html($notebook['tree'], $notebookName, isset($_GET['item'])?$_GET['ite
 <?php if($isConfigMode) { ?>
     <ul>
         <li><a href="<?php echo URL; ?>?action=config&amp;option=myPassword">Change my password</a></li>
-        <!-- <li><a href="<?php echo URL; ?>?action=config&amp;option=addUser">Add user</a></li>
+        <li><a href="<?php echo URL; ?>?action=config&amp;option=addUser">Add user</a></li>
         <li>
             Edit users:
             <ul>
-                <li><a href="<?php echo URL; ?>?action=config&amp;option=editUser&amp;user=...">...</a></li>
+<?php foreach($users as $value) { ?>
+                <li><a href="<?php echo URL; ?>?action=config&amp;option=editUser&amp;user=<?php echo $value['login']; ?>"><?php echo $value['login']; ?></a></li>
+<?php } ?>
             </ul>
-        </li> -->
+        </li>
     </ul>
 <?php } // isConfigMode ?>
 </nav>
