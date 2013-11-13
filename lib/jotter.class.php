@@ -35,6 +35,8 @@ class Jotter {
      */
     public function setNotebook($name, $user = false, $public = false) {
         if(strpos($name, '..') !== false) return false;
+
+        $this->loadNotebooks();
         $this->notebookPath = ROOT.'/notebooks/'.$name;
         $this->notebookFile = $this->notebookPath.'/notebook.json';
 
