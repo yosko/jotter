@@ -24,6 +24,7 @@ class JotterLogin extends YosLogin {
      * @return boolean           exec status
      */
     public function setUser($login, $password) {
+        $userFile = ROOT.'/notebooks/users.json';
         $newUser = array(
             'login' => $login,
             'password' => YosLoginTools::hashPassword($password)

@@ -44,8 +44,8 @@ if( !empty($_POST['submitLoginForm']) ) {
     //install app and create first user
     if(!$appInstalled) {
         $logger->createUser(
-            trim($_POST['login']),
-            trim($_POST['password'])
+            htmlspecialchars(trim($_POST['login'])),
+            htmlspecialchars(trim($_POST['password']))
         );
     }
 
@@ -246,6 +246,18 @@ if(!$user['isLoggedIn']) {
     $option = isset($_GET['option'])?$_GET['option']:false;
 
     if($option == 'myPassword') {
+        if (isset($_POST["submitNewPassword"])) {
+            $password = htmlspecialchars(trim($_POST['password']));
+            $errors['emptyPassword'] = (!isset($_POST['password']) || trim($_POST['password']) == "");
+
+            if(!in_array(true, $errors)) {
+                //save password
+                $errors['save'] = !$logger->setUser($user['login'], $password);
+
+                header('Location: '.URL.'?action=config&option=myPassword');
+                exit;
+            }
+        }
         
     } elseif($option == 'addUser') {
         
