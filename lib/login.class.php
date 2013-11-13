@@ -60,6 +60,16 @@ class Login extends YosLogin {
         return $this->setUser($login, $password);
     }
 
+    public function deleteUser($login) {
+        $userFile = ROOT.'/data/users.json';
+        foreach($this->users as $key => $user) {
+            if($user['login'] == $login) {
+                unset($this->users[$key]);
+            }
+        }
+        return Utils::saveJson($userFile, $this->users);
+    }
+
     /**
      * Get a user by his(her) login
      * @param  string $login login

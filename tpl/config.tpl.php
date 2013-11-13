@@ -31,15 +31,22 @@ if($option == 'myPassword') { ?>
         <p>
             <label for="password">Password</label>
             <input type="password" name="password" id="password">
-<?php if(isset($errors['emptyPassword']) && $errors['emptyPassword']) { ?>
+<?php if(isset($errors['emptyPassword']) && $errors['emptyPassword'] && !empty($login)) { ?>
             <span class="error">Password must not be empty</span>
 <?php } ?>
         </p>
 
         <input type="submit" name="submitUserForm" id="submitUserForm" value="Save user" />
     </form>
-<?php } elseif($option == 'editUser') { ?>
-    
+<?php } elseif($option == 'deleteUser') { ?>
+    <h2>Delete user <?php echo $login; ?></h2>
+    <p>
+        You are about to delete a user.
+        There is no turning back!
+    </p>
+    <form method="post" action="">
+        <input id="deleteUserSubmit" name="deleteUserSubmit" type="submit" value="Delete user <?php echo $login; ?>">
+    </form>
 <?php } else { ?>
     <h2>Config</h2>
 

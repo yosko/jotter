@@ -298,7 +298,18 @@ if(!$user['isLoggedIn']) {
             }
         }
         
-    } elseif($option == 'editUser') {
+    } elseif($option == 'deleteUser') {
+        $login = htmlspecialchars(trim($_GET['user']));
+
+        if(isset($_POST['deleteUserSubmit'])) {
+
+            //TODO: delete or reaffect notebooks of that user
+
+            $logger->deleteUser($login, $password);
+
+            header('Location: '.URL.'?action=config');
+            exit;
+        }
         
     } else {
 
