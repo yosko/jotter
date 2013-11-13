@@ -1,4 +1,5 @@
 notebooks/*
+!notebooks/.htaccess
 tmp/cache/*
 tmp/logs/*
 tmp/sessions/*
