@@ -1,6 +1,6 @@
 <?php
 
-class JotterLogin extends YosLogin {
+class Login extends YosLogin {
     protected $users;
 
     /**

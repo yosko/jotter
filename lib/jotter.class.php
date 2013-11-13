@@ -15,10 +15,9 @@ class Jotter {
 
     /**
      * Load the list of notebooks file
-     * @param  integer $userId (Optional) filter on notebooks of the given user
-     * @return array           List of notebooks (name + user)
+     * @return array             List of notebooks (name + user)
      */
-    public function loadNotebooks($userId = -1) {
+    public function loadNotebooks() {
         
         $this->notebooks = Utils::loadJson($this->notebooksFile);
         if(!is_array($this->notebooks))
@@ -30,11 +29,11 @@ class Jotter {
     /**
      * Add or Edit a notebook
      * @param string  $name   New notebook name
-     * @param integer $user   Owner's id (required for new notebook)
+     * @param string  $user   Owner's login (required for new notebook)
      * @param boolean $public Whether the notebook should be public or private
      * @return array          List of notebooks
      */
-    public function setNotebook($name, $user = -1, $public = false) {
+    public function setNotebook($name, $user = false, $public = false) {
         if(strpos($name, '..') !== false) return false;
         $this->notebookPath = ROOT.'/notebooks/'.$name;
         $this->notebookFile = $this->notebookPath.'/notebook.json';
@@ -73,11 +72,10 @@ class Jotter {
 
     /**
      * Load a notebook config file
-     * @param  string  $name   Notebook's name
-     * @param  integer $userId (Optional) filter on notebooks of the given user
-     * @return array           Notebook's configuration
+     * @param  string $name      Notebook's name
+     * @return array             Notebook's configuration
      */
-    public function loadNotebook($name, $userId = -1) {
+    public function loadNotebook($name) {
         if(strpos($name, '..') !== false) return false;
 
         $this->notebookName = $name;

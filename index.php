@@ -26,7 +26,7 @@ require_once( ROOT.'/lib/ext/yoslogin.class.php');
 //Jotter libraries
 require_once( ROOT.'/lib/utils.class.php');
 require_once( ROOT.'/lib/jotter.class.php');
-require_once( ROOT.'/lib/jotterlogin.class.php');
+require_once( ROOT.'/lib/login.class.php');
 
 $jotter = new Jotter();
 $errors = array();
@@ -37,7 +37,7 @@ $isDir = false;
 $appInstalled = file_exists(ROOT.'/notebooks/users.json');
 
 //check if user is logged in
-$logger = new JotterLogin( 'jotter' );
+$logger = new Login( 'jotter' );
 
 //user is trying to log in
 if( !empty($_POST['submitLoginForm']) ) {
@@ -78,12 +78,23 @@ if(!$user['isLoggedIn']) {
 //notebook pages
 } elseif( !empty($_GET['nb']) ) {
     $itemPath = '';
+    $notebook = false;
     $notebookName = urlencode($_GET['nb']);
 
-    $notebook = $jotter->loadNotebook($notebookName);
+    //load the complete list of notebooks
+    $notebooks = $jotter->loadNotebooks();
+
+    //only load notebook if it is owned by current user
+    if($notebooks[$notebookName]['user'] == $user['login']) {
+        $notebook = $jotter->loadNotebook($notebookName);
+    }
+
+    // notebook wasn't loaded
+    if($notebook == false) {
+        include( ROOT.'/tpl/error.tpl.php' );
 
     // rename current notebook
-    if( !empty($_GET['action']) && $_GET['action'] == 'edit' && empty($_GET['item']) ) {
+    } elseif( !empty($_GET['action']) && $_GET['action'] == 'edit' && empty($_GET['item']) ) {
         d('edit notebook');
 
     // delete current notebook
@@ -222,11 +233,8 @@ if(!$user['isLoggedIn']) {
     if(isset($_POST['name'])) {
         $notebook = array(
             'name' => urlencode($_POST['name']),
-            'user' => 1
+            'user' => $user['login']
         );
-
-        //load the complete list of notebooks
-        $notebooks = $jotter->loadNotebooks();
 
         $errors['empty'] = empty($notebook['name']);
         $errors['alreadyExists'] = isset($notebooks[$notebook['name']]);
