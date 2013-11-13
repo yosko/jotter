@@ -39,6 +39,11 @@
 <?php if($user['isLoggedIn']) { ?>
 
             <li class="secondary">
+                <a href="<?php echo URL; ?>?action=config" title="Configure Jotter">
+                    <img src="<?php echo URL; ?>tpl/img/wrench-screwdriver.png" alt="Config">
+                </a>
+            </li>
+            <li class="secondary">
                 <a href="<?php echo URL; ?>?action=logout" title="Log out">
                     <img src="<?php echo URL; ?>tpl/img/door-open-out.png" alt="Logout">
                 </a>
@@ -91,7 +96,19 @@ function Tree2Html($tree, $nbName, $selectedPath, $parents = array()) {
 echo Tree2Html($notebook['tree'], $notebookName, isset($_GET['item'])?$_GET['item']:'');
 
 ?>
-<?php } ?>
+<?php } // notebook tree ?>
+<?php if($isConfigMode) { ?>
+    <ul>
+        <li><a href="<?php echo URL; ?>?action=config&amp;option=myPassword">Change my password</a></li>
+        <!-- <li><a href="<?php echo URL; ?>?action=config&amp;option=addUser">Add user</a></li>
+        <li>
+            Edit users:
+            <ul>
+                <li><a href="<?php echo URL; ?>?action=config&amp;option=editUser&amp;user=...">...</a></li>
+            </ul>
+        </li> -->
+    </ul>
+<?php } // isConfigMode ?>
 </nav>
 <section id="content">
     <div class="toolbar" id="item-toolbar" data-role="editor-toolbar" data-target="#editor">

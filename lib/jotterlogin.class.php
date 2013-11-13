@@ -3,26 +3,72 @@
 class JotterLogin extends YosLogin {
     protected $users;
 
-    public function createUser($login, $password) {
-        $userFile = ROOT.'/notebooks/users.json';
-        $users = array(
-            array(
-                'login' => $login,
-                'password' => YosLoginTools::hashPassword($password),
-            )
-        );
-        Utils::saveJson($userFile, $users);
-    }
-
-    protected function getUser($login) {
-        $foundUser = false;
-
-        if(!isset($users)) {
+    /**
+     * Load complete list of users
+     * @return array list of users
+     */
+    public function loadUsers() {
+        if(!isset($this->users)) {
             $userFile = ROOT.'/notebooks/users.json';
-            $users = Utils::loadJson($userFile);
+            $this->users = Utils::loadJson($userFile);
         }
 
-        foreach($users as $user) {
+        if(!is_array($this->users))
+            $this->users = array();
+    }
+
+    /**
+     * Add or edit a user and save it to the users file
+     * @param  string  $login    login
+     * @param  string  $password password (will be hashed)
+     * @return boolean           exec status
+     */
+    public function setUser($login, $password) {
+        $newUser = array(
+            'login' => $login,
+            'password' => YosLoginTools::hashPassword($password)
+        );
+
+        $foundUser = false;
+        foreach($this->users as $key => $user) {
+            //edit existing user
+            if($user['login'] == $login) {
+                $foundUser = true;
+                $this->users[$key] = $newUser;
+            }
+        }
+
+        //add new user
+        if(!$foundUser) {
+            $this->users[] = $newUser;
+            usort($this->users, function($a, $b) {
+                return strcmp($a['login'], $b['login']);
+            });
+        }
+
+        return Utils::saveJson($userFile, $this->users);
+    }
+
+    /**
+     * Add a user (only calls setUser)
+     * @param  string  $login    login
+     * @param  string  $password password (will be hashed)
+     * @return boolean           exec status
+     */
+    public function createUser($login, $password) {
+        return $this->setUser($login, $password);
+    }
+
+    /**
+     * Get a user by his(her) login
+     * @param  string $login login
+     * @return array         user
+     */
+    protected function getUser($login) {
+        $foundUser = false;
+        $this->loadUsers();
+
+        foreach($this->users as $user) {
             if($user['login'] == $login) {
                 $foundUser = $user;
             }

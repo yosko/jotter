@@ -31,6 +31,7 @@ require_once( ROOT.'/lib/jotterlogin.class.php');
 $jotter = new Jotter();
 $errors = array();
 $isNote = false;
+$isConfigMode = false;
 $isEditMode = false;
 $isDir = false;
 $appInstalled = file_exists(ROOT.'/notebooks/users.json');
@@ -215,7 +216,6 @@ if(!$user['isLoggedIn']) {
         include( ROOT.'/tpl/notebook.tpl.php' );
     }
 
-
 //add a notebook
 } elseif( !empty($_GET['action']) && $_GET['action'] == 'add' ) {
     // user wants to make a new notebook
@@ -239,6 +239,24 @@ if(!$user['isLoggedIn']) {
     }
 
     include( ROOT.'/tpl/notebookForm.tpl.php' );
+
+//configuration page
+} elseif( !empty($_GET['action']) && $_GET['action'] == 'config' ) {
+    $isConfigMode = true;
+    $option = isset($_GET['option'])?$_GET['option']:false;
+
+    if($option == 'myPassword') {
+        
+    } elseif($option == 'addUser') {
+        
+    } elseif($option == 'editUser') {
+        
+    } else {
+
+    }
+
+    include( ROOT.'/tpl/config.tpl.php' );
+
 
 //homepage: notebooks list
 } else {
