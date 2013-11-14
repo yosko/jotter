@@ -1,5 +1,7 @@
 # Jotter
 
+![Jotter](http://www.yosko.net/data/images/jotter.png)
+
 Jotter is a lightweight, no database, powerful web notebook that lets you create and manage notes online safely, quickly & easily.
 
 ## Features
@@ -10,10 +12,13 @@ Jotter is a lightweight, no database, powerful web notebook that lets you create
 - multi-user support
 - no DBMS needed. Everything is stored in flat files (JSON & Markdown)
 
-## TODO list
+![Jotter screenshot](http://www.yosko.net/data/images/jotter-v0.1.png)
+
+## Potential future features
 
 - Trash bin for deleted notes
-- Keep last versions of notes and restore it on demand
+- Keep last versions of each note and restore it on demand
+- Inserting image (currently, only drag & drop works, not the button)
 - Option to make some notes/notebooks publicly accessible
 - Share notebooks between users
 - Patch the WYSIWYG and Markdown libraries to enhance behavior and avoid most common rendering problems
