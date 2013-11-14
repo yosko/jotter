@@ -94,8 +94,8 @@ if(!$user['isLoggedIn']) {
     $notebooks = $jotter->loadNotebooks();
 
     //only load notebook if it is owned by current user
-    if($notebooks[$notebookName]['user'] == $user['login']) {
-        $notebook = $jotter->loadNotebook($notebookName);
+    if(isset($notebooks[$user['login']][$notebookName])) {
+        $notebook = $jotter->loadNotebook($notebookName, $user['login']);
     }
 
     // notebook wasn't loaded
@@ -110,7 +110,7 @@ if(!$user['isLoggedIn']) {
     } elseif( !empty($_GET['action']) && $_GET['action'] == 'delete' && empty($_GET['item']) ) {
         //confirmation was sent
         if(isset($_POST['delete'])) {
-            $jotter->unsetNotebook($notebookName);
+            $jotter->unsetNotebook($notebookName, $user['login']);
 
             header('Location: '.URL);
             exit;
@@ -125,7 +125,7 @@ if(!$user['isLoggedIn']) {
             $path = $item['name'];
 
             if(!empty($_GET['item'])) {
-                if(!is_dir(DIR_DATA.$notebookName.'/'.$_GET['item'])) {
+                if(!is_dir(DIR_DATA.$user['login'].'/'.$notebookName.'/'.$_GET['item'])) {
                     if(dirname($_GET['item']) != '.') {
                         $path = dirname($_GET['item']).'/'.$path;
                     }
@@ -161,7 +161,7 @@ if(!$user['isLoggedIn']) {
         $itemData = Utils::getArrayItem($notebook['tree'], $itemPath);
         $isNote = $itemData === true;
         if(!$isNote) {
-            $dirPath = DIR_DATA.$notebookName.'/'.$itemPath;
+            $dirPath = DIR_DATA.$user['login'].'/'.$notebookName.'/'.$itemPath;
             $isDir = file_exists($dirPath) && is_dir($dirPath);
         }
 
@@ -254,7 +254,7 @@ if(!$user['isLoggedIn']) {
         );
 
         $errors['empty'] = empty($notebook['name']);
-        $errors['alreadyExists'] = isset($notebooks[$notebook['name']]);
+        $errors['alreadyExists'] = isset($notebooks[$user['login']][$notebook['name']]);
         if(!in_array(true, $errors)) {
             $notebooks = $jotter->setNotebook($notebook['name'], $notebook['user']);
 
@@ -312,7 +312,7 @@ if(!$user['isLoggedIn']) {
         if(isset($_POST['deleteUserSubmit'])) {
             //delete user's notebooks
             $notebooks = $jotter->loadNotebooks();
-            foreach($notebooks as $key => $value) {
+            foreach($notebooks[$user['login']] as $key => $value) {
                 if($value['user'] == $login) {
                     $jotter->unsetNotebook($key);
                 }

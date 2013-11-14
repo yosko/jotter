@@ -2,12 +2,11 @@
     <h2>Notebooks</h2>
     <ul>
 <?php
-foreach($notebooks as $name => $notebook) {
-    //only show current user notebooks
-    if($notebook['user'] == $user['login']) {
+if(!empty($notebooks[$user['login']])) {
+    foreach($notebooks[$user['login']] as $name => $notebook) {
 ?>
 
-        <li><a href="<?php echo URL.'?nb='.$name; ?>"><?php echo urldecode($name); ?></a> (by <?php echo $notebook['user']; ?>)</li>
+        <li><a href="<?php echo URL.'?nb='.$name; ?>"><?php echo urldecode($name); ?></a></li>
 <?php } } ?>
 
         <li><a href="?action=add">Start a new notebook</a></li>

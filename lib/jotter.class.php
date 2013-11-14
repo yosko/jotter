@@ -29,26 +29,24 @@ class Jotter {
     /**
      * Add or Edit a notebook
      * @param string  $name   New notebook name
-     * @param string  $user   Owner's login (required for new notebook)
+     * @param string  $user   Owner's login
      * @param boolean $public Whether the notebook should be public or private
      * @return array          List of notebooks
      */
-    public function setNotebook($name, $user = false, $public = false) {
+    public function setNotebook($name, $user, $public = false) {
         if(strpos($name, '..') !== false) return false;
 
         $this->loadNotebooks();
-        $this->notebookPath = ROOT.'/data/'.$name;
+        $this->notebookPath = ROOT.'/data/'.$user.'/'.$name;
         $this->notebookFile = $this->notebookPath.'/notebook.json';
 
         //add a new notebook
-        if(!isset($this->notebooks[$name])) {
-            $this->notebooks[$name] = array(
-                'user' => $user
-            );
+        if(!isset($this->notebooks[$user][$name])) {
+            $this->notebooks[$user][$name] = true;
 
             //create the notebook directory and default note
             $defaultNote = 'note.md';
-            mkdir($this->notebookPath);
+            mkdir($this->notebookPath, 0700, true);
             touch($this->notebookPath.'/'.$defaultNote);
 
             $this->notebook = array(
@@ -74,14 +72,15 @@ class Jotter {
 
     /**
      * Load a notebook config file
-     * @param  string $name      Notebook's name
-     * @return array             Notebook's configuration
+     * @param  string $name Notebook's name
+     * @param  string $user Owner's login
+     * @return array        Notebook's configuration
      */
-    public function loadNotebook($name) {
+    public function loadNotebook($name, $user) {
         if(strpos($name, '..') !== false) return false;
 
         $this->notebookName = $name;
-        $this->notebookPath = ROOT.'/data/'.$this->notebookName;
+        $this->notebookPath = ROOT.'/data/'.$user.'/'.$this->notebookName;
         $this->notebookFile = $this->notebookPath.'/notebook.json';
         $this->notebook = Utils::loadJson($this->notebookFile);
 
@@ -91,11 +90,12 @@ class Jotter {
     /**
      * Remove a notebook and everything in it
      * @param  string $name notebook name
+     * @param  string $user Owner's login
      * @return boolean      true on success
      */
-    public function unsetNotebook($name) {
-        $this->notebooks = Utils::unsetArrayItem($this->notebooks, $name);
-        $absPath = ROOT.'/data/'.$name.'/';
+    public function unsetNotebook($name, $user) {
+        $this->notebooks = Utils::unsetArrayItem($this->notebooks, $user.'/'.$name);
+        $absPath = ROOT.'/data/'.$user.'/'.$name.'/';
 
         return Utils::rmdirRecursive($absPath)
             && Utils::saveJson($this->notebooksFile, $this->notebooks);
@@ -111,7 +111,7 @@ class Jotter {
      */
     public function setItem($path, $isDir = true, $newName = false, $data = false) {
         $success = true;
-        $absPath = ROOT.'/data/'.$this->notebookName.'/'.$path;
+        $absPath = $this->notebookPath.'/'.$path;
         $dirPath = $isDir?$absPath:dirname($absPath);
 
         //if necessary, create parent directories
@@ -185,7 +185,7 @@ class Jotter {
      * @return boolean     True on success
      */
     public function setNoteText($path, $text) {
-        $absPath = ROOT.'/data/'.$this->notebookName.'/'.$path;
+        $absPath = $this->notebookPath.'/'.$path;
 
         //convert HTML to Markdown
         $markdown = new HTML_To_Markdown($text);
@@ -202,7 +202,7 @@ class Jotter {
      * @return string       note content
      */
     public function loadNote($path) {
-        $content = Utils::loadFile(ROOT.'/data/'.$this->notebookName.'/'.$path);
+        $content = Utils::loadFile($this->notebookPath.'/'.$path);
 
         //convert Markdown to HTML
         return \Michelf\MarkdownExtra::defaultTransform($content);
@@ -215,7 +215,7 @@ class Jotter {
      */
     public function unsetNote($path) {
         $this->notebook['tree'] = Utils::unsetArrayItem($this->notebook['tree'], $path);
-        $absPath = ROOT.'/data/'.$this->notebookName.'/'.$path;
+        $absPath = $this->notebookPath.'/'.$path;
 
         return unlink($absPath)
             && Utils::saveJson($this->notebookFile, $this->notebook);
@@ -228,7 +228,7 @@ class Jotter {
      */
     public function unsetDirectory($path) {
         $this->notebook['tree'] = Utils::unsetArrayItem($this->notebook['tree'], $path);
-        $absPath = ROOT.'/data/'.$this->notebookName.'/'.$path;
+        $absPath = $this->notebookPath.'/'.$path;
 
         return Utils::rmdirRecursive($absPath)
             && Utils::saveJson($this->notebookFile, $this->notebook);
