@@ -1,4 +1,5 @@
 <?php include DIR_TPL.'header.tpl.php'; ?>
+    <h2><img src="<?php echo URL_TPL; ?>img/jotter.png" alt="Jotter"></h2>
     <h2>Notebooks</h2>
     <ul>
 <?php

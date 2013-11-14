@@ -26,7 +26,10 @@ img { border: none; }
     background-color: #eee;
     position: relative;
 }
-#content > h2, #content > form, #content > p { margin-left: 1em; margin-right: 1em; }
+#content > h1, #content > h2, #content > h3,
+#content > h4, #content > h5, #content > h6,
+#content > form, #content > p
+{ margin-left: 1em; margin-right: 1em; }
 
 /**** ACTIONS LISTS ****/
 

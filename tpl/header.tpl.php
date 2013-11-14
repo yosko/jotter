@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <title>Jotter - Notebook Manager</title>
     <link rel="stylesheet" href="<?php echo URL_TPL; ?>style.css">
+    <link rel="icon" type="image/png" href="<?php echo URL_TPL; ?>img/jotter-icon-16.png"/>
 <?php if($isNote && $isEditMode) { ?>
     <script src="<?php echo URL_TPL; ?>js/ext/jquery-2.0.3.min.js"></script>
     <script src="<?php echo URL_TPL; ?>js/ext/jquery.hotkeys.js"></script>
@@ -17,7 +18,10 @@
 <nav id="panel">
     <div class="toolbar">
         <ul class="actions">
-<?php if(isset($notebook['tree'])) { ?>
+<?php
+if($user['isLoggedIn']) {
+    if(isset($notebook['tree'])) {
+        ?>
 
             <li>
                 <a href="<?php echo URL; ?>?nb=<?php echo $notebookName; ?>&amp;item=<?php echo $itemPath; ?>&amp;action=addnote" title="Add a new note inside the current directory">
@@ -38,11 +42,9 @@
 
             <li class="secondary">
                 <a href="<?php echo URL; ?>" title="List of notebooks">
-                    <img src="<?php echo URL_TPL; ?>img/folders-stack.png" alt="Notebooks">
+                    <img src="<?php echo URL_TPL; ?>img/jotter-icon-16.png" alt="Notebooks">
                 </a>
             </li>
-<?php if($user['isLoggedIn']) { ?>
-
             <li class="secondary">
                 <a href="<?php echo URL; ?>?action=config" title="Configure Jotter">
                     <img src="<?php echo URL_TPL; ?>img/wrench-screwdriver.png" alt="Config">
