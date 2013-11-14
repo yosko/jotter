@@ -41,7 +41,7 @@ if($option == 'myPassword') { ?>
 <?php } elseif($option == 'deleteUser') { ?>
     <h2>Delete user <?php echo $login; ?></h2>
     <p>
-        You are about to delete a user.
+        You are about to delete a user and all of his/her notebooks.
         There is no turning back!
     </p>
     <form method="post" action="">

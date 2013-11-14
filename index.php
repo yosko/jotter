@@ -310,9 +310,15 @@ if(!$user['isLoggedIn']) {
         $login = htmlspecialchars(trim($_GET['user']));
 
         if(isset($_POST['deleteUserSubmit'])) {
+            //delete user's notebooks
+            $notebooks = $jotter->loadNotebooks();
+            foreach($notebooks as $key => $value) {
+                if($value['user'] == $login) {
+                    $jotter->unsetNotebook($key);
+                }
+            }
 
-            //TODO: delete or reaffect notebooks of that user
-
+            //delete user
             $logger->deleteUser($login, $password);
 
             header('Location: '.URL.'?action=config');
