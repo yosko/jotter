@@ -35,7 +35,7 @@ Jotter is a lightweight, no database, powerful web notebook that lets you create
 
 ## License
 
-Jotter is a work by [Yosko](http://www.yosko.net), all wright reserved.
+Jotter is a work by [Yosko](http://www.yosko.net), all rights reserved.
 
 It is licensed under the [GNU LGPL](http://www.gnu.org/licenses/lgpl.html).
 
