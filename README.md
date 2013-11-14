@@ -12,7 +12,6 @@ Jotter is a lightweight, no database, powerful web notebook that lets you create
 
 ## TODO list
 
-- Option to delete a notebook
 - Trash bin for deleted notes
 - Keep last versions of notes and restore it on demand
 - Option to make some notes/notebooks publicly accessible

@@ -89,6 +89,19 @@ class Jotter {
     }
 
     /**
+     * Remove a notebook and everything in it
+     * @param  string $name notebook name
+     * @return boolean      true on success
+     */
+    public function unsetNotebook($name) {
+        $this->notebooks = Utils::unsetArrayItem($this->notebooks, $name);
+        $absPath = ROOT.'/data/'.$name.'/';
+
+        return Utils::rmdirRecursive($absPath)
+            && Utils::saveJson($this->notebooksFile, $this->notebooks);
+    }
+
+    /**
      * Add or edit (rename) an item (note or directory)
      * @param string   $path    Relative path to item
      * @param boolean  $isDir   False for notes, true for directories

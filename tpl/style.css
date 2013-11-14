@@ -66,17 +66,26 @@ img { border: none; }
 
 /**** TREE PANEL ****/
 
-#panel h1, #panel h2, #panel h3, #panel h4 { margin: 0; padding: 0.2em 0.5em; }
+#panel h3 { margin: 0.2em; }
+#panel a { display: block; text-decoration: none; }
+#panel h3 > a {
+    padding: 0.1em 0.5em 0.1em 1.6em;
+    background-repeat: no-repeat;
+    background-position: 0.2em 0.2em;
+    background-image: url('img/folders-stack.png');
+}
+#panel a:hover { background-color: #ddd; border-radius: 0.2em; }
+#panel .selected > a { background-color: #eee; border-radius: 0.2em; }
 
 #panel #root, #panel #root ul { list-style-type: none; padding: 0; margin: 0; }
-#panel #root { padding: 0 0.5em; }
-#panel #root li { background-repeat: no-repeat; margin: 0.2em 0; padding: 0.1em 0.5em 0.1em 1.6em;  background-position: 0.2em 0.2em; }
-#panel #root .file, #panel #root .directory { height: 1.5em; line-height: 1.3em; }
-#panel #root .file { background-image: url('img/document.png'); }
-#panel #root .directory { background-image: url('img/folder.png'); }
-#panel #root .directory.open { background-image: url('img/folder-open.png'); }
-#panel #root .selected { background-color: #eee; border-radius: 0.2em; }
-
+#panel #root { margin: 0 0.2em; }
+#panel #root li { margin: 0.2em 0; padding: 0 0 0 1em; }
+/*#panel #root > li { padding: 0; }*/
+#panel #root li > a { background-repeat: no-repeat; padding: 0.1em 0.5em 0.1em 1.6em; background-position: 0.2em 0.2em; }
+#panel #root .file > a, #panel #root .directory > a { height: 1.5em; line-height: 1.4em; }
+#panel #root .file > a { background-image: url('img/document.png'); }
+#panel #root .directory > a { background-image: url('img/folder.png'); }
+#panel #root .directory.open > a { background-image: url('img/folder-open.png'); }
 
 /**** CONTENT ****/
 

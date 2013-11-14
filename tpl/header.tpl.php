@@ -29,6 +29,11 @@
                     <img src="<?php echo URL_TPL; ?>img/folder--plus.png" alt="Add directory">
                 </a>
             </li>
+            <li>
+                <a href="?nb=<?php echo $notebookName; ?>&amp;action=delete" title="Delete the current notebook">
+                    <img src="<?php echo URL_TPL; ?>img/folders-stack-minus.png" alt="Delete notebook">
+                </a>
+            </li>
 <?php } ?>
 
             <li class="secondary">
@@ -53,7 +58,7 @@
     </div>
 <?php if(isset($notebook['tree'])) { ?>
 
-    <h1><a href="?nb=<?php echo $notebookName; ?>"><?php echo urldecode($notebookName); ?></a></h1>
+    <h3<?php if(!$isDir && !$isNote) { echo ' class="selected"'; } ?>><a href="?nb=<?php echo $notebookName; ?>"><?php echo urldecode($notebookName); ?></a></h3>
 <?php
 
 function Tree2Html($tree, $nbName, $selectedPath, $parents = array()) {

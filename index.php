@@ -108,7 +108,15 @@ if(!$user['isLoggedIn']) {
 
     // delete current notebook
     } elseif( !empty($_GET['action']) && $_GET['action'] == 'delete' && empty($_GET['item']) ) {
-        d('delete notebook');
+        //confirmation was sent
+        if(isset($_POST['delete'])) {
+            $jotter->unsetNotebook($notebookName);
+
+            header('Location: '.URL);
+            exit;
+        }
+
+        include( DIR_TPL.'itemDelete.tpl.php' );
 
     // add a subdirectory or a note to the current directory
     } elseif( !empty($_GET['action']) && ($_GET['action'] == 'adddir' || $_GET['action'] == 'addnote') ) {
