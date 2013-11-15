@@ -21,8 +21,6 @@ define( 'URL',
 define( 'URL_TPL', URL.'tpl/' );
 
 // external libraries
-// https://github.com/yosko/easydump
-require_once( ROOT.'lib/ext/easydump.php');
 // https://github.com/michelf/php-markdown/
 require_once( ROOT.'lib/ext/Markdown.php');
 require_once( ROOT.'lib/ext/MarkdownExtra.php');
