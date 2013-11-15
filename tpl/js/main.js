@@ -8,7 +8,9 @@ $(function(){
     document.execCommand('defaultParagraphSeparator', false, 'p');
 
     //init editor
-    editor.wysiwyg().focus();
+    editor.wysiwyg({
+        activeToolbarClass: 'selected'
+    }).focus();
 
     //bind save to shortcut Ctrl+S
     $(window).keypress(function(event) {
