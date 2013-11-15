@@ -4,6 +4,8 @@
 
 Jotter is a lightweight, no database, powerful web notebook that lets you create and manage notes online safely, quickly & easily.
 
+See [the demo](http://tools.yosko.net/demos/jotter/) or install it yourself!
+
 ## Features
 
 - WYSIWYG (What You See Is What You Get) editor
