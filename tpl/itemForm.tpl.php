@@ -7,7 +7,7 @@ if(!isset($isDir))
     <h2><?php echo ($editItem?'Edit ':'New ').($isDir?'Directory':'Note'); ?></h2>
     <form method="post" action="?nb=<?php echo $notebookName; ?>&amp;action=<?php echo $_GET['action']; ?>&amp;item=<?php echo isset($_GET['item'])?$_GET['item']:''; ?>">
         <label for="name">Name</label>
-        <input id="name" name="name" type="text" value="<?php echo isset($item['name'])?$item['name']:''; ?>">
+        <input id="name" name="name" type="text" value="<?php echo isset($item['name'])?$item['name']:''; ?>" autofocus="autofocus">
     <?php if(isset($errors['empty']) && $errors['empty']) { ?>
         <div class="error">Please enter a name for your new item.</div>
     <?php } elseif(isset($errors['sameName']) && $errors['sameName']) { ?>
