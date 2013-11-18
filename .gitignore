@@ -1,3 +1,4 @@
+cache/*
 data/*
 !data/.htaccess
 *.sublime-project
