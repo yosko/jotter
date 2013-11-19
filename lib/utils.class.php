@@ -47,7 +47,7 @@ class Utils {
         } else {
             $previous[$node] = $value;
             //make sure new element is in the right place
-            natcasesort($previous);
+            Utils::natcaseksort($previous);
             return $array;
         }
     }
@@ -62,6 +62,15 @@ class Utils {
 
     public static function unsetArrayItem($array, $path) {
         return self::handleArrayItemFromPath($array, $path, null, false, true);
+    }
+
+    /**
+     * Sort array by keys in "natural" order & case-insensitively
+     * Combine uksort (sort by keys) with strnatcasecmp (natural case-insensitive comparison) 
+     * @param  array $array unsorted array
+     */
+    public static function natcaseksort(&$array) {
+        uksort($array, 'strnatcasecmp');
     }
 
     /**

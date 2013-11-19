@@ -109,8 +109,6 @@ $(function(){
     }
 
     function checkIsUnsaved() {
-        //for now: ask the user 
-        //TODO: auto save
         if(unsavedContent)
             return "There is unsaved content. Do you still wish to leave this page?";
     }

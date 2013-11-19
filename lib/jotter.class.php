@@ -44,6 +44,9 @@ class Jotter {
         if(!isset($this->notebooks[$user][$name])) {
             $this->notebooks[$user][$name] = true;
 
+            //reorder notebooks
+            Utils::natcaseksort($this->notebooks[$user]);
+
             //create the notebook directory and default note
             $defaultNote = 'note.md';
             mkdir($this->notebookPath, 0700, true);
@@ -140,7 +143,8 @@ class Jotter {
         //create the item
         } elseif($success) {
             if($isDir) {
-                $success = mkdir($absPath, 0700, true);
+                if(!file_exists($absPath))
+                    $success = mkdir($absPath, 0700, true);
                 $value = array();
             } else {
                 $success = touch($absPath);
