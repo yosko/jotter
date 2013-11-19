@@ -1,5 +1,6 @@
 cache/*
 data/*
+errors.log
 !data/.htaccess
 *.sublime-project
 *.sublime-workspace

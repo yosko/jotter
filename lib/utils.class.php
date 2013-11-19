@@ -78,7 +78,7 @@ class Utils {
      * @param  string $file path to file
      * @return string       file content
      */
-    public function loadFile($file) {
+    public static function loadFile($file) {
         if (file_exists( $file )) {
             $data = file_get_contents($file);
             return $data;
@@ -94,10 +94,11 @@ class Utils {
      * @param  string $content file content
      * @return boolean         true on success
      */
-    public function saveFile($file, $content) {
+    public static function saveFile($file, $content) {
         if (!file_exists( $file )) {
             //in case the directory doesn't yet exist
-            $success = mkdir(dirname($file), 0700, true);
+            if(!file_exists( dirname($file) ))
+                $success = mkdir(dirname($file), 0700, true);
             //create file
             touch($file);
         }
@@ -115,7 +116,7 @@ class Utils {
      * @param  boolean $compress If data should be gzip uncompressed before decoding it
      * @return misc              File content decoded
      */
-    public function loadJson($file, $uncompress = false) {
+    public static function loadJson($file, $uncompress = false) {
         if($data = self::loadFile($file)) {
             if($uncompress)
                 $data = gzinflate($data);
@@ -131,7 +132,7 @@ class Utils {
      * @param  boolean $compress Compress (or not) file content in gzip
      * @return boolean           true on success
      */
-    public function saveJson($file, $data, $compress = false) {
+    public static function saveJson($file, $data, $compress = false) {
         if(version_compare(PHP_VERSION, '5.4.0') >= 0)
             $json = json_encode($data, JSON_PRETTY_PRINT);
         else

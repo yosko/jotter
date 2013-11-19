@@ -29,6 +29,7 @@ class Login extends YosLogin {
             'login' => $login,
             'password' => YosLoginTools::hashPassword($password)
         );
+        $this->loadUsers();
 
         $foundUser = false;
         foreach($this->users as $key => $user) {
