@@ -62,6 +62,14 @@ $(function(){
         e.preventDefault();
     });
 
+    //add 'http://' to link input
+    $('#insertLink input').focus(function(e){
+        var input = $(this);
+        if(input.val().trim() == '') {
+            input.val(input.attr('placeholder'));
+        }
+    });
+
     //show/hide subtoolbars
     $('#insertLink').hide();
     $('#linkDropdown').click(function(e){
