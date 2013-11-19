@@ -52,10 +52,17 @@ $(function(){
         e.preventDefault();
     });
 
+
+
     //display html source
     $('#source-button').click(function(e){
         if($('#html').length == 0) {
-            $('#editor').after( '<pre id="html" style="">'+htmlEncode( $('#editor').html() )+'</pre>' );
+            //get note code from editor
+            var html = $('#editor').html();
+            //remove base64 code for display
+            html = html.replace(/src="data:image[^"]*"/g, 'src="..."');
+            //encode & display it
+            $('#editor').after( '<pre id="html" style="">'+htmlEncode( html )+'</pre>' );
         } else {
             $('#html').remove();
         }
