@@ -209,9 +209,10 @@ foreach($users as $value) {
                 </a>
             </li>
             <li class="secondary">
-                <a href="#" class="ajax-formatter" title="Insert image (or drag &amp; drop it in your text)">
+                <a href="#" class="ajax-formatter" id="picture-button" title="Insert image (or drag &amp; drop it in your text)">
                     <img src="<?php echo URL_TPL; ?>img/image.png" alt="Image">
                 </a>
+                <input type="file" id="hidden-picture-button" data-target="#picture-button" data-edit="insertImage" />
             </li>
             <li class="secondary">
                 <a href="#" class="ajax-formatter" id="mdash-button" title="Insert em dash">

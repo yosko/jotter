@@ -81,6 +81,13 @@ h6 { font-size: 0.7em; }
 .actions li.active a, .actions li a.selected { background-color: #fff1e7; }
 .actions a:hover { background-color: #e3dbd6; }
 
+.actions #hidden-picture-button {
+    opacity: 0;
+    position: absolute;
+    width: 0;
+    height: 0;
+}
+
 /**** TREE PANEL ****/
 
 #panel h3 { margin: 0.2em; }

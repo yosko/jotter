@@ -47,6 +47,11 @@ $(function(){
         e.preventDefault();
     });
 
+    $('#picture-button').click(function(e) {
+        $('#hidden-picture-button').click();
+        e.preventDefault();
+    });
+
     //display html source
     $('#source-button').click(function(e){
         if($('#html').length == 0) {
