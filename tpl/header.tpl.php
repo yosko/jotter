@@ -60,7 +60,7 @@ if($user['isLoggedIn']) {
     </div>
 <?php if(isset($notebook['tree'])) { ?>
 
-    <h3<?php if(!$isDir && !$isNote) { echo ' class="selected"'; } ?>><a href="?nb=<?php echo $notebookName; ?>"><?php echo urldecode($notebookName); ?></a></h3>
+    <h3<?php if(empty($_GET['item'])) { echo ' class="selected"'; } ?>><a href="?nb=<?php echo $notebookName; ?>"><?php echo urldecode($notebookName); ?></a></h3>
 <?php
 
 function Tree2Html($tree, $nbName, $selectedPath, $parents = array()) {
