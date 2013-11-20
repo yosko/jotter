@@ -4,10 +4,10 @@
  *
  * @license     LGPL v3 (http://www.gnu.org/licenses/lgpl.html)
  * @author      Yosko <webmaster@yosko.net>
- * @version     v0.1
+ * @version     v0.2
  * @link        https://github.com/yosko/jotter
  */
-define( 'VERSION', '0.1' );
+define( 'VERSION', '0.2' );
 define( 'ROOT', __DIR__.'/' );
 define( 'DIR_DATA', ROOT.'data/' );
 define( 'DIR_TPL', ROOT.'tpl/' );
