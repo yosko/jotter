@@ -25,8 +25,12 @@ $(function(){
     editorNeverEmpty();
 
     //set status to unsaved on input
+    //and update code if displayed
     editor.bind('input', function(e){
         setUnsavedStatus(true);
+        if($('#html').length != 0) {
+            $('#html').html( getEditorHtmlForDisplay() );
+        }
     });
 
     //auto save every 30 seconds
@@ -52,17 +56,10 @@ $(function(){
         e.preventDefault();
     });
 
-
-
     //display html source
     $('#source-button').click(function(e){
         if($('#html').length == 0) {
-            //get note code from editor
-            var html = $('#editor').html();
-            //remove base64 code for display
-            html = html.replace(/src="data:image[^"]*"/g, 'src="..."');
-            //encode & display it
-            $('#editor').after( '<pre id="html" style="">'+htmlEncode( html )+'</pre>' );
+            $('#editor').after( '<pre id="html" style="">'+getEditorHtmlForDisplay()+'</pre>' );
         } else {
             $('#html').remove();
         }
@@ -134,6 +131,14 @@ $(function(){
     }
     window.onbeforeunload = checkIsUnsaved;
 });
+
+function getEditorHtmlForDisplay() {
+    //get note code from editor
+    var html = $('#editor').html();
+    //remove base64 code for display
+    html = html.replace(/src="data:image[^"]*"/g, 'src="..."');
+    return htmlEncode( html );
+}
 
 // from http://snipplr.com/view/799/get-url-variables/
 function getUrlVars() {
