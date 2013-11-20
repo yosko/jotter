@@ -10,8 +10,9 @@
     <script src="<?php echo URL_TPL; ?>js/ext/jquery.hotkeys.js"></script>
     <script src="<?php echo URL_TPL; ?>js/ext/bootstrap.min.js"></script>
     <script src="<?php echo URL_TPL; ?>js/ext/bootstrap-wysiwyg.js"></script>
-    <script src="<?php echo URL_TPL; ?>js/main.js"></script>
+    <script src="<?php echo URL_TPL; ?>js/editor.js"></script>
 <?php } ?>
+    <script src="<?php echo URL_TPL; ?>js/main.js"></script>
 </head>
 <body>
 <div id="app">
@@ -69,7 +70,7 @@ function Tree2Html($tree, $nbName, $selectedPath, $parents = array()) {
     if($level == 0) {
         $html .= " id=\"root\" class=\"open\"";
     } else {
-        $html .= " class=\"closed\"";
+        $html .= " class=\"open\"";
     }
     $html .= ">\r\n";
     
@@ -81,7 +82,13 @@ function Tree2Html($tree, $nbName, $selectedPath, $parents = array()) {
             $path = (!empty($parents)?implode('/', $parents).'/':'').$key;
 
             $html .= str_repeat("\t", $level*2+1)."<li class=\"".($isArray?"directory":"file").($path == $selectedPath?' selected':'')."\">";
-            $html .= '<a href="'.URL.'?nb='.$nbName.'&amp;item='.$path.'">';
+
+            //if array, show open/close button
+            if($isArray) {
+                $html .= '<a class="arrow open" href="#"><img src="'.URL_TPL.'img/arbo-parent-open.png" alt="-"></a>';
+            }
+
+            $html .= '<a class="item" href="'.URL.'?nb='.$nbName.'&amp;item='.$path.'">';
             $html .= basename($key, '.md');
             $html .= '</a>';
 

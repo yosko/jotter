@@ -91,25 +91,37 @@ h6 { font-size: 0.7em; }
 /**** TREE PANEL ****/
 
 #panel h3 { margin: 0.2em; }
-#panel a { display: block; text-decoration: none; color: #484848; }
+#panel a { text-decoration: none; color: #484848; outline: 0; }
+#panel h3 > a, #panel a.item { display: block; }
 #panel h3 > a {
     padding: 0.1em 0.5em 0.1em 1.6em;
     background-repeat: no-repeat;
     background-position: 0.2em 0.2em;
     background-image: url('img/folders-stack.png');
 }
-#panel a:hover { background-color: #f4ece7; border-radius: 0.2em; }
-#panel .selected > a { background-color: #fff1e7; border-radius: 0.2em; }
+#panel h3 > a:hover, #panel a.item:hover { background-color: #f4ece7; border-radius: 0.2em; }
+#panel .selected > a.item { background-color: #fff1e7; border-radius: 0.2em; }
 
-#panel #root, #panel #root ul { list-style-type: none; padding: 0; margin: 0; }
+#panel #root, #panel #root ul {
+    list-style-type: none;
+    padding: 0; margin: 0;
+}
 #panel #root { margin: 0 0.2em; }
-#panel #root li { margin: 0.2em 0; padding: 0 0 0 1em; }
+#panel #root li { margin: 0.2em 0; padding: 0 0 0 1.2em; position: relative; }
 /*#panel #root > li { padding: 0; }*/
-#panel #root li > a { background-repeat: no-repeat; padding: 0.1em 0.5em 0.1em 1.6em; background-position: 0.2em 0.2em; }
-#panel #root .file > a, #panel #root .directory > a { height: 1.5em; line-height: 1.4em; }
-#panel #root .file > a { background-image: url('img/document.png'); }
-#panel #root .directory > a { background-image: url('img/folder.png'); }
-#panel #root .directory.open > a { background-image: url('img/folder-open.png'); }
+#panel #root li > a.item { background-repeat: no-repeat; padding: 0.1em 0.5em 0.1em 1.6em; background-position: 0.1em 0.2em; }
+#panel #root .file > a.item, #panel #root .directory > a { height: 1.5em; line-height: 1.4em; }
+#panel #root .file > a.item { background-image: url('img/document.png'); }
+#panel #root .directory > a.item { background-image: url('img/folder.png'); }
+#panel #root .directory.open > a.item { background-image: url('img/folder-open.png'); }
+
+#panel #root .arrow {
+    position: absolute;
+    left: 0;
+    margin: 0.2em 0;
+    width: 16px;
+    height: 16px;
+}
 
 /**** CONTENT ****/
 
