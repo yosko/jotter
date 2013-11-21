@@ -68,9 +68,9 @@ function Tree2Html($tree, $nbName, $selectedPath, $parents = array()) {
     $level = count($parents);
     $html = str_repeat("\t", $level*2)."<ul";
     if($level == 0) {
-        $html .= " id=\"root\" class=\"open\"";
+        $html .= " id=\"root\" class=\"subtree open\"";
     } else {
-        $html .= " class=\"open\"";
+        $html .= " class=\"subtree open\"";
     }
     $html .= ">\r\n";
     
@@ -87,6 +87,13 @@ function Tree2Html($tree, $nbName, $selectedPath, $parents = array()) {
             if($isArray) {
                 $html .= '<a class="arrow open" href="#"><img src="'.URL_TPL.'img/arbo-parent-open.png" alt="-"></a>';
             }
+            $html .= '<div class="item-menu">';
+            $html .= '<img class="dropdown-arrow" src="'.URL_TPL.'img/arbo-parent-open.png" alt="v">';
+            $html .= '<ul class="dropdown closed">';
+            $html .= '<li><a href="'.URL.'?nb='.$nbName.'&amp;item='.$path.'&amp;action=edit">Edit</a></li>';
+            $html .= '<li><a href="'.URL.'?nb='.$nbName.'&amp;item='.$path.'&amp;action=delete">Delete</a></li>';
+            $html .= '</ul>';
+            $html .= '</div>';
 
             $html .= '<a class="item" href="'.URL.'?nb='.$nbName.'&amp;item='.$path.'">';
             $html .= basename($key, '.md');
@@ -137,19 +144,8 @@ foreach($users as $value) {
 <section id="content">
     <div class="toolbar" id="item-toolbar" data-role="editor-toolbar" data-target="#editor">
         <ul class="actions btn-info">
-<?php if($isNote || $isDir) { ?>
-
-            <li>
-                <a href="?nb=<?php echo $notebookName; ?>&amp;item=<?php echo $itemPath; ?>&amp;action=edit" title="Edit (rename) this <?php echo $isNote?'note':'directory'; ?>">
-                    <img src="<?php echo URL_TPL; ?>img/<?php echo $isNote?'document':'folder'; ?>--pencil.png" alt="Edit <?php echo $isNote?'note':'directory'; ?>">
-                </a>
-            </li>
-            <li>
-                <a href="?nb=<?php echo $notebookName; ?>&amp;item=<?php echo $itemPath; ?>&amp;action=delete" title="Delete this <?php echo $isNote?'note':'directory'; ?>">
-                    <img src="<?php echo URL_TPL; ?>img/<?php echo $isNote?'document':'folder'; ?>--minus.png" alt="Delete <?php echo $isNote?'note':'directory'; ?>">
-                </a>
-            </li>
 <?php if($isNote && $isEditMode) { ?>
+
             <li class="secondary">
                 <a href="#" id="save-button" class="disabled" title="Save this note">
                     <img src="<?php echo URL_TPL; ?>img/disk-black.png" alt="Save note">
@@ -231,10 +227,7 @@ foreach($users as $value) {
                     <img src="<?php echo URL_TPL; ?>img/edit-code.png" alt="Source">
                 </a>
             </li>
-<?php
-    } // $isNote
-} // $isNote || $isDir
-?>
+<?php } // $isNote ?>
 
         </ul>
 <?php if($isNote && $isEditMode) { ?>

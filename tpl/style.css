@@ -102,26 +102,67 @@ h6 { font-size: 0.7em; }
 #panel h3 > a:hover, #panel a.item:hover { background-color: #f4ece7; border-radius: 0.2em; }
 #panel .selected > a.item { background-color: #fff1e7; border-radius: 0.2em; }
 
-#panel #root, #panel #root ul {
+#root, #panel #root ul {
     list-style-type: none;
     padding: 0; margin: 0;
 }
-#panel #root { margin: 0 0.2em; }
-#panel #root li { margin: 0.2em 0; padding: 0 0 0 1.2em; position: relative; }
+#root { margin: 0 0.2em; }
+#root li { margin: 0.2em 0; padding: 0 0 0 1.2em; position: relative; }
 /*#panel #root > li { padding: 0; }*/
-#panel #root li > a.item { background-repeat: no-repeat; padding: 0.1em 0.5em 0.1em 1.6em; background-position: 0.1em 0.2em; }
-#panel #root .file > a.item, #panel #root .directory > a { height: 1.5em; line-height: 1.4em; }
-#panel #root .file > a.item { background-image: url('img/document.png'); }
-#panel #root .directory > a.item { background-image: url('img/folder.png'); }
-#panel #root .directory.open > a.item { background-image: url('img/folder-open.png'); }
+#root li > a.item { background-repeat: no-repeat; padding: 0.1em 0.5em 0.1em 1.6em; background-position: 0.1em 0.2em; }
+#root .file > a.item, #panel #root .directory > a { height: 1.5em; line-height: 1.4em; }
+#root .file > a.item { background-image: url('img/document.png'); }
+#root .directory > a.item { background-image: url('img/folder.png'); }
+#root .directory.open > a.item { background-image: url('img/folder-open.png'); }
 
-#panel #root .arrow {
+/* arrow to fold/unfold subtrees */
+#root .arrow {
     position: absolute;
     left: 0;
-    margin: 0.2em 0;
-    width: 16px;
-    height: 16px;
+    margin: 0 0 0 0.5em;
 }
+
+/* dropdown menu for each item */
+#root .item-menu {
+    float: right;
+    position: relative;
+    right: 0;
+    margin: 0.2em 0;
+    text-align: right;
+}
+#root .dropdown-arrow {
+    z-index: 10;
+    margin: 0.1em 0.2em 0 0.2em;
+    border: 0.3em solid #cec6c1;
+    border-radius: 3px;
+    background-color: #c1b9b4;
+    cursor: pointer;
+}
+#root .dropdown-arrow:hover { background-color: #e3dbd6; }
+#root .dropdown {
+    z-index: 9;
+    display: none;
+    position: absolute;
+    right: 0.2em;
+    top: 1.1em;
+    margin: 0;
+    background-color: #cec6c1;
+    border: 3px solid #cec6c1;
+    border-radius: 5px;
+}
+#root .dropdown li {
+    margin: 0;
+    padding: 0;
+    border-bottom: 3px solid #cec6c1;
+    text-align:center;
+}
+#root .dropdown li:last-child { border-bottom: none; }
+#root .dropdown a {
+    display: block;
+    padding: 0.2em 0.5em;
+    background-color: #e3dbd6;
+}
+#root .dropdown a:hover { background-color: #f4ece7; }
 
 /**** CONTENT ****/
 
