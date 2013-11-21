@@ -20,22 +20,32 @@ window.onload=function() {
         }
     }
 
+    document.onclick = hideDropdowns;
+
     // show dropdown menu when clicking dropdown arrows
     var arrows = document.getElementsByClassName('dropdown-arrow');
     for(var i=0; i<arrows.length; i++) {
-        arrows[i].onclick = function() {
-            //TODO : make sure every other drodpown is closed before opening one?
-
+        arrows[i].onclick = function(e) {
             var dropdown = this.parentNode.querySelector(".dropdown");
 
-            if(dropdown.className == 'dropdown closed') {
-                dropdown.className = 'dropdown open';
-                dropdown.style.display = 'block';
-            } else {
-                dropdown.className = 'dropdown closed';
-                dropdown.style.display = 'none';
-            }
+            //hide every other dropdown
+            hideDropdowns();
+
+            //show this one
+            dropdown.className = 'dropdown open';
+            dropdown.style.display = 'block';
+
+            //avoid click propagation (which would call hideDropdowns() again)
+            e.stopPropagation();
             return false;
         }
+    }
+}
+
+function hideDropdowns() {
+    var dropdowns = document.getElementsByClassName('dropdown');
+    for(var i=0; i<dropdowns.length; i++) {
+        dropdowns[i].className = 'dropdown closed';
+        dropdowns[i].style.display = 'none';
     }
 }
