@@ -15,8 +15,7 @@
     <script src="<?php echo URL_TPL; ?>js/main.js"></script>
 </head>
 <body>
-<div id="app">
-<nav id="panel">
+<div id="toolbar">
     <div class="toolbar">
         <ul class="actions">
 <?php
@@ -59,89 +58,6 @@ if($user['isLoggedIn']) {
 <?php } ?>
         </ul>
     </div>
-<?php if(isset($notebook['tree'])) { ?>
-
-    <h3<?php if(empty($_GET['item'])) { echo ' class="selected"'; } ?>><a href="?nb=<?php echo $notebookName; ?>"><?php echo urldecode($notebookName); ?></a></h3>
-<?php
-
-function Tree2Html($tree, $nbName, $selectedPath, $parents = array()) {
-    $level = count($parents);
-    $html = str_repeat("\t", $level*2)."<ul";
-    if($level == 0) {
-        $html .= " id=\"root\" class=\"subtree open\"";
-    } else {
-        $html .= " class=\"subtree open\"";
-    }
-    $html .= ">\r\n";
-    
-    foreach ($tree as $key => $value) {
-        $isArray = is_array($value);
-        $isNote = substr($key, -3) == '.md';
-        if($isArray || $isNote) {
-            //path to element
-            $path = (!empty($parents)?implode('/', $parents).'/':'').$key;
-
-            $html .= str_repeat("\t", $level*2+1)."<li class=\"".($isArray?"directory":"file").($path == $selectedPath?' selected':'')."\">";
-
-            //if array, show open/close button
-            if($isArray) {
-                $html .= '<a class="arrow open" href="#"><img src="'.URL_TPL.'img/arbo-parent-open.png" alt="-"></a>';
-            }
-            $html .= '<div class="item-menu">';
-            $html .= '<img class="dropdown-arrow" src="'.URL_TPL.'img/arbo-parent-open.png" alt="v">';
-            $html .= '<ul class="dropdown closed">';
-            $html .= '<li><a href="'.URL.'?nb='.$nbName.'&amp;item='.$path.'&amp;action=edit">Edit</a></li>';
-            $html .= '<li><a href="'.URL.'?nb='.$nbName.'&amp;item='.$path.'&amp;action=delete">Delete</a></li>';
-            $html .= '</ul>';
-            $html .= '</div>';
-
-            $html .= '<a class="item" href="'.URL.'?nb='.$nbName.'&amp;item='.$path.'">';
-            $html .= basename($key, '.md');
-            $html .= '</a>';
-
-            //if array, show its children
-            if($isArray) {
-                $html .= "\r\n";
-                $html .= Tree2Html($value, $nbName, $selectedPath, array_merge($parents, (array)$key));
-                $html .= str_repeat("\t", $level*2+1);
-            }
-
-            $html .= "</li>\r\n";
-        }
-    }
-
-    $html .= str_repeat("\t", $level*2)."</ul>\r\n";
-    return $html;
-}
-
-echo Tree2Html($notebook['tree'], $notebookName, isset($_GET['item'])?$_GET['item']:'');
-
-?>
-<?php } // notebook tree ?>
-<?php if($isConfigMode) { ?>
-    <ul>
-        <li><a href="<?php echo URL; ?>?action=config&amp;option=myPassword">Change my password</a></li>
-        <li><a href="<?php echo URL; ?>?action=config&amp;option=addUser">Add user</a></li>
-<?php if(count($users) > 1) { ?>
-        <li>
-            Delete users:
-            <ul>
-<?php
-foreach($users as $value) {
-    if($value['login'] != $user['login']) {
-?>
-                <li><a href="<?php echo URL; ?>?action=config&amp;option=deleteUser&amp;user=<?php echo $value['login']; ?>"><?php echo $value['login']; ?></a></li>
-<?php
-    } // login = current user
-} //foreach
-?>
-            </ul>
-        </li>
-    </ul>
-<?php } // count($users) > 1 ?>
-<?php } // isConfigMode ?>
-</nav>
-<section id="content">
     <div class="toolbar" id="item-toolbar" data-role="editor-toolbar" data-target="#editor">
         <ul class="actions btn-info">
 <?php if($isNote && $isEditMode) { ?>
@@ -297,6 +213,92 @@ foreach($users as $value) {
 <?php } // $isNote ?>
 
     </div>
+</div>
+<div id="app">
+<nav id="panel">
+<?php if(isset($notebook['tree'])) { ?>
+
+    <h3<?php if(empty($_GET['item'])) { echo ' class="selected"'; } ?>><a href="?nb=<?php echo $notebookName; ?>"><?php echo urldecode($notebookName); ?></a></h3>
+<?php
+
+function Tree2Html($tree, $nbName, $selectedPath, $parents = array()) {
+    $level = count($parents);
+    $html = str_repeat("\t", $level*2)."<ul";
+    if($level == 0) {
+        $html .= " id=\"root\" class=\"subtree open\"";
+    } else {
+        $html .= " class=\"subtree open\"";
+    }
+    $html .= ">\r\n";
+    
+    foreach ($tree as $key => $value) {
+        $isArray = is_array($value);
+        $isNote = substr($key, -3) == '.md';
+        if($isArray || $isNote) {
+            //path to element
+            $path = (!empty($parents)?implode('/', $parents).'/':'').$key;
+
+            $html .= str_repeat("\t", $level*2+1)."<li class=\"".($isArray?"directory":"file").($path == $selectedPath?' selected':'')."\">";
+
+            //if array, show open/close button
+            if($isArray) {
+                $html .= '<a class="arrow open" href="#"><img src="'.URL_TPL.'img/arbo-parent-open.png" alt="-"></a>';
+            }
+            $html .= '<div class="item-menu">';
+            $html .= '<img class="dropdown-arrow" src="'.URL_TPL.'img/arbo-parent-open.png" alt="v">';
+            $html .= '<ul class="dropdown closed">';
+            $html .= '<li><a href="'.URL.'?nb='.$nbName.'&amp;item='.$path.'&amp;action=edit">Edit</a></li>';
+            $html .= '<li><a href="'.URL.'?nb='.$nbName.'&amp;item='.$path.'&amp;action=delete">Delete</a></li>';
+            $html .= '</ul>';
+            $html .= '</div>';
+
+            $html .= '<a class="item" href="'.URL.'?nb='.$nbName.'&amp;item='.$path.'">';
+            $html .= basename($key, '.md');
+            $html .= '</a>';
+
+            //if array, show its children
+            if($isArray) {
+                $html .= "\r\n";
+                $html .= Tree2Html($value, $nbName, $selectedPath, array_merge($parents, (array)$key));
+                $html .= str_repeat("\t", $level*2+1);
+            }
+
+            $html .= "</li>\r\n";
+        }
+    }
+
+    $html .= str_repeat("\t", $level*2)."</ul>\r\n";
+    return $html;
+}
+
+echo Tree2Html($notebook['tree'], $notebookName, isset($_GET['item'])?$_GET['item']:'');
+
+?>
+<?php } // notebook tree ?>
+<?php if($isConfigMode) { ?>
+    <ul>
+        <li><a href="<?php echo URL; ?>?action=config&amp;option=myPassword">Change my password</a></li>
+        <li><a href="<?php echo URL; ?>?action=config&amp;option=addUser">Add user</a></li>
+<?php if(count($users) > 1) { ?>
+        <li>
+            Delete users:
+            <ul>
+<?php
+foreach($users as $value) {
+    if($value['login'] != $user['login']) {
+?>
+                <li><a href="<?php echo URL; ?>?action=config&amp;option=deleteUser&amp;user=<?php echo $value['login']; ?>"><?php echo $value['login']; ?></a></li>
+<?php
+    } // login = current user
+} //foreach
+?>
+            </ul>
+        </li>
+    </ul>
+<?php } // count($users) > 1 ?>
+<?php } // isConfigMode ?>
+</nav>
+<section id="content">
 <?php if($isNote || $isDir) { ?>
 
     <header class="path"><?php echo $_GET['item']; ?></header>

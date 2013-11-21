@@ -15,28 +15,24 @@ h6 { font-size: 0.7em; }
 
 /**** PANEL / FLEX BOXES ****/
 
-#app {
-    height: 100%;
-    display: flex;
-    flex-flow: row;
-}
-#panel {
+#toolbar, #app { display: flex; flex-flow: row; width: 100%; }
+#toolbar { position: absolute; height: 24px; }
+#app { height: 100%; }
+#toolbar > :first-child, #panel {
     order: 1;
     flex: 3 30%;
     align-self: stretch;
-    overflow: auto;
     max-width: 20em;
     white-space: nowrap;
-    background-color: #e3dbd6;
     border-right: 0.2em solid #847c77;
 }
+#panel { overflow: auto; background-color: #e3dbd6; margin-top: 24px; }
+#toolbar > :last-child, #content { order: 2; flex: 7 70%; align-self: stretch; }
 #content {
-    order: 2;
-    flex: 7 70%;
-    align-self: stretch;
+    position: relative;
     overflow: auto;
     background-color: #e3dbd6;
-    position: relative;
+    margin-top: 24px;
 }
 #content > h1, #content > h2, #content > h3,
 #content > h4, #content > h5, #content > h6,
