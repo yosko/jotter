@@ -16,15 +16,6 @@ See [the demo](http://tools.yosko.net/demos/jotter/) or install it yourself!
 
 ![Jotter screenshot](http://www.yosko.net/data/images/jotter-v0.1.png)
 
-## Potential future features
-
-- Trash bin for deleted notes
-- Keep last versions of each note and restore it on demand
-- Inserting image (currently, only drag & drop works, not the button)
-- Option to make some notes/notebooks publicly accessible
-- Share notebooks between users
-- Patch the WYSIWYG and Markdown libraries to enhance behavior and avoid most common rendering problems
-
 ## Requirements
 
 - PHP 5.3 or above
@@ -34,6 +25,35 @@ See [the demo](http://tools.yosko.net/demos/jotter/) or install it yourself!
 
 1. Upload it (or `git clone` it) on your server (let's say in `/var/www/jotter`)
 2. Go to the corresponding URL (lets say `http://www.example.com/jotter`)
+
+## TODO
+
+- Next version:
+  - drag & drop to move notes/directories within a notebook
+- Following ones:
+  - remember folded/unfolded folder (will change the save format)
+  - Make the wysiwyg optional (& directly write notes in Markdown)
+  - Trash bin for deleted notes
+  - Keep last N versions of each note and restore it on demand
+  - Option to make some notes/notebooks publicly accessible
+- Not sure if possible:
+  - Sync API (à la Simplenotes?) for desktop/mobile apps
+  - Share notebooks between users & handle concurrent edit (à la Etherpad?)
+  - Patch the WYSIWYG and Markdown libraries to enhance behavior and avoid most common rendering problems
+
+## Version History
+
+- v0.2 (2013-11-20)
+  - fold/unfold directories (not yet saved on server)
+  - moved/changed some buttons for better ergonomics
+  - always keep toolbar visible
+  - interactive source code display (whitout base64 code)
+  - image button implemented
+  - prefill link with 'http://'
+  - FIX random sort order
+  - other minor fixes and tweaks
+- v0.1 (2013-11-18)
+  - initial version
 
 ## License
 
