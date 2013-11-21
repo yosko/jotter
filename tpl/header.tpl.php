@@ -18,39 +18,19 @@
 <div id="toolbar">
     <div class="toolbar">
         <ul class="actions">
-<?php
-if($user['isLoggedIn']) {
-    if(isset($notebook['tree'])) {
-        ?>
+<?php if($user['isLoggedIn']) { ?>
 
             <li>
-                <a href="<?php echo URL; ?>?nb=<?php echo $notebookName; ?>&amp;item=<?php echo $itemPath; ?>&amp;action=addnote" title="Add a new note inside the current directory">
-                    <img src="<?php echo URL_TPL; ?>img/document--plus.png" alt="Add note">
-                </a>
-            </li>
-            <li>
-                <a href="<?php echo URL; ?>?nb=<?php echo $notebookName; ?>&amp;item=<?php echo $itemPath; ?>&amp;action=adddir" title="Add a new directory inside the current directory">
-                    <img src="<?php echo URL_TPL; ?>img/folder--plus.png" alt="Add directory">
-                </a>
-            </li>
-            <li>
-                <a href="?nb=<?php echo $notebookName; ?>&amp;action=delete" title="Delete the current notebook">
-                    <img src="<?php echo URL_TPL; ?>img/folders-stack-minus.png" alt="Delete notebook">
-                </a>
-            </li>
-<?php } ?>
-
-            <li class="secondary">
                 <a href="<?php echo URL; ?>" title="List of notebooks">
                     <img src="<?php echo URL_TPL; ?>img/jotter-icon-16.png" alt="Notebooks">
                 </a>
             </li>
-            <li class="secondary">
+            <li>
                 <a href="<?php echo URL; ?>?action=config" title="Configure Jotter">
                     <img src="<?php echo URL_TPL; ?>img/wrench-screwdriver.png" alt="Config">
                 </a>
             </li>
-            <li class="secondary">
+            <li>
                 <a href="<?php echo URL; ?>?action=logout" title="Log out">
                     <img src="<?php echo URL_TPL; ?>img/door-open-out.png" alt="Logout">
                 </a>
@@ -62,83 +42,58 @@ if($user['isLoggedIn']) {
         <ul class="actions btn-info">
 <?php if($isNote && $isEditMode) { ?>
 
-            <li class="secondary">
+            <li>
                 <a href="#" id="save-button" class="disabled" title="Save this note">
                     <img src="<?php echo URL_TPL; ?>img/disk-black.png" alt="Save note">
                 </a>
             </li>
-            <li class="secondary">
+            <li>
                 <a href="#" id="headingDropDown" class="ajax-formatter" data-toggle="dropdown" title="Title">
                     <img src="<?php echo URL_TPL; ?>img/edit-heading.png" alt="Link">
                 </a>
             </li>
-            <!-- <li class="secondary">
-                <a href="#" class="ajax-formatter" data-toggle="dropdown" title="Alignement">
-                    <img src="<?php echo URL_TPL; ?>img/edit-alignment.png" alt="Align"> &#x25BC;
-                </a>
-            </li> -->
-            <li class="secondary">
+            <li>
                 <a href="#" class="ajax-formatter" data-edit="bold" title="Bold (Ctrl+B)">
                     <img src="<?php echo URL_TPL; ?>img/edit-bold.png" alt="Bold">
                 </a>
             </li>
-            <li class="secondary">
+            <li>
                 <a href="#" class="ajax-formatter" data-edit="italic" title="Italic (Ctrl+I)">
                     <img src="<?php echo URL_TPL; ?>img/edit-italic.png" alt="Italic">
                 </a>
             </li>
-            <!-- <li class="secondary">
-                <a href="#" class="ajax-formatter" data-edit="underline" title="Underline (Ctrl+U)">
-                    <img src="<?php echo URL_TPL; ?>img/edit-underline.png" alt="Underline">
-                </a>
-            </li>
-            <li class="secondary">
-                <a href="#" class="ajax-formatter" data-edit="strikethrough" title="Strike">
-                    <img src="<?php echo URL_TPL; ?>img/edit-strike.png" alt="Strike">
-                </a>
-            </li> -->
-            <li class="secondary">
+            <li>
                 <a href="#" class="ajax-formatter" data-edit="insertunorderedlist" title="List">
                     <img src="<?php echo URL_TPL; ?>img/edit-list.png" alt="List">
                 </a>
             </li>
-            <li class="secondary">
+            <li>
                 <a href="#" class="ajax-formatter" data-edit="insertorderedlist" title="Ordered list">
                     <img src="<?php echo URL_TPL; ?>img/edit-list-order.png" alt="Ordered List">
                 </a>
             </li>
-            <!-- <li class="secondary">
-                <a href="#" class="ajax-formatter" data-edit="indent" title="Indent text (Tab)">
-                    <img src="<?php echo URL_TPL; ?>img/edit-indent.png" alt="Indent">
-                </a>
-            </li>
-            <li class="secondary">
-                <a href="#" class="ajax-formatter" data-edit="outdent" title="Outdent text (Shift+Tab)">
-                    <img src="<?php echo URL_TPL; ?>img/edit-outdent.png" alt="Outdent">
-                </a>
-            </li> -->
-            <li class="secondary">
+            <li>
                 <a href="#" id="linkDropdown" class="ajax-formatter" data-toggle="dropdown" title="Link">
                     <img src="<?php echo URL_TPL; ?>img/chain--plus.png" alt="Link">
                 </a>
             </li>
-            <li class="secondary">
+            <li>
                 <a href="#" class="ajax-formatter" data-edit="unlink" title="Remove link">
                     <img src="<?php echo URL_TPL; ?>img/chain--minus.png" alt="Remove link">
                 </a>
             </li>
-            <li class="secondary">
+            <li>
                 <a href="#" class="ajax-formatter" id="picture-button" title="Insert image (or drag &amp; drop it in your text)">
                     <img src="<?php echo URL_TPL; ?>img/image.png" alt="Image">
                 </a>
                 <input type="file" id="hidden-picture-button" data-target="#picture-button" data-edit="insertImage" />
             </li>
-            <li class="secondary">
+            <li>
                 <a href="#" class="ajax-formatter" id="mdash-button" title="Insert em dash">
                     &mdash;
                 </a>
             </li>
-            <li class="secondary">
+            <li>
                 <a href="#" class="ajax-formatter" id="source-button" title="View source">
                     <img src="<?php echo URL_TPL; ?>img/edit-code.png" alt="Source">
                 </a>
@@ -152,64 +107,42 @@ if($user['isLoggedIn']) {
             <button type="button">Add</button>
         </div>
         <ul class="actions" id="headingButtons">
-            <li class="secondary">
+            <li>
                 <a href="#" class="ajax-formatter" data-edit="formatBlock h1" title="Title level 1">
                     <img src="<?php echo URL_TPL; ?>img/edit-heading-1.png" alt="Level 1">
                 </a>
             </li>
-            <li class="secondary">
+            <li>
                 <a href="#" class="ajax-formatter" data-edit="formatBlock h2" title="Title level 2">
                     <img src="<?php echo URL_TPL; ?>img/edit-heading-2.png" alt="Level 2">
                 </a>
             </li>
-            <li class="secondary">
+            <li>
                 <a href="#" class="ajax-formatter" data-edit="formatBlock h3" title="Title level 3">
                     <img src="<?php echo URL_TPL; ?>img/edit-heading-3.png" alt="Level 3">
                 </a>
             </li>
-            <li class="secondary">
+            <li>
                 <a href="#" class="ajax-formatter" data-edit="formatBlock h4" title="Title level 4">
                     <img src="<?php echo URL_TPL; ?>img/edit-heading-4.png" alt="Level 4">
                 </a>
             </li>
-            <li class="secondary">
+            <li>
                 <a href="#" class="ajax-formatter" data-edit="formatBlock h5" title="Title level 5">
                     <img src="<?php echo URL_TPL; ?>img/edit-heading-5.png" alt="Level 5">
                 </a>
             </li>
-            <li class="secondary">
+            <li>
                 <a href="#" class="ajax-formatter" data-edit="formatBlock h6" title="Title level 6">
                     <img src="<?php echo URL_TPL; ?>img/edit-heading-6.png" alt="Level 6">
                 </a>
             </li>
-            <li class="secondary">
+            <li>
                 <a href="#" class="ajax-formatter" data-edit="formatBlock p" title="Turn title into a paragraph">
                     <img src="<?php echo URL_TPL; ?>img/edit-heading-minus.png" alt="Paragraph">
                 </a>
             </li>
         </ul>
-        <!-- <ul class="actions">
-            <li class="secondary">
-                <a href="#" class="ajax-formatter" data-edit="justifyleft" title="Align left (Ctrl+L)">
-                    <img src="<?php echo URL_TPL; ?>img/edit-alignment.png" alt="Align left">
-                </a>
-            </li>
-            <li class="secondary">
-                <a href="#" class="ajax-formatter" data-edit="justifycenter" title="Align center (Ctrl+E)">
-                    <img src="<?php echo URL_TPL; ?>img/edit-alignment-center.png" alt="Align center">
-                </a>
-            </li>
-            <li class="secondary">
-                <a href="#" class="ajax-formatter" data-edit="justifyright" title="Align right (Ctrl+R)">
-                    <img src="<?php echo URL_TPL; ?>img/edit-alignment-right.png" alt="Align right">
-                </a>
-            </li>
-            <li class="secondary">
-                <a href="#" class="ajax-formatter" data-edit="justifyfull" title="Justify text (Ctrl+J)">
-                    <img src="<?php echo URL_TPL; ?>img/edit-alignment-justify.png" alt="Justify">
-                </a>
-            </li>
-        </ul> -->
 <?php } // $isNote ?>
 
     </div>
@@ -218,7 +151,19 @@ if($user['isLoggedIn']) {
 <nav id="panel">
 <?php if(isset($notebook['tree'])) { ?>
 
-    <h3<?php if(empty($_GET['item'])) { echo ' class="selected"'; } ?>><a href="?nb=<?php echo $notebookName; ?>"><?php echo urldecode($notebookName); ?></a></h3>
+    <div class="item-menu">
+        <img class="dropdown-arrow" src="<?php echo URL_TPL; ?>img/arbo-parent-open.png" alt="v">
+        <ul class="dropdown closed">
+        <!--<li><a href="<?php echo URL; ?>?nb=<?php echo $notebookName; ?>&amp;action=edit" title="Edit notebook">Edit</a></li>-->
+        <li><a href="<?php echo URL; ?>?nb=<?php echo $notebookName; ?>&amp;action=delete" title="Delete notebook">
+            <img class="icon" src="<?php echo URL_TPL; ?>img/folders-stack-minus.png" alt="">
+            Delete
+        </a></li>
+        </ul>
+    </div>
+    <h3<?php if(empty($_GET['item'])) { echo ' class="selected"'; } ?>>
+        <a class="item" href="?nb=<?php echo $notebookName; ?>"><?php echo urldecode($notebookName); ?></a>
+    </h3>
 <?php
 
 function Tree2Html($tree, $nbName, $selectedPath, $parents = array()) {
@@ -247,8 +192,10 @@ function Tree2Html($tree, $nbName, $selectedPath, $parents = array()) {
             $html .= '<div class="item-menu">';
             $html .= '<img class="dropdown-arrow" src="'.URL_TPL.'img/arbo-parent-open.png" alt="v">';
             $html .= '<ul class="dropdown closed">';
-            $html .= '<li><a href="'.URL.'?nb='.$nbName.'&amp;item='.$path.'&amp;action=edit">Edit</a></li>';
-            $html .= '<li><a href="'.URL.'?nb='.$nbName.'&amp;item='.$path.'&amp;action=delete">Delete</a></li>';
+            $html .= '<li><a href="'.URL.'?nb='.$nbName.'&amp;item='.$path.'&amp;action=edit" title="Edit &quot;'.$path.'&quot;">';
+            $html .= '<img class="icon" src="'.URL_TPL.'img/'.($isNote?'document':'folder').'--pencil.png" alt=""> Edit</a></li>';
+            $html .= '<li><a href="'.URL.'?nb='.$nbName.'&amp;item='.$path.'&amp;action=delete" title="Delete &quot;'.$path.'&quot;">';
+            $html .= '<img class="icon" src="'.URL_TPL.'img/'.($isNote?'document':'folder').'--minus.png" alt=""> Delete</a></li>';
             $html .= '</ul>';
             $html .= '</div>';
 
@@ -274,6 +221,21 @@ function Tree2Html($tree, $nbName, $selectedPath, $parents = array()) {
 echo Tree2Html($notebook['tree'], $notebookName, isset($_GET['item'])?$_GET['item']:'');
 
 ?>
+    <ul class="buttons">
+        <li>
+            <a href="<?php echo URL; ?>?nb=<?php echo $notebookName; ?>&amp;item=<?php echo $itemPath; ?>&amp;action=addnote" title="Add a new note inside the current directory">
+                <img src="<?php echo URL_TPL; ?>img/document--plus.png" alt="">
+                Add note
+            </a>
+        </li>
+        <li>
+            <a href="<?php echo URL; ?>?nb=<?php echo $notebookName; ?>&amp;item=<?php echo $itemPath; ?>&amp;action=adddir" title="Add a new directory inside the current directory">
+                <img src="<?php echo URL_TPL; ?>img/folder--plus.png" alt="">
+                Add directory
+            </a>
+        </li>
+    </ul>
+
 <?php } // notebook tree ?>
 <?php if($isConfigMode) { ?>
     <ul>

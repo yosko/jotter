@@ -53,11 +53,11 @@ h6 { font-size: 0.7em; }
     border-right: 0.2em solid #e3dbd6;
 }
 .actions li {
-    float: right;
-    border-left: 0.2em solid #e3dbd6;
+    float: left;
+    border-right: 0.2em solid #e3dbd6;
     background-color: #e3dbd6;
 }
-.actions li.secondary { float: left; border-right: 0.2em solid #e3dbd6; border-left: none; }
+.actions li.secondary { float: right; border-left: 0.2em solid #e3dbd6; border-right: none; }
 .actions a {
     display: block;
     height: 16px;
@@ -86,27 +86,28 @@ h6 { font-size: 0.7em; }
 
 /**** TREE PANEL ****/
 
+#panel img { vertical-align: text-bottom; }
 #panel h3 { margin: 0.2em; }
 #panel a { text-decoration: none; color: #484848; outline: 0; }
-#panel h3 > a, #panel a.item { display: block; }
+#panel h3 > a, #panel a.item, #panel .buttons a { display: block; }
 #panel h3 > a {
     padding: 0.1em 0.5em 0.1em 1.6em;
     background-repeat: no-repeat;
     background-position: 0.2em 0.2em;
     background-image: url('img/folders-stack.png');
 }
-#panel h3 > a:hover, #panel a.item:hover { background-color: #f4ece7; border-radius: 0.2em; }
+#panel h3 > a:hover, #panel a.item:hover, #panel .buttons a:hover
+{ background-color: #f4ece7; border-radius: 0.2em; }
 #panel .selected > a.item { background-color: #fff1e7; border-radius: 0.2em; }
 
-#root, #panel #root ul {
+.item-menu ul, #root, #root ul, #panel .buttons {
     list-style-type: none;
     padding: 0; margin: 0;
 }
 #root { margin: 0 0.2em; }
 #root li { margin: 0.2em 0; padding: 0 0 0 1.2em; position: relative; }
-/*#panel #root > li { padding: 0; }*/
 #root li > a.item { background-repeat: no-repeat; padding: 0.1em 0.5em 0.1em 1.6em; background-position: 0.1em 0.2em; }
-#root .file > a.item, #panel #root .directory > a { height: 1.5em; line-height: 1.4em; }
+#root .file > a.item, #root .directory > a { height: 1.5em; line-height: 1.4em; }
 #root .file > a.item { background-image: url('img/document.png'); }
 #root .directory > a.item { background-image: url('img/folder.png'); }
 #root .directory.open > a.item { background-image: url('img/folder-open.png'); }
@@ -119,14 +120,15 @@ h6 { font-size: 0.7em; }
 }
 
 /* dropdown menu for each item */
-#root .item-menu {
+#panel .item-menu {
     float: right;
     position: relative;
     right: 0;
     margin: 0.2em 0;
     text-align: right;
 }
-#root .dropdown-arrow {
+#panel > .item-menu { margin: 0.4em 0.2em 0; }
+#panel .dropdown-arrow {
     z-index: 10;
     margin: 0.1em 0.2em 0 0.2em;
     border: 0.3em solid #cec6c1;
@@ -134,8 +136,8 @@ h6 { font-size: 0.7em; }
     background-color: #c1b9b4;
     cursor: pointer;
 }
-#root .dropdown-arrow:hover { background-color: #e3dbd6; }
-#root .dropdown {
+#panel .dropdown-arrow:hover { background-color: #e3dbd6; }
+#panel .dropdown {
     z-index: 9;
     display: none;
     position: absolute;
@@ -146,19 +148,23 @@ h6 { font-size: 0.7em; }
     border: 3px solid #cec6c1;
     border-radius: 5px;
 }
-#root .dropdown li {
+#panel .dropdown li {
     margin: 0;
     padding: 0;
     border-bottom: 3px solid #cec6c1;
     text-align:center;
 }
-#root .dropdown li:last-child { border-bottom: none; }
-#root .dropdown a {
+#panel .dropdown li:last-child { border-bottom: none; }
+#panel .dropdown a {
     display: block;
+    text-align: left;
     padding: 0.2em 0.5em;
     background-color: #e3dbd6;
 }
-#root .dropdown a:hover { background-color: #f4ece7; }
+#panel .dropdown a:hover { background-color: #f4ece7; }
+
+#panel .buttons { margin: 1em 0.2em 0 0.2em; }
+#panel .buttons a { padding: 0.2em; }
 
 /**** CONTENT ****/
 
