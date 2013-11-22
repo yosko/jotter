@@ -14,7 +14,7 @@ See [the demo](http://tools.yosko.net/demos/jotter/) or install it yourself!
 - multi-user support
 - no DBMS needed. Everything is stored in flat files (JSON & Markdown)
 
-![Jotter screenshot](http://www.yosko.net/data/images/jotter-v0.1.png)
+![Jotter screenshot](http://www.yosko.net/data/images/jotter-v0.2.png)
 
 ## Requirements
 
