@@ -86,7 +86,9 @@ if(!$user['isLoggedIn']) {
     if(!$appInstalled) {
         $phpMinVersion = '5.3';
         $phpIsMinVersion = (version_compare(PHP_VERSION, $phpMinVersion) >= 0);
-        $isWritable = (file_exists(DIR_DATA) && is_writable(DIR_DATA)) || is_writable(dirname(DIR_DATA));
+        $isWritable = is_writable(DIR_DATA) && is_writable(ROOT.'cache/')
+                || !file_exists(DIR_DATA) && !file_exists(ROOT.'cache/')
+                && is_writable(dirname(DIR_DATA));
     }
 
     include( DIR_TPL.'loginForm.tpl.php' );

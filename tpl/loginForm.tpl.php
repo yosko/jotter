@@ -11,7 +11,7 @@ include DIR_TPL.'header.tpl.php';
             <?php echo $phpMinVersion?'OK':'KO'; ?>
         </li>
         <li class="<?php echo $isWritable?'success':'error'; ?>">
-            Write access to create <code>data/</code> directory:
+            Write access to create <code>data/</code> &amp; <code>cache/</code> directories:
             <?php echo $isWritable?'OK':'KO'; ?>
         </li>
     </ul>
