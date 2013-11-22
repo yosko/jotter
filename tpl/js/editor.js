@@ -84,15 +84,26 @@ $(function(){
         $('#insertLink').hide();
         e.preventDefault();
     });
-    $('#headingButtons').hide();
+
+    toggleHeadingButtons();
     $('#headingDropDown').click(function(e){
-        $('#headingButtons').toggle();
+        toggleHeadingButtons();
         e.preventDefault();
     });
     $('#headingButtons a').click(function(e){
-        $('#headingButtons').hide();
+        toggleHeadingButtons();
         e.preventDefault();
     });
+
+    function toggleHeadingButtons() {
+        if( $('#headingButtons').is(':hidden') ) {
+            $('#headingButtons').show();
+            $('#toolbar').height(48);
+        } else {
+            $('#headingButtons').hide();
+            $('#toolbar').height(24);
+        }
+    }
 
     function saveNote() {
         currentlySaving = true;

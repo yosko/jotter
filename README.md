@@ -43,10 +43,11 @@ See [the demo](http://tools.yosko.net/demos/jotter/) or install it yourself!
 
 ## Version History
 
-- v0.2 (2013-11-20)
+- v0.2 (2013-11-22)
   - fold/unfold directories (not yet saved on server)
   - moved/changed some buttons for better ergonomics
   - always keep toolbar visible
+  - change notebook without returning to homepage
   - interactive source code display (whitout base64 code)
   - image button implemented
   - prefill link with 'http://'

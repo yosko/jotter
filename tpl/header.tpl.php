@@ -16,7 +16,7 @@
 </head>
 <body>
 <div id="toolbar">
-    <div class="toolbar">
+    <div class="toolbar" id="panel-toolbar">
         <ul class="actions">
 <?php if($user['isLoggedIn']) { ?>
 
@@ -150,7 +150,23 @@
 <div id="app">
 <nav id="panel">
 <?php if(isset($notebook['tree'])) { ?>
+    
+    <form action="">
+        <select name="nb" id="notebookSelect">
+            <option value="!nothing!">&raquo; select a notebook &laquo;</option>
+            <option value="!new!">&raquo; create a new notebook &laquo;</option>
+<?php
+if(!empty($notebooks[$user['login']])) {
+    foreach($notebooks[$user['login']] as $key => $value) {
+?>
 
+            <option value="<?php echo $key; ?>"><?php echo urldecode($key); ?></option>
+<?php
+    }
+}
+?>
+        </select>
+    </form>
     <div class="item-menu">
         <img class="dropdown-arrow" src="<?php echo URL_TPL; ?>img/arbo-parent-open.png" alt="v">
         <ul class="dropdown closed">

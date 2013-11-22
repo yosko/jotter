@@ -16,9 +16,9 @@ h6 { font-size: 0.7em; }
 /**** PANEL / FLEX BOXES ****/
 
 #toolbar, #app { display: flex; flex-flow: row; width: 100%; }
-#toolbar { position: absolute; height: 24px; }
+#toolbar { position: absolute; height: 24px; z-index: 10; }
 #app { height: 100%; }
-#toolbar > :first-child, #panel {
+#panel-toolbar, #panel {
     order: 1;
     flex: 3 30%;
     align-self: stretch;
@@ -27,7 +27,7 @@ h6 { font-size: 0.7em; }
     border-right: 0.2em solid #847c77;
 }
 #panel { overflow: auto; background-color: #e3dbd6; margin-top: 24px; }
-#toolbar > :last-child, #content { order: 2; flex: 7 70%; align-self: stretch; }
+#item-toolbar, #content { order: 2; flex: 7 70%; align-self: stretch; }
 #content {
     position: relative;
     overflow: auto;
@@ -41,7 +41,7 @@ h6 { font-size: 0.7em; }
 
 /**** ACTIONS LISTS ****/
 
-.toolbar {
+#panel-toolbar .actions, #item-toolbar .actions:first-child {
     background-color: #c1b9b4;
 }
 .actions {
@@ -86,6 +86,7 @@ h6 { font-size: 0.7em; }
 
 /**** TREE PANEL ****/
 
+#notebookSelect { width: 100%; text-align: center; }
 #panel img { vertical-align: text-bottom; }
 #panel h3 { margin: 0.2em; }
 #panel a { text-decoration: none; color: #484848; outline: 0; }

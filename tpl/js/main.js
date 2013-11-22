@@ -40,6 +40,21 @@ window.onload=function() {
             return false;
         }
     }
+
+    //load a notebook selected from the dropdown list (or create a new one)
+    var notebookSelect = document.getElementById('notebookSelect');
+    notebookSelect.onchange = function(e) {
+        var home = location.protocol + '//' + location.host + location.pathname;
+
+        //redirect to notebook creation
+        if(notebookSelect.value == '!new!') {
+            window.location = home+'?action=add';
+
+        //redirect to selected notebook
+        } else if(notebookSelect.value.substring(0,1) != '!') {
+            window.location = home+'?nb='+notebookSelect.value;
+        }
+    }
 }
 
 function hideDropdowns() {
