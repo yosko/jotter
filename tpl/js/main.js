@@ -81,7 +81,6 @@ function drag(e) {
  * Avoid page reload on dropping an item onto another
  */
 function allowDrop(e) {
-    e.target.style.backgroundColor = 'red';
     e.preventDefault();
 }
 
@@ -96,17 +95,44 @@ function drop(e) {
     var dest = e.target.parentNode;
     var destPath = dest.getAttribute('data-path');
 
-    //if item was dropped on a directory (not a note)
-    if(dest.className == 'directory') {
+    //if item was dropped on a directory (not a note) which is not one of its descendant
+    if(dest.className == 'directory' && !isAncestor(source, dest)) {
+        //TODO: sync with server
+
         //find its subtree list
         var destList = dest.querySelector('li .subtree');
-        
-        //move the source item
-        destList.appendChild(source.parentNode.removeChild(source));
 
-        //TODO: sync with server
-        //TODO: order list by item name (based on path to avoid searching for text in link)
+        //remove the source item
+        source.parentNode.removeChild(source);
+
+        //insert source item in the right, sorted place
+        var sourceItem = sourcePath.substring(sourcePath.lastIndexOf('/')+1);
+        var inserted = false;
+        for(var i=0; i<destList.childNodes.length; i++) {
+            var x = destList.childNodes[i];
+
+            if(x.nodeType == Node.ELEMENT_NODE) {
+                var currentItem = x.getAttribute('data-path').substring(x.getAttribute('data-path').lastIndexOf('/')+1);
+                if(currentItem.toLowerCase() > sourceItem.toLowerCase()) {
+                    destList.insertBefore(source, x);
+                    inserted = true;
+                }
+            }
+        }
+
+        //add item in the end if not yet inserted
+        if(!inserted) {
+            destList.appendChild(source);
+        }
     }
+}
 
-    // alert(sourcePath + ' -> ' + destPath);
+function isDescendant(ancestor,descendant){
+    return ancestor.compareDocumentPosition(descendant) & 
+        Node.DOCUMENT_POSITION_CONTAINS;
+}
+
+function isAncestor(descendant,ancestor){
+    return descendant.compareDocumentPosition(ancestor) & 
+        Node.DOCUMENT_POSITION_CONTAINED_BY;
 }
