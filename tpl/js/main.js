@@ -57,10 +57,56 @@ window.onload=function() {
     }
 }
 
+/**
+ * Hide any open dropdown menu
+ */
 function hideDropdowns() {
     var dropdowns = document.getElementsByClassName('dropdown');
     for(var i=0; i<dropdowns.length; i++) {
         dropdowns[i].className = 'dropdown closed';
         dropdowns[i].style.display = 'none';
     }
+}
+
+/**
+ * When dragging an item, remember its path
+ */
+function drag(e) {
+    item = e.target.parentNode;
+    var path = item.getAttribute('data-path');
+    e.dataTransfer.setData("Text",path);
+}
+
+/**
+ * Avoid page reload on dropping an item onto another
+ */
+function allowDrop(e) {
+    e.target.style.backgroundColor = 'red';
+    e.preventDefault();
+}
+
+/**
+ * Perform the update when dropping an item onto another
+ */
+function drop(e) {
+    e.preventDefault();
+    var sourcePath = e.dataTransfer.getData("Text");
+    var source = document.querySelector('[data-path="'+sourcePath+'"]');
+
+    var dest = e.target.parentNode;
+    var destPath = dest.getAttribute('data-path');
+
+    //if item was dropped on a directory (not a note)
+    if(dest.className == 'directory') {
+        //find its subtree list
+        var destList = dest.querySelector('li .subtree');
+        
+        //move the source item
+        destList.appendChild(source.parentNode.removeChild(source));
+
+        //TODO: sync with server
+        //TODO: order list by item name (based on path to avoid searching for text in link)
+    }
+
+    // alert(sourcePath + ' -> ' + destPath);
 }

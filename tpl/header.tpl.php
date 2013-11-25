@@ -178,7 +178,7 @@ if(!empty($notebooks[$user['login']])) {
         </ul>
     </div>
     <h3<?php if(empty($_GET['item'])) { echo ' class="selected"'; } ?>>
-        <a class="item" href="?nb=<?php echo $notebookName; ?>"><?php echo urldecode($notebookName); ?></a>
+        <a class="item" ondrop="drop(event)" ondragover="allowDrop(event)" id="notebookTitle" href="?nb=<?php echo $notebookName; ?>"><?php echo urldecode($notebookName); ?></a>
     </h3>
 <?php
 
@@ -186,9 +186,9 @@ function Tree2Html($tree, $nbName, $selectedPath, $parents = array()) {
     $level = count($parents);
     $html = str_repeat("\t", $level*2)."<ul";
     if($level == 0) {
-        $html .= " id=\"root\" class=\"subtree open\"";
+        $html .= ' id="root" class="subtree open" ondragover="allowDrop(event)"';
     } else {
-        $html .= " class=\"subtree open\"";
+        $html .= ' class="subtree open"';
     }
     $html .= ">\r\n";
     
@@ -199,12 +199,16 @@ function Tree2Html($tree, $nbName, $selectedPath, $parents = array()) {
             //path to element
             $path = (!empty($parents)?implode('/', $parents).'/':'').$key;
 
-            $html .= str_repeat("\t", $level*2+1)."<li class=\"".($isArray?"directory":"file").($path == $selectedPath?' selected':'')."\">";
+            $html .= str_repeat("\t", $level*2+1)
+                .'<li class="'.($isArray?"directory":"file").($path == $selectedPath?' selected':'').'"'
+                .' data-path="'.$path.'"'
+                .' draggable="true" ondragstart="drag(event)" ondrop="drop(event)">';
 
             //if array, show open/close button
             if($isArray) {
                 $html .= '<a class="arrow open" href="#"><img src="'.URL_TPL.'img/arbo-parent-open.png" alt="-"></a>';
             }
+            $html .= "\r\n".str_repeat("\t", $level*2+2);
             $html .= '<div class="item-menu">';
             $html .= '<img class="dropdown-arrow" src="'.URL_TPL.'img/arbo-parent-open.png" alt="v">';
             $html .= '<ul class="dropdown closed">';
@@ -215,6 +219,7 @@ function Tree2Html($tree, $nbName, $selectedPath, $parents = array()) {
             $html .= '</ul>';
             $html .= '</div>';
 
+            $html .= "\r\n".str_repeat("\t", $level*2+2);
             $html .= '<a class="item" href="'.URL.'?nb='.$nbName.'&amp;item='.$path.'">';
             $html .= basename($key, '.md');
             $html .= '</a>';
@@ -223,9 +228,9 @@ function Tree2Html($tree, $nbName, $selectedPath, $parents = array()) {
             if($isArray) {
                 $html .= "\r\n";
                 $html .= Tree2Html($value, $nbName, $selectedPath, array_merge($parents, (array)$key));
-                $html .= str_repeat("\t", $level*2+1);
             }
 
+            $html .= "\r\n".str_repeat("\t", $level*2+1);
             $html .= "</li>\r\n";
         }
     }
