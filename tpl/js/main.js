@@ -97,32 +97,42 @@ function drop(e) {
 
     //if item was dropped on a directory (not a note) which is not one of its descendant
     if(dest.className == 'directory' && !isAncestor(source, dest)) {
-        //TODO: sync with server
+        //sync with server
+        var request = new XMLHttpRequest();
+        var notebook = document.getElementById('notebookTitle').getAttribute('data-name');
+        request.open('GET','?action=ajax&option=moveItem&nb='+notebook+'&source='+sourcePath+'&destination='+destPath,false);
+        request.send();
+        response = JSON.parse(request.responseText);
 
-        //find its subtree list
-        var destList = dest.querySelector('li .subtree');
+        // is syncing was successful, display the item at its new position
+        if(response == true) {
+            //find its subtree list
+            var destList = dest.querySelector('li .subtree');
 
-        //remove the source item
-        source.parentNode.removeChild(source);
+            //remove the source item
+            source.parentNode.removeChild(source);
 
-        //insert source item in the right, sorted place
-        var sourceItem = sourcePath.substring(sourcePath.lastIndexOf('/')+1);
-        var inserted = false;
-        for(var i=0; i<destList.childNodes.length; i++) {
-            var x = destList.childNodes[i];
+            //insert source item in the right, sorted place
+            var sourceItem = sourcePath.substring(sourcePath.lastIndexOf('/')+1);
+            var inserted = false;
+            for(var i=0; i<destList.childNodes.length; i++) {
+                var x = destList.childNodes[i];
 
-            if(x.nodeType == Node.ELEMENT_NODE) {
-                var currentItem = x.getAttribute('data-path').substring(x.getAttribute('data-path').lastIndexOf('/')+1);
-                if(currentItem.toLowerCase() > sourceItem.toLowerCase()) {
-                    destList.insertBefore(source, x);
-                    inserted = true;
+                if(x.nodeType == Node.ELEMENT_NODE) {
+                    var currentItem = x.getAttribute('data-path').substring(x.getAttribute('data-path').lastIndexOf('/')+1);
+                    if(currentItem.toLowerCase() > sourceItem.toLowerCase()) {
+                        destList.insertBefore(source, x);
+                        inserted = true;
+                    }
                 }
             }
-        }
 
-        //add item in the end if not yet inserted
-        if(!inserted) {
-            destList.appendChild(source);
+            //add item in the end if not yet inserted
+            if(!inserted) {
+                destList.appendChild(source);
+            }
+
+            //TODO: change source item its children paths
         }
     }
 }

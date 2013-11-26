@@ -80,8 +80,15 @@ if( !empty($_POST['submitLoginForm']) ) {
 }
 
 
+// ajax calls
+if(!empty($_GET['action']) && $_GET['action'] == 'ajax') {
+    $data = false;
+
+    header('Content-type: application/json');
+    echo json_encode($data);
+
 //login form
-if(!$user['isLoggedIn']) {
+} elseif(!$user['isLoggedIn']) {
     //display form as an installation process
     if(!$appInstalled) {
         $phpMinVersion = '5.3';
