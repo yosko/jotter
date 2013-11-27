@@ -220,8 +220,12 @@ if(!empty($_GET['action']) && $_GET['action'] == 'ajax') {
             $isDir = file_exists($dirPath) && is_dir($dirPath);
         }
 
+        //item not found: show notebook root
+        if(!$isDir && !$isNote) {
+            include( DIR_TPL.'notebook.tpl.php' );
+
         // rename current item
-        if( !empty($_GET['action']) && $_GET['action'] == 'edit' ) {
+        } elseif( !empty($_GET['action']) && $_GET['action'] == 'edit' ) {
             //confirmation was sent
             if(isset($_POST['name'])) {
                 $item['name'] = $_POST['name'];
@@ -295,6 +299,7 @@ if(!empty($_GET['action']) && $_GET['action'] == 'ajax') {
             }
         }
 
+    //default: show notebook root
     } else {
         include( DIR_TPL.'notebook.tpl.php' );
     }
