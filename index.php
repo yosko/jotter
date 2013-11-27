@@ -84,6 +84,45 @@ if( !empty($_POST['submitLoginForm']) ) {
 if(!empty($_GET['action']) && $_GET['action'] == 'ajax') {
     $data = false;
 
+    // always return false if user is not authenticated
+    if($user['isLoggedIn']) {
+        $option = isset($_GET['option'])?$_GET['option']:false;
+
+        //move an item into another directory
+        if($option == 'moveItem') {
+            //load the complete list of notebooks
+            $notebooks = $jotter->loadNotebooks();
+
+            $notebookName = $_GET['nb'];
+            $sourcePath = $_GET['source'];
+            $destPath = $_GET['destination'];
+
+            if(!is_dir(DIR_DATA.$user['login'].'/'.$notebookName.'/'.$destPath)) {
+                $destPath = dirname($destPath);
+            }
+            if($sourcePath == '.') { $sourcePath = ''; }
+            if($destPath == '.') { $destPath = ''; }
+
+            //TODO: check if source parent of destination
+            //TODO: check if source & destination are "identical"
+
+            //make sure the requested move is possible and safe
+            $error = strpos($notebookName, '..') !== false
+                || strpos($sourcePath, '..') !== false
+                || strpos($destPath, '..') !== false
+                || !isset($notebooks[$user['login']][$notebookName])
+                || !file_exists(DIR_DATA.$user['login'].'/'.$notebookName.'/'.$sourcePath)
+                || !file_exists(DIR_DATA.$user['login'].'/'.$notebookName.'/'.$destPath);
+
+            if(!$error) {
+                $notebook = $jotter->loadNotebook($notebookName, $user['login']);
+                $error = !$jotter->moveItem($sourcePath, $destPath);
+            }
+
+            $data = !$error;
+        }
+    }
+
     header('Content-type: application/json');
     echo json_encode($data);
 

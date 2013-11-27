@@ -164,6 +164,39 @@ class Jotter {
     }
 
     /**
+     * Move an item to a different location
+     * @param string $sourcePath path to the item to move (can be a note or directory, never empty)
+     * @param string $destPath   path to destination (must be a directory or empty for the notebook root)
+     */
+    public function moveItem($sourcePath, $destPath) {
+        $itemName = basename($sourcePath);
+
+        //rename item
+        $success = rename($this->notebookPath.'/'.$sourcePath, $this->notebookPath.'/'.$destPath.'/'.$itemName);
+
+        //change corresponding key in tree array
+        if($success) {
+            $item = Utils::getArrayItem(
+                $this->notebook['tree'],
+                $sourcePath
+            );
+            $this->notebook['tree'] = Utils::setArrayItem(
+                $this->notebook['tree'],
+                $destPath.'/'.$itemName,
+                $item
+            );
+            $this->notebook['tree'] = Utils::unsetArrayItem(
+                $this->notebook['tree'],
+                $sourcePath
+            );
+
+            $success = Utils::saveJson($this->notebookFile, $this->notebook);
+        }
+
+        return $success;
+    }
+
+    /**
      * Add or edit (rename) a directory
      * @param string $path    Relative path to directory
      * @param string $newName New name for directory, false if not needed
