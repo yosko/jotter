@@ -90,13 +90,18 @@ function allowDrop(e) {
 function drop(e) {
     e.preventDefault();
     var sourcePath = e.dataTransfer.getData("Text");
+    var sourceDirPath = sourcePath.substring(0, sourcePath.lastIndexOf('/'));;
     var source = document.querySelector('[data-path="'+sourcePath+'"]');
 
     var dest = e.target.parentNode;
     var destPath = dest.getAttribute('data-path');
 
     //if item was dropped on a directory (not a note) which is not one of its descendant
-    if(dest.className == 'directory' && !isAncestor(source, dest)) {
+    //and not its own current directory
+    if(dest.className.lastIndexOf('directory') !== -1
+        && !isAncestor(source, dest)
+        && sourceDirPath != destPath
+    ) {
         //sync with server
         var request = new XMLHttpRequest();
         var notebook = document.getElementById('notebookTitle').getAttribute('data-name');
