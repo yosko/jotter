@@ -177,7 +177,7 @@ if(!empty($notebooks[$user['login']])) {
         </a></li>
         </ul>
     </div>
-    <h3<?php if(empty($_GET['item'])) { echo ' class="selected"'; } ?>>
+    <h3<?php if(empty($_GET['item'])) { echo ' class="selected"'; } ?> data-path="">
         <a class="item" ondrop="drop(event)" ondragover="allowDrop(event)" id="notebookTitle" href="?nb=<?php echo $notebookName; ?>" data-name="<?php echo $notebookName; ?>"><?php echo urldecode($notebookName); ?></a>
     </h3>
 <?php

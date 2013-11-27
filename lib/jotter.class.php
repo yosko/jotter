@@ -185,7 +185,7 @@ class Jotter {
                 );
                 $this->notebook['tree'] = Utils::setArrayItem(
                     $this->notebook['tree'],
-                    $destPath.'/'.$itemName,
+                    $destPath.(!empty($destPath)?'/':'').$itemName,
                     $item
                 );
                 $this->notebook['tree'] = Utils::unsetArrayItem(

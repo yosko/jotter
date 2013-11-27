@@ -96,10 +96,12 @@ function drop(e) {
     var dest = e.target.parentNode;
     var destPath = dest.getAttribute('data-path');
 
+
     //if item was dropped on a directory (not a note) which is not one of its descendant
     //and not its own current directory
-    if(dest.className.lastIndexOf('directory') !== -1
+    if((dest.className.lastIndexOf('directory') !== -1
         && !isAncestor(source, dest)
+        || e.target.id == 'notebookTitle')
         && sourceDirPath != destPath
     ) {
         //sync with server
@@ -112,7 +114,12 @@ function drop(e) {
         // is syncing was successful, display the item at its new position
         if(response == true) {
             //find its subtree list
-            var destList = dest.querySelector('li .subtree');
+            var destList;
+            if(e.target.id == 'notebookTitle') {
+                destList = document.getElementById('root');
+            } else {
+                destList = dest.querySelector('li .subtree');
+             }
 
             //remove the source item
             source.parentNode.removeChild(source);
