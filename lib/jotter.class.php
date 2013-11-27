@@ -169,28 +169,32 @@ class Jotter {
      * @param string $destPath   path to destination (must be a directory or empty for the notebook root)
      */
     public function moveItem($sourcePath, $destPath) {
+        $success = true;
         $itemName = basename($sourcePath);
 
-        //rename item
-        $success = rename($this->notebookPath.'/'.$sourcePath, $this->notebookPath.'/'.$destPath.'/'.$itemName);
+        // if source and destination truly are different
+        if($sourcePath != $destPath.'/'.$itemName) {
+            //rename item
+            $success = rename($this->notebookPath.'/'.$sourcePath, $this->notebookPath.'/'.$destPath.'/'.$itemName);
 
-        //change corresponding key in tree array
-        if($success) {
-            $item = Utils::getArrayItem(
-                $this->notebook['tree'],
-                $sourcePath
-            );
-            $this->notebook['tree'] = Utils::setArrayItem(
-                $this->notebook['tree'],
-                $destPath.'/'.$itemName,
-                $item
-            );
-            $this->notebook['tree'] = Utils::unsetArrayItem(
-                $this->notebook['tree'],
-                $sourcePath
-            );
+            //change corresponding key in tree array
+            if($success) {
+                $item = Utils::getArrayItem(
+                    $this->notebook['tree'],
+                    $sourcePath
+                );
+                $this->notebook['tree'] = Utils::setArrayItem(
+                    $this->notebook['tree'],
+                    $destPath.'/'.$itemName,
+                    $item
+                );
+                $this->notebook['tree'] = Utils::unsetArrayItem(
+                    $this->notebook['tree'],
+                    $sourcePath
+                );
 
-            $success = Utils::saveJson($this->notebookFile, $this->notebook);
+                $success = Utils::saveJson($this->notebookFile, $this->notebook);
+            }
         }
 
         return $success;
