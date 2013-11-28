@@ -177,7 +177,7 @@ if(!empty($notebooks[$user['login']])) {
         </a></li>
         </ul>
     </div>
-    <h3<?php if(empty($_GET['item'])) { echo ' class="selected"'; } ?> data-path="">
+    <h3<?php if(empty($_GET['item'])) { echo ' id="selected"'; } ?> data-path="">
         <a class="item" id="notebookTitle" href="?nb=<?php echo $notebookName; ?>" data-name="<?php echo $notebookName; ?>"><?php echo urldecode($notebookName); ?></a>
     </h3>
 <?php
@@ -200,7 +200,8 @@ function Tree2Html($tree, $nbName, $selectedPath, $parents = array()) {
             $path = (!empty($parents)?implode('/', $parents).'/':'').$key;
 
             $html .= str_repeat("\t", $level*2+1)
-                .'<li class="'.($isArray?"directory":"file").($path == $selectedPath?' selected':'').'"'
+                .'<li class="'.($isArray?"directory":"file").'"'
+                .($path == $selectedPath?' id="selected"':'')
                 .' data-path="'.$path.'">';
 
             //if array, show open/close button

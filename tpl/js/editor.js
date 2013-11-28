@@ -112,13 +112,14 @@ $(function(){
         button.attr('title', 'Saving...');
         image.changeImageFile('ajax-loader.gif');
 
-        getParam=getUrlVars();
+        var notebook = document.getElementById('notebookTitle').getAttribute('data-name');
+        var item = document.getElementById('selected').getAttribute('data-path');
         var data=new Object();
         data['text'] = $('#editor').html();
 
         $.ajax({
             type: 'POST',
-            url: '?action=save&nb='+getParam['nb']+'&item='+getParam['item'],
+            url: '?action=save&nb='+notebook+'&item='+item,
             data: data,
             success: function(response){
                 //the note was saved
@@ -149,20 +150,6 @@ function getEditorHtmlForDisplay() {
     //remove base64 code for display
     html = html.replace(/src="data:image[^"]*"/g, 'src="..."');
     return htmlEncode( html );
-}
-
-// from http://snipplr.com/view/799/get-url-variables/
-function getUrlVars() {
-    var vars = [], hash;
-    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-     
-    for(var i = 0; i < hashes.length; i++) {
-        hash = hashes[i].split('=');
-        vars.push(hash[0]);
-        vars[hash[0]] = hash[1];
-    }
-     
-    return vars;
 }
 
 function htmlEncode(value){

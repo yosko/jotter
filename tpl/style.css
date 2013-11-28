@@ -75,7 +75,7 @@ h6 { font-size: 0.7em; }
     vertical-align: baseline;
 }
 .actions a.disabled { background-color: #e3dbd6; }
-.actions li.active a, .actions li a.selected { background-color: #fff1e7; }
+.actions li.active a, .actions li a#selected { background-color: #fff1e7; }
 .actions a:hover { background-color: #e3dbd6; }
 
 .actions #hidden-picture-button {
@@ -101,7 +101,7 @@ h6 { font-size: 0.7em; }
 }
 #panel h3 > a:hover, #panel a.item:hover, a.item.hover, #panel .buttons a:hover
 { background-color: #f4ece7; border-radius: 0.2em; }
-#panel .selected > a.item { background-color: #fff1e7; border-radius: 0.2em; }
+#panel #selected > a.item { background-color: #fff1e7; border-radius: 0.2em; }
 
 .item-menu ul, #root, #root ul, #panel .buttons {
     list-style-type: none;
