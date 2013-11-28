@@ -55,6 +55,36 @@ window.onload=function() {
             window.location = home+'?nb='+notebookSelect.value;
         }
     }
+
+    var items = document.getElementsByClassName('item');
+    for(var i=0; i<items.length; i++) {
+        //simulate hover on items where drop is possible
+        items[i].ondragover = function(e) {
+            e.preventDefault();
+            this.className = this.className + ' hover';
+        }
+        items[i].ondragleave = function() {
+            this.className = this.className.split(' ').filter(function(v) {
+                return v!='hover';
+            }).join(' ');
+        }
+
+        if(!items[i].hasAttribute('id') || !items[i] != 'notebookTitle') {
+            //draggable items (every item except the root)
+            items[i].ondragstart = function(e) {
+                item = e.target.parentNode;
+                var path = item.getAttribute('data-path');
+                e.dataTransfer.setData("Text",path);
+            }
+            items[i].parentNode.ondrop = function(e) {
+                drop(e);
+            }
+        } else {
+            items[i].ondrop = function(e) {
+                drop(e);
+            }
+        }
+    }
 }
 
 /**
@@ -69,28 +99,12 @@ function hideDropdowns() {
 }
 
 /**
- * When dragging an item, remember its path
- */
-function drag(e) {
-    item = e.target.parentNode;
-    var path = item.getAttribute('data-path');
-    e.dataTransfer.setData("Text",path);
-}
-
-/**
- * Avoid page reload on dropping an item onto another
- */
-function allowDrop(e) {
-    e.preventDefault();
-}
-
-/**
  * Perform the update when dropping an item onto another
  */
 function drop(e) {
     e.preventDefault();
     var sourcePath = e.dataTransfer.getData("Text");
-    var sourceDirPath = sourcePath.substring(0, sourcePath.lastIndexOf('/'));;
+    var sourceDirPath = sourcePath.substring(0, sourcePath.lastIndexOf('/'));
     var source = document.querySelector('[data-path="'+sourcePath+'"]');
 
     var dest = e.target.parentNode;

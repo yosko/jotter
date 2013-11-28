@@ -97,7 +97,7 @@ h6 { font-size: 0.7em; }
     background-position: 0.2em 0.2em;
     background-image: url('img/folders-stack.png');
 }
-#panel h3 > a:hover, #panel a.item:hover, #panel .buttons a:hover
+#panel h3 > a:hover, #panel a.item:hover, a.item.hover, #panel .buttons a:hover
 { background-color: #f4ece7; border-radius: 0.2em; }
 #panel .selected > a.item { background-color: #fff1e7; border-radius: 0.2em; }
 

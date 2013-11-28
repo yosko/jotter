@@ -178,7 +178,7 @@ if(!empty($notebooks[$user['login']])) {
         </ul>
     </div>
     <h3<?php if(empty($_GET['item'])) { echo ' class="selected"'; } ?> data-path="">
-        <a class="item" ondrop="drop(event)" ondragover="allowDrop(event)" id="notebookTitle" href="?nb=<?php echo $notebookName; ?>" data-name="<?php echo $notebookName; ?>"><?php echo urldecode($notebookName); ?></a>
+        <a class="item" id="notebookTitle" href="?nb=<?php echo $notebookName; ?>" data-name="<?php echo $notebookName; ?>"><?php echo urldecode($notebookName); ?></a>
     </h3>
 <?php
 
@@ -186,7 +186,7 @@ function Tree2Html($tree, $nbName, $selectedPath, $parents = array()) {
     $level = count($parents);
     $html = str_repeat("\t", $level*2)."<ul";
     if($level == 0) {
-        $html .= ' id="root" class="subtree open" ondragover="allowDrop(event)"';
+        $html .= ' id="root" class="subtree open"';
     } else {
         $html .= ' class="subtree open"';
     }
@@ -201,8 +201,7 @@ function Tree2Html($tree, $nbName, $selectedPath, $parents = array()) {
 
             $html .= str_repeat("\t", $level*2+1)
                 .'<li class="'.($isArray?"directory":"file").($path == $selectedPath?' selected':'').'"'
-                .' data-path="'.$path.'"'
-                .' ondrop="drop(event)">';
+                .' data-path="'.$path.'">';
 
             //if array, show open/close button
             if($isArray) {
@@ -220,7 +219,7 @@ function Tree2Html($tree, $nbName, $selectedPath, $parents = array()) {
             $html .= '</div>';
 
             $html .= "\r\n".str_repeat("\t", $level*2+2);
-            $html .= '<a draggable="true" ondragstart="drag(event)" class="item" href="'.URL.'?nb='.$nbName.'&amp;item='.$path.'">';
+            $html .= '<a draggable="true" class="item" href="'.URL.'?nb='.$nbName.'&amp;item='.$path.'">';
             $html .= basename($key, '.md');
             $html .= '</a>';
 
