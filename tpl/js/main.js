@@ -182,10 +182,14 @@ function drop(e) {
                 var dest = destPath+(destPath!==''?'/':'');
                 var pathBefore = items[i].parentNode.getAttribute('data-path');
                 var pathAfter = pathBefore.replace(source, dest);
-                items[i].parentNode.setAttribute('data-path', pathAfter);
-                console.log(pathBefore+' ->'+pathAfter);
 
-                //TODO: do the same with href for this item
+                items[i].parentNode.setAttribute('data-path', pathAfter);
+
+                links = items[i].parentNode.getElementsByTagName('a');
+                for(var j=0; j<links.length; j++) {
+                    links[j].href = links[j].href.replace('item='+pathBefore, 'item='+pathAfter);
+                    links[j].title = links[j].title.replace('"'+pathBefore+'"', '"'+pathAfter+'"');
+                }
             }
         }
     }
