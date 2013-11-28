@@ -27,6 +27,7 @@ h6 { font-size: 0.7em; }
     border-right: 0.2em solid #847c77;
 }
 #panel { overflow: auto; background-color: #e3dbd6; margin-top: 24px; }
+#panel.dragMode { background-color: #c1b9b4; }
 #item-toolbar, #content { order: 2; flex: 7 70%; align-self: stretch; }
 #content {
     position: relative;
@@ -89,6 +90,7 @@ h6 { font-size: 0.7em; }
 #notebookSelect { width: 100%; text-align: center; }
 #panel img { vertical-align: text-bottom; }
 #panel h3 { margin: 0.2em; }
+#panel h3, #root { background-color: #e3dbd6; border-radius: 0.2em; }
 #panel a { text-decoration: none; color: #484848; outline: 0; }
 #panel h3 > a, #panel a.item, #panel .buttons a { display: block; }
 #panel h3 > a {

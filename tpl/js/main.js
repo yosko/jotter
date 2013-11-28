@@ -74,9 +74,13 @@ window.onload=function() {
         if(!items[i].hasAttribute('id') || !items[i] != 'notebookTitle') {
             //draggable items (every item except the root)
             items[i].ondragstart = function(e) {
+                document.getElementById('panel').className = 'dragMode';
                 item = e.target.parentNode;
                 var path = item.getAttribute('data-path');
                 e.dataTransfer.setData("Text",path);
+            }
+            items[i].ondragend = function(e) {
+                document.getElementById('panel').className = '';
             }
             items[i].parentNode.ondrop = function(e) {
                 drop(e);
