@@ -178,7 +178,14 @@ function drop(e) {
             // update source item and its children paths
             var items = source.getElementsByClassName('item');
             for(var i=0; i<items.length; i++) {
-                items[i].parentNode.setAttribute('data-path', items[i].parentNode.getAttribute('data-path').replace(sourceDirPath, destPath));
+                var source = sourceDirPath+(sourceDirPath!==''?'/':'');
+                var dest = destPath+(destPath!==''?'/':'');
+                var pathBefore = items[i].parentNode.getAttribute('data-path');
+                var pathAfter = pathBefore.replace(source, dest);
+                items[i].parentNode.setAttribute('data-path', pathAfter);
+                console.log(pathBefore+' ->'+pathAfter);
+
+                //TODO: do the same with href for this item
             }
         }
     }
