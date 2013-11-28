@@ -193,6 +193,7 @@ class Jotter {
                     $sourcePath
                 );
 
+                $this->notebook['updated'] = time();
                 $success = Utils::saveJson($this->notebookFile, $this->notebook);
             }
         }
@@ -256,6 +257,7 @@ class Jotter {
      */
     public function unsetNote($path) {
         $this->notebook['tree'] = Utils::unsetArrayItem($this->notebook['tree'], $path);
+        $this->notebook['updated'] = time();
         $absPath = $this->notebookPath.'/'.$path;
 
         return unlink($absPath)
@@ -269,6 +271,7 @@ class Jotter {
      */
     public function unsetDirectory($path) {
         $this->notebook['tree'] = Utils::unsetArrayItem($this->notebook['tree'], $path);
+        $this->notebook['updated'] = time();
         $absPath = $this->notebookPath.'/'.$path;
 
         return Utils::rmdirRecursive($absPath)
