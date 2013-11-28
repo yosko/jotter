@@ -59,14 +59,16 @@ window.onload=function() {
     var items = document.getElementsByClassName('item');
     for(var i=0; i<items.length; i++) {
         //simulate hover on items where drop is possible
-        items[i].ondragover = function(e) {
-            e.preventDefault();
-            this.className = this.className + ' hover';
-        }
-        items[i].ondragleave = function() {
-            this.className = this.className.split(' ').filter(function(v) {
-                return v!='hover';
-            }).join(' ');
+        if(items[i].parentNode.className.lastIndexOf('directory') !== -1
+            || items[i].hasAttribute('id') && items[i] != 'notebookTitle'
+        ) {
+            items[i].ondragover = function(e) {
+                e.preventDefault();
+                hover(this);
+            }
+            items[i].ondragleave = function() {
+                leave(this);
+            }
         }
 
         if(!items[i].hasAttribute('id') || !items[i] != 'notebookTitle') {
@@ -98,6 +100,16 @@ function hideDropdowns() {
     }
 }
 
+function hover(node) {
+    node.className = node.className + ' hover';
+}
+
+function leave(node) {
+    node.className = node.className.split(' ').filter(function(v) {
+        return v!='hover';
+    }).join(' ');
+}
+
 /**
  * Perform the update when dropping an item onto another
  */
@@ -110,6 +122,7 @@ function drop(e) {
     var dest = e.target.parentNode;
     var destPath = dest.getAttribute('data-path');
 
+    leave(e.target);
 
     //if item was dropped on a directory (not a note) which is not one of its descendant
     //and not its own current directory
