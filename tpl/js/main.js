@@ -1,4 +1,4 @@
-window.onload=function() {
+window.addEventListener('load', function (){
     // show/hide subtree when clicking arrows
     var arrows = document.getElementsByClassName('arrow');
     for(var i=0; i<arrows.length; i++) {
@@ -91,7 +91,7 @@ window.onload=function() {
             }
         }
     }
-}
+});
 
 /**
  * Hide any open dropdown menu

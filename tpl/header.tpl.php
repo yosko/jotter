@@ -10,6 +10,7 @@
     <script src="<?php echo URL_TPL; ?>js/ext/jquery.hotkeys.js"></script>
     <script src="<?php echo URL_TPL; ?>js/ext/bootstrap.min.js"></script>
     <script src="<?php echo URL_TPL; ?>js/ext/bootstrap-wysiwyg.js"></script>
+    <script src="<?php echo URL_TPL; ?>js/wysiwyg.js"></script>
     <script src="<?php echo URL_TPL; ?>js/editor.js"></script>
 <?php } ?>
     <script src="<?php echo URL_TPL; ?>js/main.js"></script>
