@@ -1,102 +1,113 @@
 window.addEventListener('load', function (){
-    // show/hide subtree when clicking arrows
-    var arrows = document.getElementsByClassName('arrow');
-    for(var i=0; i<arrows.length; i++) {
-        arrows[i].onclick = function() {
-            var subtree = this.parentNode.querySelector(".subtree");
-            var image = this.querySelector('img');
-            var srcPath = image.src.substring(0,image.src.lastIndexOf('/') +1 );
+    var arrows, i;
 
-            if(this.className == 'arrow open') {
-                image.src = srcPath+'arbo-parent-closed.png';
-                this.className = 'arrow closed';
-                subtree.style.display = 'none';
-            } else {
-                image.src = srcPath+'arbo-parent-open.png';
-                this.className = 'arrow open';
-                subtree.style.display = 'block';
-            }
-            return false;
-        }
+    // show/hide subtree when clicking arrows
+    arrows = document.getElementsByClassName('arrow');
+    for(i=0; i<arrows.length; i++) {
+        // arrows[i].onclick = toggleSubtree;
+        arrows[i].addEventListener('click', toggleSubtree, false);
     }
 
-    document.onclick = hideDropdowns;
+    // document.onclick = hideAllDropdowns;
+    document.addEventListener('click', hideAllDropdowns, false);
 
     // show dropdown menu when clicking dropdown arrows
-    var arrows = document.getElementsByClassName('dropdown-arrow');
-    for(var i=0; i<arrows.length; i++) {
-        arrows[i].onclick = function(e) {
-            var dropdown = this.parentNode.querySelector(".dropdown");
-
-            //hide every other dropdown
-            hideDropdowns();
-
-            //show this one
-            dropdown.className = 'dropdown open';
-            dropdown.style.display = 'block';
-
-            //avoid click propagation (which would call hideDropdowns() again)
-            e.stopPropagation();
-            return false;
-        }
+    arrows = document.getElementsByClassName('dropdown-arrow');
+    for(i=0; i<arrows.length; i++) {
+        // arrows[i].onclick = showDropdown;
+        arrows[i].addEventListener('click', showDropdown, false);
     }
 
     //load a notebook selected from the dropdown list (or create a new one)
     var notebookSelect = document.getElementById('notebookSelect');
-    notebookSelect.onchange = function(e) {
-        var home = location.protocol + '//' + location.host + location.pathname;
-
-        //redirect to notebook creation
-        if(notebookSelect.value == '!new!') {
-            window.location = home+'?action=add';
-
-        //redirect to selected notebook
-        } else if(notebookSelect.value.substring(0,1) != '!') {
-            window.location = home+'?nb='+notebookSelect.value;
-        }
-    }
+    // notebookSelect.onchange = changeNotebook;
+    notebookSelect.addEventListener('change', changeNotebook, false);
 
     var items = document.getElementsByClassName('item');
-    for(var i=0; i<items.length; i++) {
+    for(i=0; i<items.length; i++) {
         //simulate hover on items where drop is possible
-        if(items[i].parentNode.className.lastIndexOf('directory') !== -1
-            || items[i].hasAttribute('id') && items[i] != 'notebookTitle'
-        ) {
-            items[i].ondragover = function(e) {
-                e.preventDefault();
-                hover(this);
-            }
-            items[i].ondragleave = function() {
-                leave(this);
-            }
+        if(items[i].parentNode.className.lastIndexOf('directory') !== -1 || items[i].hasAttribute('id') && items[i] != 'notebookTitle') {
+            // items[i].ondragover = hover;
+            // items[i].ondragleave = leave;
+            items[i].addEventListener('dragover', hover, false);
+            items[i].addEventListener('dragleave', leave, false);
         }
 
-        if(!items[i].hasAttribute('id') || !items[i] != 'notebookTitle') {
-            //draggable items (every item except the root)
-            items[i].ondragstart = function(e) {
-                document.getElementById('panel').className = 'dragMode';
-                item = e.target.parentNode;
-                var path = item.getAttribute('data-path');
-                e.dataTransfer.setData("Text",path);
-            }
-            items[i].ondragend = function(e) {
-                document.getElementById('panel').className = '';
-            }
-            items[i].parentNode.ondrop = function(e) {
-                drop(e);
-            }
+        if(!items[i].hasAttribute('id') || items[i] != 'notebookTitle') {
+            // items[i].ondragstart = startDragging;
+            // items[i].ondragend = endDragging;
+            // items[i].parentNode.ondrop = drop;
+            items[i].addEventListener('dragstart', startDragging, false);
+            items[i].addEventListener('dragend', endDragging, false);
+            items[i].parentNode.addEventListener('drop', drop, false);
         } else {
-            items[i].ondrop = function(e) {
-                drop(e);
-            }
+            // items[i].ondrop = drop;
+            items[i].addEventListener('drop', drop, false);
         }
     }
 });
 
 /**
- * Hide any open dropdown menu
+ * EVENT FUNCTIONS
  */
-function hideDropdowns() {
+
+function startDragging(ev) {
+    document.getElementById('panel').className = 'dragMode';
+    item = ev.target.parentNode;
+    var path = item.getAttribute('data-path');
+    ev.dataTransfer.setData("Text",path);
+}
+
+function endDragging(ev) {
+    document.getElementById('panel').className = '';
+}
+
+function changeNotebook(ev) {
+    var home = location.protocol + '//' + location.host + location.pathname;
+
+    //redirect to notebook creation
+    if(notebookSelect.value == '!new!') {
+        window.location = home+'?action=add';
+
+    //redirect to selected notebook
+    } else if(notebookSelect.value.substring(0,1) != '!') {
+        window.location = home+'?nb='+notebookSelect.value;
+    }
+}
+
+function toggleSubtree(ev) {
+    var subtree = ev.target.parentNode.querySelector(".subtree");
+    var image = ev.target.querySelector('img');
+    var srcPath = image.src.substring(0,image.src.lastIndexOf('/') +1 );
+
+    if(ev.target.className == 'arrow open') {
+        image.src = srcPath+'arbo-parent-closed.png';
+        ev.target.className = 'arrow closed';
+        subtree.style.display = 'none';
+    } else {
+        image.src = srcPath+'arbo-parent-open.png';
+        ev.target.className = 'arrow open';
+        subtree.style.display = 'block';
+    }
+    return false;
+}
+
+function showDropdown(ev) {
+    var dropdown = ev.target.parentNode.querySelector(".dropdown");
+
+    //hide every other dropdown
+    hideAllDropdowns();
+
+    //show this one
+    dropdown.className = 'dropdown open';
+    dropdown.style.display = 'block';
+
+    //avoid click propagation (which would call hideAllDropdowns() again)
+    ev.stopPropagation();
+    return false;
+}
+
+function hideAllDropdowns() {
     var dropdowns = document.getElementsByClassName('dropdown');
     for(var i=0; i<dropdowns.length; i++) {
         dropdowns[i].className = 'dropdown closed';
@@ -104,37 +115,37 @@ function hideDropdowns() {
     }
 }
 
-function hover(node) {
-    node.className = node.className + ' hover';
+function hover(ev) {
+    ev.preventDefault();
+    ev.target.className = ev.target.className + ' hover';
 }
 
-function leave(node) {
-    node.className = node.className.split(' ').filter(function(v) {
+function leave(ev) {
+    console.log('before: '+ev.target.className);
+    ev.target.className = ev.target.className.split(' ').filter(function(v) {
         return v!='hover';
     }).join(' ');
+    console.log(' after: '+ev.target.className);
 }
 
 /**
  * Perform the update when dropping an item onto another
  */
-function drop(e) {
-    e.preventDefault();
-    var sourcePath = e.dataTransfer.getData("Text");
+function drop(ev) {
+    ev.preventDefault();
+    var i;
+    var sourcePath = ev.dataTransfer.getData("Text");
     var sourceDirPath = sourcePath.substring(0, sourcePath.lastIndexOf('/'));
     var source = document.querySelector('[data-path="'+sourcePath+'"]');
 
-    var dest = e.target.parentNode;
+    var dest = ev.target.parentNode;
     var destPath = dest.getAttribute('data-path');
 
-    leave(e.target);
+    leave(ev);
 
     //if item was dropped on a directory (not a note) which is not one of its descendant
     //and not its own current directory
-    if((dest.className.lastIndexOf('directory') !== -1
-        && !isAncestor(source, dest)
-        || e.target.id == 'notebookTitle')
-        && sourceDirPath != destPath
-    ) {
+    if((dest.className.lastIndexOf('directory') !== -1 && !isAncestor(source, dest) || ev.target.id == 'notebookTitle') && sourceDirPath != destPath) {
         //sync with server
         var request = new XMLHttpRequest();
         var notebook = document.getElementById('notebookTitle').getAttribute('data-name');
@@ -143,10 +154,10 @@ function drop(e) {
         response = JSON.parse(request.responseText);
 
         // is syncing was successful, display the item at its new position
-        if(response == true) {
+        if(response === true) {
             //find its subtree list
             var destList;
-            if(e.target.id == 'notebookTitle') {
+            if(ev.target.id == 'notebookTitle') {
                 destList = document.getElementById('root');
             } else {
                 destList = dest.querySelector('li .subtree');
@@ -158,7 +169,7 @@ function drop(e) {
             //insert source item in the right, sorted place
             var sourceItem = sourcePath.substring(sourcePath.lastIndexOf('/')+1);
             var inserted = false;
-            for(var i=0; i<destList.childNodes.length; i++) {
+            for(i=0; i<destList.childNodes.length; i++) {
                 var x = destList.childNodes[i];
 
                 if(x.nodeType == Node.ELEMENT_NODE) {
@@ -177,9 +188,9 @@ function drop(e) {
 
             // update source item and its children paths
             var items = source.getElementsByClassName('item');
-            for(var i=0; i<items.length; i++) {
-                var source = sourceDirPath+(sourceDirPath!==''?'/':'');
-                var dest = destPath+(destPath!==''?'/':'');
+            for(i=0; i<items.length; i++) {
+                source = sourceDirPath+(sourceDirPath!==''?'/':'');
+                dest = destPath+(destPath!==''?'/':'');
                 var pathBefore = items[i].parentNode.getAttribute('data-path');
                 var pathAfter = pathBefore.replace(source, dest);
 
@@ -196,11 +207,9 @@ function drop(e) {
 }
 
 function isDescendant(ancestor,descendant){
-    return ancestor.compareDocumentPosition(descendant) & 
-        Node.DOCUMENT_POSITION_CONTAINS;
+    return ancestor.compareDocumentPosition(descendant) & Node.DOCUMENT_POSITION_CONTAINS;
 }
 
 function isAncestor(descendant,ancestor){
-    return descendant.compareDocumentPosition(ancestor) & 
-        Node.DOCUMENT_POSITION_CONTAINED_BY;
+    return descendant.compareDocumentPosition(ancestor) & Node.DOCUMENT_POSITION_CONTAINED_BY;
 }

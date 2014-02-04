@@ -6,12 +6,12 @@
     <link rel="stylesheet" href="<?php echo URL_TPL; ?>style.css">
     <link rel="icon" type="image/png" href="<?php echo URL_TPL; ?>img/jotter-icon-16.png"/>
 <?php if($isNote && $isEditMode) { ?>
+    <script src="<?php echo URL_TPL; ?>js/editor.js"></script>
     <script src="<?php echo URL_TPL; ?>js/ext/jquery-2.0.3.min.js"></script>
     <script src="<?php echo URL_TPL; ?>js/ext/jquery.hotkeys.js"></script>
     <script src="<?php echo URL_TPL; ?>js/ext/bootstrap.min.js"></script>
     <script src="<?php echo URL_TPL; ?>js/ext/bootstrap-wysiwyg.js"></script>
     <script src="<?php echo URL_TPL; ?>js/wysiwyg.js"></script>
-    <script src="<?php echo URL_TPL; ?>js/editor.js"></script>
 <?php } ?>
     <script src="<?php echo URL_TPL; ?>js/main.js"></script>
 </head>
