@@ -1,3 +1,9 @@
+
+EditorHandler.prototype.customInit = function () {
+    console.log('custom init for wysiwyf');
+};
+
+
 $(function(){
     var editor = $('#editor');
 
@@ -16,7 +22,7 @@ $(function(){
     //and update code if displayed
     editor.bind('input', function(e){
         setUnsavedStatus(true);
-        if($('#html').length != 0) {
+        if($('#html').length !== 0) {
             $('#html').html( getEditorHtmlForDisplay() );
         }
     });
@@ -34,7 +40,7 @@ $(function(){
 
     //display html source
     $('#source-button').click(function(e){
-        if($('#html').length == 0) {
+        if($('#html').length === 0) {
             $('#editor').after( '<pre id="html" style="">'+getEditorHtmlForDisplay()+'</pre>' );
         } else {
             $('#html').remove();
@@ -45,7 +51,7 @@ $(function(){
     //add 'http://' to link input
     $('#insertLink input').focus(function(e){
         var input = $(this);
-        if(input.val().trim() == '') {
+        if(input.val().trim() === '') {
             input.val(input.attr('placeholder'));
         }
     });
@@ -109,13 +115,13 @@ function htmlDecode(value) {
 function editorNeverEmpty() {
     var content = $('#editor').html().trim();
     var previousState = unsavedContent;
-    if(content == '' || content == '<br>') {
+    if(content === '' || content === '<br>') {
         //make sure it is completely empty
         $('#editor').empty();
 
         //now make the paragraph on the cursor position
         document.execCommand('formatBlock', false, 'p');
-        if(previousState == false) {
+        if(previousState === false) {
             setUnsavedStatus(false);
         }
     }

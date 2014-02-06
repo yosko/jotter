@@ -50,6 +50,7 @@ $errors = array();
 $isNote = false;
 $isConfigMode = false;
 $isEditMode = false;
+$isWysiwyg = false;
 $isDir = false;
 $appInstalled = file_exists(DIR_DATA.'users.json');
 
@@ -289,6 +290,7 @@ if(!empty($_GET['action']) && $_GET['action'] == 'ajax') {
 
                 // show editor toolbar
                 $isEditMode = true;
+                $isWysiwyg = !isset($notebook['editor']) || $notebook['editor'] == 'wysiwyg';
 
                 include( DIR_TPL.'note.tpl.php' );
             } elseif($isDir) {
@@ -310,13 +312,14 @@ if(!empty($_GET['action']) && $_GET['action'] == 'ajax') {
     if(isset($_POST['name'])) {
         $notebook = array(
             'name' => urlencode($_POST['name']),
-            'user' => $user['login']
+            'user' => $user['login'],
+            'editor' => (isset($_POST['editor']) && $_POST['editor'] == 'wysiwyg')?$_POST['editor']:'markdown'
         );
 
         $errors['empty'] = empty($notebook['name']);
         $errors['alreadyExists'] = isset($notebooks[$user['login']][$notebook['name']]);
         if(!in_array(true, $errors)) {
-            $notebooks = $jotter->setNotebook($notebook['name'], $notebook['user']);
+            $notebooks = $jotter->setNotebook($notebook['name'], $notebook['user'], $notebook['editor']);
 
             header('Location: '.URL.'?nb='.$notebook['name']);
             exit;

@@ -33,7 +33,7 @@ class Jotter {
      * @param boolean $public Whether the notebook should be public or private
      * @return array          List of notebooks
      */
-    public function setNotebook($name, $user, $public = false) {
+    public function setNotebook($name, $user, $editor, $public = false) {
         if(strpos($name, '..') !== false) return false;
 
         $this->loadNotebooks();
@@ -56,6 +56,7 @@ class Jotter {
                 'created'   => time(),
                 'user'      => $user,
                 'public'    => $public,
+                'editor'    => $editor,
                 'tree'      => array(
                     $defaultNote   => true
                 )

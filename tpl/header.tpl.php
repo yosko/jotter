@@ -5,15 +5,19 @@
     <title>Jotter - Notebook Manager</title>
     <link rel="stylesheet" href="<?php echo URL_TPL; ?>style.css">
     <link rel="icon" type="image/png" href="<?php echo URL_TPL; ?>img/jotter-icon-16.png"/>
+    <script src="<?php echo URL_TPL; ?>js/main.js"></script>
 <?php if($isNote && $isEditMode) { ?>
     <script src="<?php echo URL_TPL; ?>js/editor.js"></script>
+<?php if($isWysiwyg) { ?>
     <script src="<?php echo URL_TPL; ?>js/ext/jquery-2.0.3.min.js"></script>
     <script src="<?php echo URL_TPL; ?>js/ext/jquery.hotkeys.js"></script>
     <script src="<?php echo URL_TPL; ?>js/ext/bootstrap.min.js"></script>
     <script src="<?php echo URL_TPL; ?>js/ext/bootstrap-wysiwyg.js"></script>
-    <script src="<?php echo URL_TPL; ?>js/wysiwyg.js"></script>
-<?php } ?>
-    <script src="<?php echo URL_TPL; ?>js/main.js"></script>
+    <script src="<?php echo URL_TPL; ?>js/editor-wysiwyg.js"></script>
+<?php
+    } //isWysiwyg
+} //isNote & isEditMode
+?>
 </head>
 <body>
 <div id="toolbar">
@@ -42,12 +46,12 @@
     <div class="toolbar" id="item-toolbar" data-role="editor-toolbar" data-target="#editor">
         <ul class="actions btn-info">
 <?php if($isNote && $isEditMode) { ?>
-
             <li>
                 <a href="#" id="save-button" class="disabled" title="Save this note">
                     <img src="<?php echo URL_TPL; ?>img/disk-black.png" alt="Save note">
                 </a>
             </li>
+<?php if($isWysiwyg) { ?>
             <li>
                 <a href="#" id="headingDropDown" class="ajax-formatter" data-toggle="dropdown" title="Title">
                     <img src="<?php echo URL_TPL; ?>img/edit-heading.png" alt="Link">
@@ -99,10 +103,22 @@
                     <img src="<?php echo URL_TPL; ?>img/edit-code.png" alt="Source">
                 </a>
             </li>
-<?php } // $isNote ?>
+<?php
+    } // isWysiwyg
+    else {
+?>
+            <li>
+                <a href="<?php echo URL; ?>?action=markdown" target="blank" id="markdown-button" title="Show Markdown syntax help">
+                    <img src="<?php echo URL_TPL; ?>img/edit-markdown.png" alt="Markdown">
+                </a>
+            </li>
+<?php
+    } // not isWysiwyg
+} // $isNote & isEditMode
+?>
 
         </ul>
-<?php if($isNote && $isEditMode) { ?>
+<?php if($isNote && $isEditMode && $isWysiwyg) { ?>
         <div id="insertLink">
             <input placeholder="http://" type="text" data-edit="createLink"/>
             <button type="button">Add</button>
