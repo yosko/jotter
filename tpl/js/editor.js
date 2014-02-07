@@ -1,72 +1,84 @@
 //constructor
-var EditorHandler = function(saveButton, editor) {
-    this.saveButton = document.getElementById(saveButton);
-    this.saveImage = document.getElementById(saveButton+' img');
-    this.editor = document.getElementById(editor);
+var BaseEditor = function() {
+    this.saveButton = null;
+    this.saveImage = null;
+    this.editor = null;
     this.unsavedContent = false;
     this.currentlySaving = false;
     this.isCtrl = false;
 };
 
 //prototype
-EditorHandler.prototype = function() {
+BaseEditor.prototype = {
+    init: function() {
+        var that = this;
 
-    var init = function() {
-        console.log('init editor');
+        this.saveButton = document.getElementById('save-button');
+        this.saveImage = document.getElementById('save-button').querySelector('img'); //TODO fix this bug: point to the <img> inside ID 'save-button'
+        this.editor = document.getElementById('editor');
 
         /**
          * EVENTS
          */
 
-        document.onkeyup=function(e){
-            if(e.keyCode == 17) this.isCtrl=false;
-        };
+        // document.onkeyup=function(e){
+        //     if(e.keyCode == 17) that.isCtrl=false;
+        // };
 
         document.onkeydown=function(e){
-            //if Ctrl
-            if(e.keyCode == 17) {
-                this.isCtrl=true;
-            }
-
-            //Ctrl+S
-            if(e.keyCode == 83 && this.isCtrl === true) {
-                if(this.unsavedContent)
-                    saveNote.call(this);
+            if(e.ctrlKey && e.keyCode == 'S'.charCodeAt(0)) {
                 e.preventDefault();
-                return false;
+                // e.stopPropagation();
+                // console.log('WOOOOOT');
+                if(that.unsavedContent) {
+                    that.saveNote.call(that);
+                }
+                // return false;
             }
+            // //if Ctrl
+            // if(e.keyCode == 17) {
+            //     that.isCtrl=true;
+            // }
+
+            // //Ctrl+S
+            // if(e.keyCode == 83 && that.isCtrl === true) {
+            //     e.preventDefault();
+            //     e.stopPropagation();
+            //     if(that.unsavedContent) {
+            //         that.saveNote.call(that);
+            //     }
+            //     return false;
+            // }
         };
 
         //auto save every 30 seconds
         setInterval(function(){
             if(this.unsavedContent && !this.currentlySaving)
-                saveNote.call(this);
+                this.saveNote.call(this);
         }, 30000);
 
         //click on save button
         this.saveButton.onclick = function(e) {
-            if(this.unsavedContent)
-                saveNote.call(this);
+            if(that.unsavedContent)
+                that.saveNote.call(that);
             e.preventDefault();
         };
 
         //avoid leaving page without saving
-        var that = this;
         window.onbeforeunload = function(e) {
-            checkIsUnsaved.call(that);
+            that.checkIsUnsaved.call(that, e);
         };
 
-        customInit.call(this);
+        this.customInit.call(this);
     },
-    customInit = function() {
-        console.log('custom init (empty)');
+    customInit: function() {
         //abstract method that can be overwritten by specific editors (such as wysiwyg)
     },
-    saveNote = function() {
+    saveNote: function() {
         console.log('save note');
         this.currentlySaving = true;
-        saveButton.setAttribute('title', 'Saving...');
-        changeImageFile.call(this, saveImage, 'ajax-loader.gif');
+        this.saveButton.setAttribute('title', 'Saving...');
+        this.changeImageFile.call(this, 'ajax-loader.gif');
 
         var notebook = document.getElementById('notebookTitle').getAttribute('data-name');
         var item = document.getElementById('selected').getAttribute('data-path');
@@ -81,58 +93,47 @@ EditorHandler.prototype = function() {
 
         //the note was saved
         if(response === true) {
-            setUnsavedStatus.call(this, false);
+            this.setUnsavedStatus.call(this, false);
 
         //error, the note wasn't saved
         } else {
-            changeImageFile.call(this, saveImage, 'disk--exclamation.png');
-            saveButton.setAttribute('title', 'Error: couldn\'t save this note.');
+            this.changeImageFile.call(this, 'disk--exclamation.png');
+            this.saveButton.setAttribute('title', 'Error: couldn\'t save this note.');
         }
         this.currentlySaving = false;
+        return false;
     },
-    checkIsUnsaved = function() {
-        console.log('unload - '+this.unsavedContent);
-        if(this.unsavedContent)
+    checkIsUnsaved: function(e) {
+        console.log('unload');
+        if(this.unsavedContent) {
+            e.preventDefault();
             return "There is unsaved content. Do you still wish to leave this page?";
+        }
     },
-    setUnsavedStatus = function(status) {
-        console.log('change save status');
+    setUnsavedStatus: function(status) {
+        console.log('change save status ('+this.unsavedContent+' -> '+status+')');
         this.unsavedContent = status;
 
         if(this.unsavedContent) {
 
             this.unsavedContent = true;
 
-            saveButton.removeClass('disabled');
-            saveButton.setAttribute('title', 'Save changes');
-            changeImageFile.call(this, saveImage, 'disk.png');
+            this.saveButton.classList.remove('disabled');
+            this.saveButton.setAttribute('title', 'Save changes');
+            this.changeImageFile.call(this, 'disk.png');
 
             //when user delete everything inside the editor, make sure there is still a <p>
             //TODO: handle without jquery?
-            editorNeverEmpty();
+            this.editorNeverEmpty.call(this);
         } else {
-            changeImageFile.call(this, saveImage, 'disk-black.png');
+            this.changeImageFile.call(this, 'disk-black.png');
             
-            saveButton.addClass('disabled');
-            saveButton.setAttribute('title', 'Nothing to save');
+            this.saveButton.classList.add('disabled');
+            this.saveButton.setAttribute('title', 'Nothing to save');
         }
     },
-    changeImageFile = function(image, newFileName) {
-        console.log('change image');
-        var dirPath = image.getAttribute('src').substring(0,image.getAttribute('src').lastIndexOf('/') +1 );
-        image.setAttribute('src', dirPath+'/'+newFileName);
-    };
-
-    //return public members
-    return {
-        init: init,
-        saveNote: saveNote
-    };
-} ();
-
-
-window.addEventListener('load', function (){
-    //instanciate editor tools
-    var editorHandler = new EditorHandler('save-button', 'editor');
-    editorHandler.init();
-});
+    changeImageFile: function(newFileName) {
+        var dirPath = this.saveImage.getAttribute('src').substring(0,this.saveImage.getAttribute('src').lastIndexOf('/') +1 );
+        this.saveImage.setAttribute('src', dirPath+'/'+newFileName);
+    }
+};

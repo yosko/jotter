@@ -1,30 +1,42 @@
 
-EditorHandler.prototype.customInit = function () {
-    console.log('custom init for wysiwyf');
+var WysiwygEditor = function () {
+    
 };
 
+WysiwygEditor.prototype = new BaseEditor();
 
-$(function(){
+WysiwygEditor.prototype.customInit = function () {
     var editor = $('#editor');
-
-    //doesn't seem to work in firefox, which still use <br>
-    document.execCommand('defaultParagraphSeparator', false, 'p');
 
     //init editor
     editor.wysiwyg({
         activeToolbarClass: 'selected'
     }).focus();
 
+    //doesn't seem to work in firefox, which still use <br>
+    document.execCommand('defaultParagraphSeparator', false, 'p');
+
     //if note is empty on load, add a <p>
-    editorNeverEmpty();
+    this.editorNeverEmpty.call(this);
 
     //set status to unsaved on input
     //and update code if displayed
+    var that = this;
     editor.bind('input', function(e){
-        setUnsavedStatus(true);
+        that.setUnsavedStatus.call(that, true);
         if($('#html').length !== 0) {
-            $('#html').html( getEditorHtmlForDisplay() );
+            $('#html').html( that.getEditorHtmlForDisplay.call(that) );
         }
+    });
+
+    //display html source
+    $('#source-button').click(function(e){
+        if($('#html').length === 0) {
+            $('#editor').after( '<pre id="html" style="">'+that.getEditorHtmlForDisplay.call(that)+'</pre>' );
+        } else {
+            $('#html').remove();
+        }
+        e.preventDefault();
     });
 
     //insert an em dash
@@ -38,16 +50,6 @@ $(function(){
         e.preventDefault();
     });
 
-    //display html source
-    $('#source-button').click(function(e){
-        if($('#html').length === 0) {
-            $('#editor').after( '<pre id="html" style="">'+getEditorHtmlForDisplay()+'</pre>' );
-        } else {
-            $('#html').remove();
-        }
-        e.preventDefault();
-    });
-
     //add 'http://' to link input
     $('#insertLink input').focus(function(e){
         var input = $(this);
@@ -57,7 +59,6 @@ $(function(){
     });
 
     //show/hide subtoolbars
-    $('#insertLink').hide();
     $('#linkDropdown').click(function(e){
         $('#insertLink').toggle();
         e.preventDefault();
@@ -67,7 +68,6 @@ $(function(){
         e.preventDefault();
     });
 
-    toggleHeadingButtons();
     $('#headingDropDown').click(function(e){
         toggleHeadingButtons();
         e.preventDefault();
@@ -86,35 +86,36 @@ $(function(){
             $('#toolbar').height(24);
         }
     }
-});
+};
 
-function getEditorHtmlForDisplay() {
+WysiwygEditor.prototype.getEditorHtmlForDisplay = function () {
+    console.log('getEditorHtmlForDisplay');
     //get note code from editor
     var html = $('#editor').html();
     //remove base64 code for display
     html = html.replace(/src="data:image[^"]*"/g, 'src="..."');
-    return htmlEncode( html );
-}
+    return this.htmlEncode.call(this, html);
+};
 
-function htmlEncode(value){
+WysiwygEditor.prototype.htmlEncode = function (value) {
     if (value) {
         return jQuery('<div />').text(value).html();
     } else {
         return '';
     }
-}
+};
 
-function htmlDecode(value) {
+WysiwygEditor.prototype.htmlDecode = function (value) {
     if (value) {
         return $('<div />').html(value).text();
     } else {
         return '';
     }
-}
+};
 
-function editorNeverEmpty() {
+WysiwygEditor.prototype.editorNeverEmpty = function () {
     var content = $('#editor').html().trim();
-    var previousState = unsavedContent;
+    var previousState = this.unsavedContent;
     if(content === '' || content === '<br>') {
         //make sure it is completely empty
         $('#editor').empty();
@@ -122,12 +123,12 @@ function editorNeverEmpty() {
         //now make the paragraph on the cursor position
         document.execCommand('formatBlock', false, 'p');
         if(previousState === false) {
-            setUnsavedStatus(false);
+            this.setUnsavedStatus.call(this, false);
         }
     }
-}
+};
 
-function moveCursorToTop() {
+WysiwygEditor.prototype.moveCursorToTop = function () {
     var pressHome = jQuery.Event("keypress");
     pressHome.ctrlKey = false;
     pressHome.which = 36;   //"home" key
@@ -137,4 +138,4 @@ function moveCursorToTop() {
     pressEnd.which = 35;   //"home" key
 
     $('#editor').trigger(pressEnd).trigger(pressHome);
-}
+};

@@ -14,10 +14,15 @@
     <script src="<?php echo URL_TPL; ?>js/ext/bootstrap.min.js"></script>
     <script src="<?php echo URL_TPL; ?>js/ext/bootstrap-wysiwyg.js"></script>
     <script src="<?php echo URL_TPL; ?>js/editor-wysiwyg.js"></script>
-<?php
-    } //isWysiwyg
-} //isNote & isEditMode
-?>
+<?php } //isWysiwyg ?>
+    <script>
+window.addEventListener('load', function (){
+    //instanciate editor tools
+    var editor = new <?php echo $isWysiwyg?'WysiwygEditor':'BaseEditor'; ?>();
+    editor.init();
+});
+    </script>
+<?php } //isNote & isEditMode ?>
 </head>
 <body>
 <div id="toolbar">
@@ -119,11 +124,11 @@
 
         </ul>
 <?php if($isNote && $isEditMode && $isWysiwyg) { ?>
-        <div id="insertLink">
+        <div id="insertLink" style="display: none;">
             <input placeholder="http://" type="text" data-edit="createLink"/>
             <button type="button">Add</button>
         </div>
-        <ul class="actions" id="headingButtons">
+        <ul class="actions" id="headingButtons" style="display: none;">
             <li>
                 <a href="#" class="ajax-formatter" data-edit="formatBlock h1" title="Title level 1">
                     <img src="<?php echo URL_TPL; ?>img/edit-heading-1.png" alt="Level 1">
