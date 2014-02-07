@@ -121,11 +121,9 @@ function hover(ev) {
 }
 
 function leave(ev) {
-    console.log('before: '+ev.target.className);
     ev.target.className = ev.target.className.split(' ').filter(function(v) {
         return v!='hover';
     }).join(' ');
-    console.log(' after: '+ev.target.className);
 }
 
 /**

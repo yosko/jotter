@@ -20,6 +20,14 @@ BaseEditor.prototype = {
         /**
          * EVENTS
          */
+        
+        this.editor.oninput = function(e) {
+            that.setUnsavedStatus.call(that, true);
+            var html = document.getElementById('html');
+            if(html !== null && html.length !== 0) {
+                html.innerHTML( that.getEditorHtmlForDisplay.call(that) );
+            }
+        };
 
         // document.onkeyup=function(e){
         //     if(e.keyCode == 17) that.isCtrl=false;
@@ -29,7 +37,6 @@ BaseEditor.prototype = {
             if(e.ctrlKey && e.keyCode == 'S'.charCodeAt(0)) {
                 e.preventDefault();
                 // e.stopPropagation();
-                // console.log('WOOOOOT');
                 if(that.unsavedContent) {
                     that.saveNote.call(that);
                 }
@@ -72,10 +79,10 @@ BaseEditor.prototype = {
         this.customInit.call(this);
     },
     customInit: function() {
-        //abstract method that can be overwritten by specific editors (such as wysiwyg)
+        //markdown editor
+        this.editor.setAttribute('contenteditable', true);
     },
     saveNote: function() {
-        console.log('save note');
         this.currentlySaving = true;
         this.saveButton.setAttribute('title', 'Saving...');
         this.changeImageFile.call(this, 'ajax-loader.gif');
@@ -104,14 +111,12 @@ BaseEditor.prototype = {
         return false;
     },
     checkIsUnsaved: function(e) {
-        console.log('unload');
         if(this.unsavedContent) {
             e.preventDefault();
             return "There is unsaved content. Do you still wish to leave this page?";
         }
     },
     setUnsavedStatus: function(status) {
-        console.log('change save status ('+this.unsavedContent+' -> '+status+')');
         this.unsavedContent = status;
 
         if(this.unsavedContent) {
@@ -135,5 +140,19 @@ BaseEditor.prototype = {
     changeImageFile: function(newFileName) {
         var dirPath = this.saveImage.getAttribute('src').substring(0,this.saveImage.getAttribute('src').lastIndexOf('/') +1 );
         this.saveImage.setAttribute('src', dirPath+'/'+newFileName);
+    },
+    editorNeverEmpty: function() {
+        var content = this.editor.innerHTML.trim();
+        var previousState = this.unsavedContent;
+        if(content === '' || content === '<br>') {
+            //make sure it is completely empty
+            this.editor.innerHTML = '';
+
+            //now make the paragraph on the cursor position
+            document.execCommand('formatBlock', false, 'p');
+            if(previousState === false) {
+                this.setUnsavedStatus.call(this, false);
+            }
+        }
     }
 };

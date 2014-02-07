@@ -22,12 +22,12 @@ WysiwygEditor.prototype.customInit = function () {
     //set status to unsaved on input
     //and update code if displayed
     var that = this;
-    editor.bind('input', function(e){
-        that.setUnsavedStatus.call(that, true);
-        if($('#html').length !== 0) {
-            $('#html').html( that.getEditorHtmlForDisplay.call(that) );
-        }
-    });
+    // editor.bind('input', function(e){
+    //     that.setUnsavedStatus.call(that, true);
+    //     if($('#html').length !== 0) {
+    //         $('#html').html( that.getEditorHtmlForDisplay.call(that) );
+    //     }
+    // });
 
     //display html source
     $('#source-button').click(function(e){
@@ -89,7 +89,6 @@ WysiwygEditor.prototype.customInit = function () {
 };
 
 WysiwygEditor.prototype.getEditorHtmlForDisplay = function () {
-    console.log('getEditorHtmlForDisplay');
     //get note code from editor
     var html = $('#editor').html();
     //remove base64 code for display
@@ -111,31 +110,4 @@ WysiwygEditor.prototype.htmlDecode = function (value) {
     } else {
         return '';
     }
-};
-
-WysiwygEditor.prototype.editorNeverEmpty = function () {
-    var content = $('#editor').html().trim();
-    var previousState = this.unsavedContent;
-    if(content === '' || content === '<br>') {
-        //make sure it is completely empty
-        $('#editor').empty();
-
-        //now make the paragraph on the cursor position
-        document.execCommand('formatBlock', false, 'p');
-        if(previousState === false) {
-            this.setUnsavedStatus.call(this, false);
-        }
-    }
-};
-
-WysiwygEditor.prototype.moveCursorToTop = function () {
-    var pressHome = jQuery.Event("keypress");
-    pressHome.ctrlKey = false;
-    pressHome.which = 36;   //"home" key
-
-    var pressEnd = jQuery.Event("keypress");
-    pressEnd.ctrlKey = false;
-    pressEnd.which = 35;   //"home" key
-
-    $('#editor').trigger(pressEnd).trigger(pressHome);
 };
