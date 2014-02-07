@@ -230,13 +230,15 @@ class Jotter {
     public function setNoteText($path, $text) {
         $absPath = $this->notebookPath.'/'.$path;
 
-        //convert HTML to Markdown
-        $markdown = new HTML_To_Markdown($text);
+        if(!isset($this->notebook['editor']) || $this->notebook['editor'] == 'wysiwyg') {
+            //convert HTML to Markdown
+            $text = new HTML_To_Markdown($text);
 
-        //turn every remaining tag to html entities
-        $markdown = htmlspecialchars($markdown, ENT_QUOTES);
+            //turn every remaining tag to html entities
+            $text = htmlspecialchars($text, ENT_QUOTES);
+        }
 
-        return Utils::saveFile($absPath, $markdown);
+        return Utils::saveFile($absPath, $text);
     }
 
     /**
@@ -248,7 +250,11 @@ class Jotter {
         $content = Utils::loadFile($this->notebookPath.'/'.$path);
 
         //convert Markdown to HTML
-        return \Michelf\MarkdownExtra::defaultTransform($content);
+        if(!isset($this->notebook['editor']) || $this->notebook['editor'] == 'wysiwyg') {
+            $content = \Michelf\MarkdownExtra::defaultTransform($content);
+        }
+
+        return $content;
     }
 
     /**

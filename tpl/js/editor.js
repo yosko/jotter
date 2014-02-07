@@ -87,10 +87,17 @@ BaseEditor.prototype = {
         this.saveButton.setAttribute('title', 'Saving...');
         this.changeImageFile.call(this, 'ajax-loader.gif');
 
+        var text = '';
+        if(this.editor.nodeName == 'ARTICLE') {
+            text = this.editor.innerHTML;
+        } else {
+            text = this.editor.value;
+        }
+
         var notebook = document.getElementById('notebookTitle').getAttribute('data-name');
         var item = document.getElementById('selected').getAttribute('data-path');
         var data = new FormData();
-        data.append('text', document.getElementById('editor').innerHTML);
+        data.append('text', text);
 
         //send save request to server
         var request = new XMLHttpRequest();
