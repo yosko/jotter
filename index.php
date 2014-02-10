@@ -19,14 +19,20 @@ define( 'URL',
     .'/'
 );
 define( 'URL_TPL', URL.'tpl/' );
-define( 'DEVELOPMENT_ENVIRONMENT', true );
+
+define( 'ENV_DEMO', 'demo' );
+define( 'ENV_DEV', 'dev' );
+define( 'ENV_PROD', 'prod' );
+define( 'ENV_CURRENT', ENV_PROD );
 
 //display errors & warnings
-if (DEVELOPMENT_ENVIRONMENT == true) {
+if (ENV_CURRENT == ENV_DEV) {
     error_reporting(E_ALL | E_STRICT);
     ini_set('display_errors','On');
     // ini_set('log_errors', 'On');
     // ini_set('error_log', ROOT.'errors.log');
+} else {
+    ini_set('display_errors','Off');
 }
 
 // external libraries
@@ -84,9 +90,12 @@ if( !empty($_POST['submitLoginForm']) ) {
 // ajax calls
 if(!empty($_GET['action']) && $_GET['action'] == 'ajax') {
     $data = false;
+    if (ENV_CURRENT == ENV_DEMO) {
+        $data = true;
+    }
 
     // always return false if user is not authenticated
-    if($user['isLoggedIn']) {
+    if($user['isLoggedIn'] && ENV_CURRENT != ENV_DEMO) {
         $option = isset($_GET['option'])?$_GET['option']:false;
 
         //move an item into another directory
@@ -166,7 +175,9 @@ if(!empty($_GET['action']) && $_GET['action'] == 'ajax') {
     } elseif( !empty($_GET['action']) && $_GET['action'] == 'delete' && empty($_GET['item']) ) {
         //confirmation was sent
         if(isset($_POST['delete'])) {
-            $jotter->unsetNotebook($notebookName, $user['login']);
+            if (ENV_CURRENT != ENV_DEMO) {
+                $jotter->unsetNotebook($notebookName, $user['login']);
+            }
 
             header('Location: '.URL);
             exit;
@@ -195,12 +206,14 @@ if(!empty($_GET['action']) && $_GET['action'] == 'ajax') {
             $errors['empty'] = empty($item['name']);
             $errors['alreadyExists'] = !is_null(Utils::getArrayItem($notebook['tree'], $path));
             if(!in_array(true, $errors)) {
-                if($_GET['action'] == 'addnote') {
-                    $path .= '.md';
-                    $jotter->setNote($path);
-                }
-                else {
-                    $jotter->setDirectory($path);
+                if (ENV_CURRENT != ENV_DEMO) {
+                    if($_GET['action'] == 'addnote') {
+                        $path .= '.md';
+                        $jotter->setNote($path);
+                    }
+                    else {
+                        $jotter->setDirectory($path);
+                    }
                 }
 
                 header('Location: '.URL.'?nb='.$notebookName.'&item='.$path);
@@ -238,13 +251,15 @@ if(!empty($_GET['action']) && $_GET['action'] == 'ajax') {
                 $errors['alreadyExists'] = !is_null(Utils::getArrayItem($notebook['tree'], $path));
 
                 if(!in_array(true, $errors)) {
-                    if($isNote) {
-                        $path .= '.md';
-                        $item['name'] .= '.md';
-                        $jotter->setNote($itemPath, $item['name']);
-                    }
-                    elseif($isDir) {
-                        $jotter->setDirectory($itemPath, $item['name']);
+                    if (ENV_CURRENT != ENV_DEMO) {
+                        if($isNote) {
+                            $path .= '.md';
+                            $item['name'] .= '.md';
+                            $jotter->setNote($itemPath, $item['name']);
+                        }
+                        elseif($isDir) {
+                            $jotter->setDirectory($itemPath, $item['name']);
+                        }
                     }
 
                     header('Location: '.URL.'?nb='.$notebookName.'&item='.$path);
@@ -257,10 +272,12 @@ if(!empty($_GET['action']) && $_GET['action'] == 'ajax') {
         } elseif( !empty($_GET['action']) && $_GET['action'] == 'delete' ) {
             //confirmation was sent
             if(isset($_POST['delete'])) {
-                if($isNote) {
-                    $jotter->unsetNote($itemPath);
-                } elseif($isDir) {
-                    $jotter->unsetDirectory($itemPath);
+                if (ENV_CURRENT != ENV_DEMO) {
+                    if($isNote) {
+                        $jotter->unsetNote($itemPath);
+                    } elseif($isDir) {
+                        $jotter->unsetDirectory($itemPath);
+                    }
                 }
 
                 header('Location: '.URL.'?nb='.$notebookName.'&item='.(dirname($itemPath)!='.'?dirname($itemPath):''));
@@ -274,8 +291,12 @@ if(!empty($_GET['action']) && $_GET['action'] == 'ajax') {
             $success = false;
 
             if($isNote && isset($_POST['text'])) {
-                //save the note
-                $success = $jotter->setNoteText($itemPath, $_POST['text']);
+                if (ENV_CURRENT != ENV_DEMO) {
+                    //save the note
+                    $success = $jotter->setNoteText($itemPath, $_POST['text']);
+                } else {
+                    $success = true;
+                }
             }
 
             header('Content-type: application/json');
@@ -319,7 +340,9 @@ if(!empty($_GET['action']) && $_GET['action'] == 'ajax') {
         $errors['empty'] = empty($notebook['name']);
         $errors['alreadyExists'] = isset($notebooks[$user['login']][$notebook['name']]);
         if(!in_array(true, $errors)) {
-            $notebooks = $jotter->setNotebook($notebook['name'], $notebook['user'], $notebook['editor']);
+            if (ENV_CURRENT != ENV_DEMO) {
+                $notebooks = $jotter->setNotebook($notebook['name'], $notebook['user'], $notebook['editor']);
+            }
 
             header('Location: '.URL.'?nb='.$notebook['name']);
             exit;
@@ -340,8 +363,10 @@ if(!empty($_GET['action']) && $_GET['action'] == 'ajax') {
             $errors['emptyPassword'] = (!isset($_POST['password']) || trim($_POST['password']) == "");
 
             if(!in_array(true, $errors)) {
-                //save password
-                $errors['save'] = !$logger->setUser($user['login'], $password);
+                if (ENV_CURRENT != ENV_DEMO) {
+                    //save password
+                    $errors['save'] = !$logger->setUser($user['login'], $password);
+                }
 
                 header('Location: '.URL.'?action=config&option=myPassword');
                 exit;
@@ -362,7 +387,9 @@ if(!empty($_GET['action']) && $_GET['action'] == 'ajax') {
             }
 
             if(!in_array(true, $errors)) {
-                $logger->createUser($login, $password);
+                if (ENV_CURRENT != ENV_DEMO) {
+                    $logger->createUser($login, $password);
+                }
 
                 header('Location: '.URL.'?action=config');
                 exit;
@@ -376,7 +403,7 @@ if(!empty($_GET['action']) && $_GET['action'] == 'ajax') {
             //delete user's notebooks
             $notebooks = $jotter->loadNotebooks();
             foreach($notebooks[$user['login']] as $key => $value) {
-                if($value['user'] == $login) {
+                if($value['user'] == $login && ENV_CURRENT != ENV_DEMO) {
                     $jotter->unsetNotebook($key);
                 }
             }
