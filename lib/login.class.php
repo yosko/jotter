@@ -1,6 +1,6 @@
 <?php
 
-class Login extends YosLogin {
+class Login extends YosLogin implements YosLTSession {
     protected $users;
 
     /**
@@ -76,7 +76,7 @@ class Login extends YosLogin {
      * @param  string $login login
      * @return array         user
      */
-    public function getUser($login) {
+    protected function getUser($login) {
         $foundUser = false;
         $this->loadUsers();
 
@@ -97,7 +97,7 @@ class Login extends YosLogin {
         return $this->users;
     }
 
-    protected function setLTSession($login, $sid, $value) {
+    function setLTSession($login, $sid, $value) {
         //create the session directory if needed
         if(!file_exists($this->LTDir)) { mkdir($this->LTDir, 0700, true); }
 
@@ -106,7 +106,7 @@ class Login extends YosLogin {
         fclose($fp);
     }
 
-    protected function getLTSession($cookieValue) {
+    function getLTSession($cookieValue) {
         $value = false;
         $file = $this->LTDir.$cookieValue.'.ses';
         if (file_exists($file)) {
@@ -124,21 +124,21 @@ class Login extends YosLogin {
         return($value);
     }
 
-    protected function unsetLTSession($cookieValue) {
+    function unsetLTSession($cookieValue) {
         $filePath = $this->LTDir.$cookieValue.'.ses';
         if (file_exists($filePath)) {
             unlink($filePath);
         }
     }
 
-    protected function unsetLTSessions($login) {
+    function unsetLTSessions($login) {
         $files = glob( $this->LTDir.$login.'_*', GLOB_MARK );
         foreach( $files as $file ) {
             unlink( $file );
         }
     }
 
-    protected function flushOldLTSessions() {
+    function flushOldLTSessions() {
         $dir = $this->LTDir;
 
         //list all the session files

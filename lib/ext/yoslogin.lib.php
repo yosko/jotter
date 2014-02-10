@@ -21,34 +21,51 @@
  */
 
 /**
- * https://github.com/GeorgeArgyros/Secure-random-bytes-in-PHP
- */
-require_once('srand.php');
-
-/**
- * Utility class to handle login verification and short/long term sessions
+ * Utility class to handle login verification and sessions
  * 
- * You need to implement the abstract methods to handle the way you retrieve
- * user information and the way you store and retrieve long-term sessions
+ * You need to implement the abstract method to handle the way you retrieve
+ * user information
  */
 abstract class YosLogin {
-    protected $sessionName, $nbLTSession, $LTDuration, $LTDir, $ltCookie, $allowLocalIp;
+    protected
+        $sessionName,
+        $LTSessionName,
+        $nbLTSession,
+        $LTDuration,
+        $LTDir,
+        $ltCookie,
+        $allowLocalIp,
+        $actibateLog,
+        $useLTSessions,
+        $version;
     
     /**
      * Initialize the session handler
      * @param string $sessionName base name for the PHP and the long-term sessions
      * @param int    $nbLTSession number of sumultaneous long-term sessions
      * @param int    $LTDuration  duration (in seconds) for long-term sessions
+     * @param int    $activateLog true to save very action to a log file
      * @param string $LTDir       optional: path to where the long-term sessions are stored (with trailing '/')
      */
-    public function __construct($sessionName, $nbLTSession = 200, $LTDuration = 2592000, $LTDir = 'cache/', $allowLocalIp=false) {
+    public function __construct($sessionName, $nbLTSession = 200, $LTDuration = 2592000, $LTDir = 'cache/', $allowLocalIp=false, $activateLog=false) {
+        $this->version = 'v3';
+
         $this->sessionName = $sessionName;
+        $this->allowLocalIp = $allowLocalIp;
+        $this->activateLog = $activateLog;
+
+        //activate long-term session if needed
+        $interfaces = class_implements(get_called_class());
+        $this->useLTSessions = in_array('YosLTSession', $interfaces);
+
+        //long-term session params
+        $this->LTSessionName = $sessionName.'lt';
         $this->nbLTSession = $nbLTSession;
         $this->LTDuration = $LTDuration;
         $this->LTDir = $LTDir;
-        $this->allowLocalIp = $allowLocalIp;
 
-        $this->ltCookie = $this->loadLtCookie();
+        if($this->useLTSessions)
+            $this->ltCookie = $this->loadLtCookie();
     }
 
     /**
@@ -59,39 +76,6 @@ abstract class YosLogin {
      */
     abstract protected function getUser($login);
 
-    /**
-     * Save the long term session for the given user and id
-     * @param string $login  user login
-     * @param string $sid    long-term session id (stored in a cookie too)
-     * @param array() $value optional: array of data you want to keep in long-term session on server side
-     */
-    abstract protected function setLTSession($login, $sid, $value);
-
-    /**
-     * Retrieve a long-term session based on the cookie value
-     * @param  string $cookieValue the concatenation of <login>_<id> used in the cookie value
-     * @return array()             optional: array of data stored in the session (empty if no data)
-     *                             or false if long-term session not found or expired
-     */
-    abstract protected function getLTSession($cookieValue);
-
-    /**
-     * Remove a long-term session based on the cookie value
-     * @param  string $cookieValue the concatenation of <login>_<id> used in the cookie value
-     */
-    abstract protected function unsetLTSession($cookieValue);
-
-    /**
-     * Remove all existing long-term sessions for a given user
-     * @param  string $login user login
-     */
-    abstract protected function unsetLTSessions($login);
-
-    /**
-     * Remove all expired or exceeding long-term sessions
-     */
-    abstract protected function flushOldLTSessions();
-    
     /**
      * Initialize and configure the PHP (short-term) session
      */
@@ -125,7 +109,15 @@ abstract class YosLogin {
         $this->ltCookie['id'] = $id;
         
         //set or update the long term session on client-side
-        setcookie($this->sessionName.'lt', $this->ltCookie['login'].'_'.$this->ltCookie['id'], time()+$this->LTDuration, dirname($_SERVER['SCRIPT_NAME']).'/', '', false, true);
+        setcookie(
+            $this->LTSessionName,
+            $this->ltCookie['login'].'_'.$this->ltCookie['id'],
+            time()+$this->LTDuration,
+            dirname($_SERVER['SCRIPT_NAME']).'/',
+            '',
+            false,
+            true
+        );
     }
     
     /**
@@ -133,7 +125,15 @@ abstract class YosLogin {
      */
     protected function unsetLTCookie() {
         //delete long-term cookie client-side
-        setcookie($this->sessionName.'lt', null, time()-31536000, dirname($_SERVER['SCRIPT_NAME']).'/', '', false, true);
+        setcookie(
+            $this->LTSessionName,
+            null,
+            time()-31536000,
+            dirname($_SERVER['SCRIPT_NAME']).'/',
+            '',
+            false,
+            true
+        );
         $this->ltCookie = false;
     }
     
@@ -141,9 +141,9 @@ abstract class YosLogin {
      * Load long-term cookie informations
      */
     protected function loadLTCookie() {
-        if( isset($_COOKIE[$this->sessionName.'lt']) ) {
+        if( isset($_COOKIE[$this->LTSessionName]) ) {
             $this->ltCookie = array();
-            $cookieValues = explode('_', $_COOKIE[$this->sessionName.'lt']);
+            $cookieValues = explode('_', $_COOKIE[$this->LTSessionName]);
             $this->ltCookie['login'] = $cookieValues[0];
             $this->ltCookie['id'] = $cookieValues[1];
         }
@@ -167,14 +167,15 @@ abstract class YosLogin {
         //determine user name
         if(isset($_SESSION['login'])) {
             $userName = $_SESSION['login'];
-        } elseif($this->issetLTCookie()) {
+        } elseif($this->useLTSessions && $this->issetLTCookie()) {
             $userName = $this->ltCookie['login'];
         }
         
         //if user wasn't automatically logged out before asking to log out
         if(!empty($userName)) {
             //unset long-term session
-            $this->unsetLTSessions($userName);
+            if($this->useLTSessions)
+                $this->unsetLTSessions($userName);
             $this->unsetLTCookie();
         }
         
@@ -185,6 +186,8 @@ abstract class YosLogin {
         $cookieDir = (dirname($_SERVER['SCRIPT_NAME'])!='/') ? dirname($_SERVER['SCRIPT_NAME']) : '';
         session_set_cookie_params(time()-31536000, $cookieDir, $_SERVER['SERVER_NAME']);
         session_destroy();
+
+        if($this->activateLog) { YosLoginTools::log('manual logout '.$userName); }
         
         //to avoid any problem when using the browser's back button
         header("Location: $_SERVER[PHP_SELF]");
@@ -219,9 +222,11 @@ abstract class YosLogin {
             $_SESSION['secure'] = true; //session is scure, for now
             $user['secure'] = $_SESSION['secure'];
             $user['isLoggedIn'] = true;
+
+            if($this->activateLog) { YosLoginTools::log('manual login '.$login); }
             
             //also create a long-term session
-            if($rememberMe) {
+            if($rememberMe && $this->useLTSessions) {
 
                 $_SESSION['sid'] = YosLoginTools::generateRandomString(42, true);
 
@@ -259,40 +264,49 @@ abstract class YosLogin {
             $user = $this->getUser($_SESSION['login']);
             $user['isLoggedIn'] = true;
 
+            if($this->activateLog) { YosLoginTools::log('user '.$_SESSION['login'].' is authenticated'); }
+
             //if ip change, the session isn't secure anymore, even if legitimate
             //  it might be because the user was given a new one
             //  or because if a session hijacking
             if(!isset($_SESSION['ip']) || $_SESSION['ip'] != YosLoginTools::getIpAddress($this->allowLocalIp)) {
                 $_SESSION['secure'] = false;
+                if($this->activateLog) { YosLoginTools::log('note: lost secure access'); }
             }
             
         //user has LT cookie but no PHP session
-        } elseif (isset($_COOKIE[$this->sessionName.'lt'])) {
+        } elseif (isset($_COOKIE[$this->LTSessionName])) {
             //TODO: check if LT session exists on server-side
-            $LTSession = $this->getLTSession($_COOKIE[$this->sessionName.'lt']);
+            $LTSession = $this->useLTSessions?$this->getLTSession($_COOKIE[$this->LTSessionName]):false;
             
             if($LTSession !== false) {
                 //set php session
-                $cookieValues = explode('_', $_COOKIE[$this->sessionName.'lt']);
+                $cookieValues = explode('_', $_COOKIE[$this->LTSessionName]);
                 $_SESSION['login'] = $cookieValues[0];
                 $_SESSION['secure'] = false;    //supposedly not secure anymore
                 $user = $this->getUser($_SESSION['login']);
                 $user['isLoggedIn'] = true;
 
                 //regenerate long-term session
-                $this->unsetLTSession($_COOKIE[$this->sessionName.'lt']);
+                $this->unsetLTSession($_COOKIE[$this->LTSessionName]);
                 $_SESSION['sid']=YosLoginTools::generateRandomString(42, true);
                 $this->setLTCookie($_SESSION['login'], $_SESSION['sid']);
                 $this->setLTSession($this->ltCookie['login'], $this->ltCookie['id'], array());
+
+                if($this->activateLog) { YosLoginTools::log('reload PHP session for '.$_SESSION['login'], $LTSession); }
+
             } else {
+                if($this->activateLog) { YosLoginTools::log('lost both sessions, even if lt cookie exists'); }
+
                 //delete long-term cookie
-                setcookie($this->sessionName.'lt', null, time()-31536000, dirname($_SERVER['SCRIPT_NAME']).'/', '', false, true);
+                $this->unsetLTCookie();
                 
                 header("Location: $_SERVER[REQUEST_URI]");
             }
         
         //user isn't logged in: anonymous
         } else {
+            if($this->activateLog) { YosLoginTools::log('not logged in'); }
             $user['isLoggedIn'] = false;
         }
         
@@ -302,6 +316,8 @@ abstract class YosLogin {
                 if(YosLoginTools::checkPassword($password, $user['password'])) {
                     $_SESSION['ip'] = YosLoginTools::getIpAddress($this->allowLocalIp);
                     $_SESSION['secure'] = true;
+
+                    if($this->activateLog) { YosLoginTools::log('securing access for '.$_SESSION['login']); }
                     
                     header("Location: $_SERVER[REQUEST_URI]");
                 } else {
@@ -313,8 +329,55 @@ abstract class YosLogin {
         
         return $user;
     }
+
+    /**
+     * Gives the current version number of YosLogin
+     * @return string version number (v1, v2, v3...)
+     */
+    public function getVersion() {
+        return $this->version;
+    }
 }
 
+/**
+ * Interface for long-term session handling
+ * Implement it if you want to use long-term sessions ("remember me checkbox")
+ * and define the way you store and retrieve those sessions
+ */
+interface YosLTSession {
+    /**
+     * Save the long term session for the given user and id
+     * @param string $login  user login
+     * @param string $sid    long-term session id (stored in a cookie too)
+     * @param array() $value optional: array of data you want to keep in long-term session on server side
+     */
+    function setLTSession($login, $sid, $value);
+
+    /**
+     * Retrieve a long-term session based on the cookie value
+     * @param  string $cookieValue the concatenation of <login>_<id> used in the cookie value
+     * @return array()             optional: array of data stored in the session (empty if no data)
+     *                             or false if long-term session not found or expired
+     */
+    function getLTSession($cookieValue);
+
+    /**
+     * Remove a long-term session based on the cookie value
+     * @param  string $cookieValue the concatenation of <login>_<id> used in the cookie value
+     */
+    function unsetLTSession($cookieValue);
+
+    /**
+     * Remove all existing long-term sessions for a given user
+     * @param  string $login user login
+     */
+    function unsetLTSessions($login);
+
+    /**
+     * Remove all expired or exceeding long-term sessions
+     */
+    function flushOldLTSessions();
+}
 
 /**
  * Useful generic utility functions used in YosLogin
@@ -426,6 +489,169 @@ class YosLoginTools {
             }
         }
     }
+
+    public static function log($message, $ltSession = false, $ip = false) {
+        $file = ROOT."/yoslogin.log";
+        $date = date("Y-m-d H:i:s");
+        $message = $message." on ".$_SERVER['REQUEST_URI']
+                .", SESSION: ".json_encode($_SESSION)
+                .", COOKIE: ".json_encode($_COOKIE)
+                ;
+        if($ltSession !== false) {
+            $message .= ", LT SESSION: ".json_encode($ltSession);
+        }
+        if($ip !== false) {
+            $message .= ", IP: ".$ip;
+        }
+        
+        if(!file_exists($file)) {
+            touch($file);
+        }
+
+        $handle = fopen($file, 'a+');
+        if($handle) {
+            fwrite($handle, $date." - ".$message."\r\n");
+        }
+        fclose($handle);
+    }
+}
+
+/*
+ * Author:
+ * George Argyros <argyros.george@gmail.com>
+ *
+ * Copyright (c) 2012, George Argyros
+ * All rights reserved.
+ *
+ * License:
+ * New BSD License
+ *
+ * Original source:
+ * https://github.com/GeorgeArgyros/Secure-random-bytes-in-PHP/
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *    * Redistributions of source code must retain the above copyright
+ *      notice, this list of conditions and the following disclaimer.
+ *    * Redistributions in binary form must reproduce the above copyright
+ *      notice, this list of conditions and the following disclaimer in the
+ *      documentation and/or other materials provided with the distribution.
+ *    * Neither the name of the <organization> nor the
+ *      names of its contributors may be used to endorse or promote products
+ *      derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL GEORGE ARGYROS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *
+ *
+ * The function is providing, at least at the systems tested :), 
+ * $len bytes of entropy under any PHP installation or operating system.
+ * The execution time should be at most 10-20 ms in any system.
+ */
+function secure_random_bytes($len = 10) {
+    /*
+     * Our primary choice for a cryptographic strong randomness function is
+     * openssl_random_pseudo_bytes.
+     */
+    $SSLstr = '4'; // http://xkcd.com/221/
+    if (function_exists('openssl_random_pseudo_bytes')
+        && (version_compare(PHP_VERSION, '5.3.4') >= 0
+        || substr(PHP_OS, 0, 3) !== 'WIN')
+    ) {
+        $SSLstr = openssl_random_pseudo_bytes($len, $strong);
+        if ($strong)
+            return $SSLstr;
+    }
+
+    /*
+     * If mcrypt extension is available then we use it to gather entropy from
+     * the operating system's PRNG. This is better than reading /dev/urandom
+     * directly since it avoids reading larger blocks of data than needed.
+     * Older versions of mcrypt_create_iv may be broken or take too much time
+     * to finish so we only use this function with PHP 5.3 and above.
+     */
+    if (function_exists('mcrypt_create_iv')
+        && (version_compare(PHP_VERSION, '5.3.0') >= 0
+        || substr(PHP_OS, 0, 3) !== 'WIN')
+    ) {
+        $str = mcrypt_create_iv($len, MCRYPT_DEV_URANDOM);
+        if ($str !== false)
+            return $str;
+    }
+
+    /*
+     * No build-in crypto randomness function found. We collect any entropy
+     * available in the PHP core PRNGs along with some filesystem info and memory
+     * stats. To make this data cryptographically strong we add data either from
+     * /dev/urandom or if its unavailable, we gather entropy by measuring the
+     * time needed to compute a number of SHA-1 hashes.
+     */
+    $str = '';
+    $bits_per_round = 2; // bits of entropy collected in each clock drift round
+    $msec_per_round = 400; // expected running time of each round in microseconds
+    $hash_len = 20; // SHA-1 Hash length
+    $total = $len; // total bytes of entropy to collect
+
+    $handle = @fopen('/dev/urandom', 'rb');
+    if ($handle && function_exists('stream_set_read_buffer'))
+        @stream_set_read_buffer($handle, 0);
+
+    do {
+        $bytes = ($total > $hash_len)? $hash_len : $total;
+        $total -= $bytes;
+
+        //collect any entropy available from the PHP system and filesystem
+        $entropy = rand() . uniqid(mt_rand(), true) . $SSLstr;
+        $entropy .= implode('', @fstat(@fopen( __FILE__, 'r')));
+        $entropy .= memory_get_usage();
+        if ($handle) {
+            $entropy .= @fread($handle, $bytes);
+        } else {
+            // Measure the time that the operations will take on average
+            for ($i = 0; $i < 3; $i ++) {
+                $c1 = microtime(true);
+                $var = sha1(mt_rand());
+                for ($j = 0; $j < 50; $j++) {
+                    $var = sha1($var);
+                }
+                $c2 = microtime(true);
+                $entropy .= $c1 . $c2;
+            }
+
+            // Based on the above measurement determine the total rounds
+            // in order to bound the total running time.   
+            $rounds = (int)($msec_per_round*50 / (int)(($c2-$c1)*1000000));
+
+            // Take the additional measurements. On average we can expect
+            // at least $bits_per_round bits of entropy from each measurement.
+            $iter = $bytes*(int)(ceil(8 / $bits_per_round));
+                for ($i = 0; $i < $iter; $i ++) {
+                $c1 = microtime();
+                $var = sha1(mt_rand());
+                for ($j = 0; $j < $rounds; $j++) {
+                    $var = sha1($var);
+                }
+                $c2 = microtime();
+                $entropy .= $c1 . $c2;
+            }
+        }
+        // We assume sha1 is a deterministic extractor for the $entropy variable.
+        $str .= sha1($entropy, true);
+    } while ($len > strlen($str));
+
+    if ($handle) 
+        @fclose($handle);
+
+    return substr($str, 0, $len);
 }
 
 ?>

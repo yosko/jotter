@@ -23,14 +23,14 @@ define( 'URL_TPL', URL.'tpl/' );
 define( 'ENV_DEMO', 'demo' );
 define( 'ENV_DEV', 'dev' );
 define( 'ENV_PROD', 'prod' );
-define( 'ENV_CURRENT', ENV_PROD );
+define( 'ENV_CURRENT', ENV_DEV );
 
 //display errors & warnings
 if (ENV_CURRENT == ENV_DEV) {
     error_reporting(E_ALL | E_STRICT);
     ini_set('display_errors','On');
-    // ini_set('log_errors', 'On');
-    // ini_set('error_log', ROOT.'errors.log');
+    ini_set('log_errors', 'On');
+    ini_set('error_log', ROOT.'errors.log');
 } else {
     ini_set('display_errors','Off');
 }
@@ -41,10 +41,8 @@ require_once( ROOT.'lib/ext/Markdown.php');
 require_once( ROOT.'lib/ext/MarkdownExtra.php');
 // https://github.com/nickcernis/html-to-markdown
 require_once( ROOT.'lib/ext/HTML_To_Markdown.php');
-// https://github.com/GeorgeArgyros/Secure-random-bytes-in-PHP/
-require_once( ROOT.'lib/ext/srand.php');
 // https://github.com/yosko/yoslogin/
-require_once( ROOT.'lib/ext/yoslogin.class.php');
+require_once( ROOT.'lib/ext/yoslogin.lib.php');
 
 //Jotter libraries
 require_once( ROOT.'lib/utils.class.php');
