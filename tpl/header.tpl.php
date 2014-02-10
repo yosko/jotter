@@ -45,6 +45,9 @@ window.addEventListener('load', function (){
                     <img src="<?php echo URL_TPL; ?>img/door-open-out.png" alt="Logout">
                 </a>
             </li>
+            <li class="secondary">
+                <span>v<?php echo VERSION; ?></span>
+            </li>
 <?php } ?>
         </ul>
     </div>
@@ -99,12 +102,12 @@ window.addEventListener('load', function (){
                 <input type="file" id="hidden-picture-button" data-target="#picture-button" data-edit="insertImage" />
             </li>
             <li>
-                <a href="#" class="ajax-formatter" id="mdash-button" title="Insert em dash">
+                <a href="#" id="mdash-button" title="Insert em dash">
                     &mdash;
                 </a>
             </li>
             <li>
-                <a href="#" class="ajax-formatter" id="source-button" title="View source">
+                <a href="#" id="source-button" title="View source">
                     <img src="<?php echo URL_TPL; ?>img/edit-code.png" alt="Source">
                 </a>
             </li>
@@ -115,6 +118,11 @@ window.addEventListener('load', function (){
             <li>
                 <a href="<?php echo URL; ?>?action=markdown" target="blank" id="markdown-button" title="Show Markdown syntax help">
                     <img src="<?php echo URL_TPL; ?>img/edit-markdown.png" alt="Markdown">
+                </a>
+            </li>
+            <li>
+                <a href="#" id="preview-button" title="Preview note">
+                    <img src="<?php echo URL_TPL; ?>img/eye.png" alt="Preview">
                 </a>
             </li>
 <?php
