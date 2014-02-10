@@ -88,7 +88,7 @@ h6 { font-size: 0.7em; }
 
 /**** TREE PANEL ****/
 
-#notebookSelect { width: 100%; text-align: center; }
+#notebookSelect { width: 100%; }
 #panel img { vertical-align: text-bottom; }
 #panel h3 { margin: 0.2em; }
 #panel h3, #root { background-color: #e3dbd6; border-radius: 0.2em; }

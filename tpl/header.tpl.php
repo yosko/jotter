@@ -183,8 +183,8 @@ window.addEventListener('load', function (){
     
     <form action="">
         <select name="nb" id="notebookSelect">
-            <option value="!nothing!">&raquo; select a notebook &laquo;</option>
-            <option value="!new!">&raquo; create a new notebook &laquo;</option>
+            <option value="!nothing!" default selected>&raquo; select a notebook</option>
+            <optgroup label="Load a notebook">
 <?php
 if(!empty($notebooks[$user['login']])) {
     foreach($notebooks[$user['login']] as $key => $value) {
@@ -195,6 +195,8 @@ if(!empty($notebooks[$user['login']])) {
     }
 }
 ?>
+            </optgroup>
+            <option value="!new!">&raquo; Create a new notebook</option>
         </select>
     </form>
     <div class="item-menu">
