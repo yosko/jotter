@@ -71,7 +71,7 @@ h6 { font-size: 0.7em; }
     background-color: #c1b9b4;
     text-decoration: none;
     color: #484848;
-    font-size: 0.5em;
+    /*font-size: 0.5em;*/
     line-height: 16px;
     vertical-align: baseline;
 }
@@ -201,7 +201,7 @@ textarea#editor {
     resize: none;
     border: 0;
 }
-#editor p { text-indent: 1em; }
+#editor p { text-indent: 1em; margin: 0.2em; }
 pre { white-space: pre-wrap; word-wrap: break-word; }
 
 label { display: inline-block; width: 8em; }
