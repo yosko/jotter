@@ -419,6 +419,9 @@ if(!empty($_GET['action']) && $_GET['action'] == 'ajax') {
 
     include( DIR_TPL.'config.tpl.php' );
 
+//markdown syntax page
+} elseif( !empty($_GET['action']) && $_GET['action'] == 'markdown' ) {
+    include( DIR_TPL.'markdown.tpl.php' );
 
 //homepage: notebooks list
 } else {
