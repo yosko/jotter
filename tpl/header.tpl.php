@@ -179,8 +179,6 @@ window.addEventListener('load', function (){
 </div>
 <div id="app">
 <nav id="panel">
-<?php if(isset($notebook['tree'])) { ?>
-    
     <form action="">
         <select name="nb" id="notebookSelect">
             <option value="!nothing!" default selected>&raquo; select a notebook</option>
@@ -199,6 +197,8 @@ if(!empty($notebooks[$user['login']])) {
             <option value="!new!">&raquo; Create a new notebook</option>
         </select>
     </form>
+<?php if(isset($notebook['tree'])) { ?>
+    
     <div class="item-menu">
         <img class="dropdown-arrow" src="<?php echo URL_TPL; ?>img/arbo-parent-open.png" alt="v">
         <ul class="dropdown closed">
