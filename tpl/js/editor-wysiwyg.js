@@ -7,19 +7,17 @@ WysiwygEditor.prototype = new BaseEditor();
 
 WysiwygEditor.prototype.customInit = function () {
     var editor = $('#editor');
-    var that = this;
-
 
     document.addEventListener('input', function (e) {
         //when user delete everything inside the editor, make sure there is still a <p>
         //TODO: handle without jquery?
-        that.editorNeverEmpty.call(that);
+        this.editorNeverEmpty.call(this);
 
         var html = $('#html');
         if(html !== null && html.length !== 0) {
-            html.html( that.getEditorHtmlForDisplay.call(that) );
+            html.html( this.getEditorHtmlForDisplay.call(this) );
         }
-    });
+    }.bind(this));
 
     //init editor
     editor.wysiwyg({
@@ -35,12 +33,12 @@ WysiwygEditor.prototype.customInit = function () {
     //display html source
     $('#source-button').click(function(e){
         if($('#html').length === 0) {
-            $('#editor').after( '<pre id="html" style="">'+that.getEditorHtmlForDisplay.call(that)+'</pre>' );
+            $('#editor').after( '<pre id="html" style="">'+this.getEditorHtmlForDisplay.call(this)+'</pre>' );
         } else {
             $('#html').remove();
         }
         e.preventDefault();
-    });
+    }.bind(this));
 
     //insert an em dash
     $('#mdash-button').click(function(e){

@@ -12,8 +12,6 @@ var BaseEditor = function() {
 //prototype
 BaseEditor.prototype = {
     init: function() {
-        var that = this;
-
         this.saveButton = document.getElementById('save-button');
         this.saveImage = document.getElementById('save-button').querySelector('img'); //TODO fix this bug: point to the <img> inside ID 'save-button'
         this.editor = document.getElementById('editor');
@@ -23,19 +21,19 @@ BaseEditor.prototype = {
          */
         
         document.addEventListener('input', function (e) {
-            that.setUnsavedStatus.call(that, true);
-            that.textareaFitToContent.call(that);
-        });
+            this.setUnsavedStatus.call(this, true);
+            this.textareaFitToContent.call(this);
+        }.bind(this));
 
         document.addEventListener('keydown', function (e) {
             if(e.ctrlKey && e.keyCode == 'S'.charCodeAt(0)) {
                 e.preventDefault();
-                if(that.unsavedContent) {
-                    that.cancelKeypress = true;
-                    that.saveNote.call(that);
+                if(this.unsavedContent) {
+                    this.cancelKeypress = true;
+                    this.saveNote.call(this);
                 }
             }
-        });
+        }.bind(this));
 
         /**
          * Workaround for Firefox bug:
@@ -44,11 +42,11 @@ BaseEditor.prototype = {
          * where some non-basic code is executed during the keydown handler..
          */
         document.addEventListener('keypress', function (e){
-            if(that.cancelKeypress === true) {
+            if(this.cancelKeypress === true) {
                 e.preventDefault();
-                that.cancelKeypress = false;
+                this.cancelKeypress = false;
             }
-        });
+        }.bind(this));
 
         //auto save every 30 seconds
         setInterval(function(){
@@ -57,16 +55,16 @@ BaseEditor.prototype = {
         }, 30000);
 
         //click on save button
-        this.saveButton.onclick = function(e) {
-            if(that.unsavedContent)
-                that.saveNote.call(that);
+        this.saveButton.addEventListener('click', function (e){
+            if(this.unsavedContent)
+                this.saveNote.call(this);
             e.preventDefault();
-        };
+        }.bind(this));
 
         //avoid leaving page without saving
-        window.onbeforeunload = function(e) {
-            that.checkIsUnsaved.call(that, e);
-        };
+        window.addEventListener('beforeunload', function (e){
+            this.checkIsUnsaved.call(this, e);
+        }.bind(this));
 
         this.customInit.call(this);
     },
@@ -74,15 +72,51 @@ BaseEditor.prototype = {
         //markdown editor
         this.editor.setAttribute('contenteditable', true);
         this.textareaFitToContent.call(this);
+
+        document.getElementById('preview-button').addEventListener('click', function (e){
+            var preview = null;
+            var button = document.getElementById('preview-button');
+            e.preventDefault();
+            button.parentNode.classList.toggle('active');
+            if(button.parentNode.classList.contains('active')) {
+                //prepare preview container
+                this.editor.style.display = 'none';
+                preview = document.createElement('div');
+                preview.setAttribute('id','preview');
+
+                //show a loading gif
+                var loadingGif = document.createElement('img');
+                loadingGif.setAttribute('src', 'tpl/img/ajax-loader.gif');
+                loadingGif.setAttribute('alt', 'Loading...');
+                loadingGif.setAttribute('id', 'loadingGif');
+                preview.appendChild(loadingGif);
+                
+                this.editor.parentNode.insertBefore(preview, this.editor.nextSibling);
+
+                //TODO show loading GIF
+                //send save request to server
+                var request = new XMLHttpRequest();
+                request.open('GET','?action=ajax&option=preview&note=',false);
+                request.send();
+                response = JSON.parse(request.responseText);
+
+                //TODO replace loading GIF by HTML
+            } else {
+                this.editor.style.display = 'block';
+                preview = document.getElementById('preview');
+                preview.parentNode.removeChild(preview);
+            }
+        }.bind(this));
+
     },
     textareaFitToContent: function() {
-        var lineHeight = window.getComputedStyle(editor).lineHeight;
+        var lineHeight = window.getComputedStyle(this.editor).lineHeight;
         lineHeight = parseInt(lineHeight.substr(0, lineHeight.length-2), 10);
-        if (editor.clientHeight == editor.scrollHeight)
-            editor.style.height = (lineHeight*4) + 'px';
+        if (this.editor.clientHeight == this.editor.scrollHeight)
+            this.editor.style.height = (lineHeight*4) + 'px';
 
-        if ( editor.scrollHeight > editor.clientHeight ) {
-            editor.style.height = (editor.scrollHeight + lineHeight) + "px";
+        if ( this.editor.scrollHeight > this.editor.clientHeight ) {
+            this.editor.style.height = (this.editor.scrollHeight + lineHeight) + "px";
         }
     },
     saveNote: function() {
