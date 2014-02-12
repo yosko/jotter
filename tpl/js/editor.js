@@ -183,6 +183,6 @@ BaseEditor.prototype = {
     },
     changeImageFile: function(newFileName) {
         var dirPath = this.saveImage.getAttribute('src').substring(0,this.saveImage.getAttribute('src').lastIndexOf('/') +1 );
-        this.saveImage.setAttribute('src', dirPath+'/'+newFileName);
+        this.saveImage.setAttribute('src', dirPath+newFileName);
     }
 };
