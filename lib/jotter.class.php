@@ -243,14 +243,15 @@ class Jotter {
 
     /**
      * Load (and return) a note content
-     * @param  string $path relative path to note
-     * @return string       note content
+     * @param  string  $path  relative path to note
+     * @param  boolean $parse force Markdown to HTML parsing
+     * @return string         note content
      */
-    public function loadNote($path) {
+    public function loadNote($path, $parse = false) {
         $content = Utils::loadFile($this->notebookPath.'/'.$path);
 
         //convert Markdown to HTML
-        if(!isset($this->notebook['editor']) || $this->notebook['editor'] == 'wysiwyg') {
+        if($content !== false && ($parse || !isset($this->notebook['editor']) || $this->notebook['editor'] == 'wysiwyg')) {
             $content = \Michelf\MarkdownExtra::defaultTransform($content);
         }
 

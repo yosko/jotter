@@ -100,6 +100,7 @@ if(!empty($_GET['action']) && $_GET['action'] == 'ajax') {
 
         //load the complete list of notebooks
         $notebooks = $jotter->loadNotebooks();
+        $notebook = ($notebookName !== false)?$jotter->loadNotebook($notebookName, $user['login']):false;
 
         //move an item into another directory
         if($option == 'moveItem') {
@@ -134,8 +135,6 @@ if(!empty($_GET['action']) && $_GET['action'] == 'ajax') {
         } elseif($option == 'save') {
             //only load notebook if it is owned by current user
             if(isset($notebooks[$user['login']][$notebookName])) {
-                $notebook = $jotter->loadNotebook($notebookName, $user['login']);
-
                 $itemData = Utils::getArrayItem($notebook['tree'], $itemPath);
                 $isNote = $itemData === true;
 
@@ -148,6 +147,10 @@ if(!empty($_GET['action']) && $_GET['action'] == 'ajax') {
                     }
                 }
             }
+
+        // preview a markdown note in HTML
+        } elseif($option == 'preview') {
+            $data = $jotter->loadNote($itemPath, true);
         }
     }
 

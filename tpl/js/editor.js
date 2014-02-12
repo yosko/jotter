@@ -83,6 +83,7 @@ BaseEditor.prototype = {
                 this.editor.style.display = 'none';
                 preview = document.createElement('div');
                 preview.setAttribute('id','preview');
+                this.editor.parentNode.insertBefore(preview, this.editor.nextSibling);
 
                 //show a loading gif
                 var loadingGif = document.createElement('img');
@@ -90,10 +91,8 @@ BaseEditor.prototype = {
                 loadingGif.setAttribute('alt', 'Loading...');
                 loadingGif.setAttribute('id', 'loadingGif');
                 preview.appendChild(loadingGif);
-                
-                this.editor.parentNode.insertBefore(preview, this.editor.nextSibling);
 
-                //send save request to server
+                //send preview request to server
                 var request = new XMLHttpRequest();
                 var notebook = document.getElementById('notebookTitle').getAttribute('data-name');
                 var item = document.getElementById('selected').getAttribute('data-path');
@@ -101,8 +100,9 @@ BaseEditor.prototype = {
                 request.send();
                 response = JSON.parse(request.responseText);
 
+                //replace gif with the parsed note
                 if(response !== false) {
-                    //TODO replace loading GIF by HTML
+                    preview.innerHTML = response;
                 }
             } else {
                 this.editor.style.display = 'block';
