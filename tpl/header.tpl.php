@@ -248,6 +248,12 @@ function Tree2Html($tree, $nbName, $selectedPath, $parents = array()) {
             $html .= '<img class="icon" src="'.URL_TPL.'img/'.($isNote?'document':'folder').'--pencil.png" alt=""> Edit</a></li>';
             $html .= '<li><a href="'.URL.'?nb='.$nbName.'&amp;item='.$path.'&amp;action=delete" title="Delete &quot;'.$path.'&quot;">';
             $html .= '<img class="icon" src="'.URL_TPL.'img/'.($isNote?'document':'folder').'--minus.png" alt=""> Delete</a></li>';
+            if($isArray) {
+                $html .= '<li><a href="'.URL.'?nb='.$nbName.'&amp;item='.$path.'&amp;action=addnote" title="Add note here">';
+                $html .= '<img class="icon" src="'.URL_TPL.'img/document--plus.png" alt=""> Add note here</a></li>';
+                $html .= '<li><a href="'.URL.'?nb='.$nbName.'&amp;item='.$path.'&amp;action=adddir" title="Add directory here">';
+                $html .= '<img class="icon" src="'.URL_TPL.'img/folder--plus.png" alt=""> Add directory here</a></li>';
+            }
             $html .= '</ul>';
             $html .= '</div>';
 

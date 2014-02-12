@@ -150,8 +150,9 @@ h6 { font-size: 0.7em; }
     top: 1.1em;
     margin: 0;
     background-color: #cec6c1;
-    border: 3px solid #cec6c1;
+    border: 3px solid #847c77;
     border-radius: 5px;
+    box-shadow: 0 0 0.2em 0.2em #cec6c1;
 }
 #panel .dropdown li {
     margin: 0;
