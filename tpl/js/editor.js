@@ -5,6 +5,7 @@ var BaseEditor = function() {
     this.editor = null;
     this.unsavedContent = false;
     this.currentlySaving = false;
+    this.cancelKeypress = false;   //workaround for Firefox bug
     this.isCtrl = false;
 };
 
@@ -21,42 +22,33 @@ BaseEditor.prototype = {
          * EVENTS
          */
         
-        this.editor.oninput = function(e) {
+        document.addEventListener('input', function (e) {
             that.setUnsavedStatus.call(that, true);
-            var html = document.getElementById('html');
-            if(html !== null && html.length !== 0) {
-                html.innerHTML( that.getEditorHtmlForDisplay.call(that) );
-            }
-        };
+            that.textareaFitToContent.call(that);
+        });
 
-        // document.onkeyup=function(e){
-        //     if(e.keyCode == 17) that.isCtrl=false;
-        // };
-
-        document.onkeydown=function(e){
+        document.addEventListener('keydown', function (e) {
             if(e.ctrlKey && e.keyCode == 'S'.charCodeAt(0)) {
                 e.preventDefault();
-                // e.stopPropagation();
                 if(that.unsavedContent) {
+                    that.cancelKeypress = true;
                     that.saveNote.call(that);
                 }
-                // return false;
             }
-            // //if Ctrl
-            // if(e.keyCode == 17) {
-            //     that.isCtrl=true;
-            // }
+        });
 
-            // //Ctrl+S
-            // if(e.keyCode == 83 && that.isCtrl === true) {
-            //     e.preventDefault();
-            //     e.stopPropagation();
-            //     if(that.unsavedContent) {
-            //         that.saveNote.call(that);
-            //     }
-            //     return false;
-            // }
-        };
+        /**
+         * Workaround for Firefox bug:
+         * e.preventDefault(); and e.stopPropagation(); won't suffice in the keydown
+         * event, and Firefox will still propagate to keypress in a specific case
+         * where some non-basic code is executed during the keydown handler..
+         */
+        document.addEventListener('keypress', function (e){
+            if(that.cancelKeypress === true) {
+                e.preventDefault();
+                that.cancelKeypress = false;
+            }
+        });
 
         //auto save every 30 seconds
         setInterval(function(){
@@ -81,6 +73,17 @@ BaseEditor.prototype = {
     customInit: function() {
         //markdown editor
         this.editor.setAttribute('contenteditable', true);
+        this.textareaFitToContent.call(this);
+    },
+    textareaFitToContent: function() {
+        var lineHeight = window.getComputedStyle(editor).lineHeight;
+        lineHeight = parseInt(lineHeight.substr(0, lineHeight.length-2), 10);
+        if (editor.clientHeight == editor.scrollHeight)
+            editor.style.height = (lineHeight*4) + 'px';
+
+        if ( editor.scrollHeight > editor.clientHeight ) {
+            editor.style.height = (editor.scrollHeight + lineHeight) + "px";
+        }
     },
     saveNote: function() {
         this.currentlySaving = true;
@@ -133,10 +136,6 @@ BaseEditor.prototype = {
             this.saveButton.classList.remove('disabled');
             this.saveButton.setAttribute('title', 'Save changes');
             this.changeImageFile.call(this, 'disk.png');
-
-            //when user delete everything inside the editor, make sure there is still a <p>
-            //TODO: handle without jquery?
-            this.editorNeverEmpty.call(this);
         } else {
             this.changeImageFile.call(this, 'disk-black.png');
             
@@ -147,19 +146,5 @@ BaseEditor.prototype = {
     changeImageFile: function(newFileName) {
         var dirPath = this.saveImage.getAttribute('src').substring(0,this.saveImage.getAttribute('src').lastIndexOf('/') +1 );
         this.saveImage.setAttribute('src', dirPath+'/'+newFileName);
-    },
-    editorNeverEmpty: function() {
-        var content = this.editor.innerHTML.trim();
-        var previousState = this.unsavedContent;
-        if(content === '' || content === '<br>') {
-            //make sure it is completely empty
-            this.editor.innerHTML = '';
-
-            //now make the paragraph on the cursor position
-            document.execCommand('formatBlock', false, 'p');
-            if(previousState === false) {
-                this.setUnsavedStatus.call(this, false);
-            }
-        }
     }
 };

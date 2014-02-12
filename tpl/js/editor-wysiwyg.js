@@ -7,6 +7,19 @@ WysiwygEditor.prototype = new BaseEditor();
 
 WysiwygEditor.prototype.customInit = function () {
     var editor = $('#editor');
+    var that = this;
+
+
+    document.addEventListener('input', function (e) {
+        //when user delete everything inside the editor, make sure there is still a <p>
+        //TODO: handle without jquery?
+        that.editorNeverEmpty.call(that);
+
+        var html = $('#html');
+        if(html !== null && html.length !== 0) {
+            html.html( that.getEditorHtmlForDisplay.call(that) );
+        }
+    });
 
     //init editor
     editor.wysiwyg({
@@ -18,16 +31,6 @@ WysiwygEditor.prototype.customInit = function () {
 
     //if note is empty on load, add a <p>
     this.editorNeverEmpty.call(this);
-
-    //set status to unsaved on input
-    //and update code if displayed
-    var that = this;
-    // editor.bind('input', function(e){
-    //     that.setUnsavedStatus.call(that, true);
-    //     if($('#html').length !== 0) {
-    //         $('#html').html( that.getEditorHtmlForDisplay.call(that) );
-    //     }
-    // });
 
     //display html source
     $('#source-button').click(function(e){
@@ -109,5 +112,20 @@ WysiwygEditor.prototype.htmlDecode = function (value) {
         return $('<div />').html(value).text();
     } else {
         return '';
+    }
+};
+
+WysiwygEditor.prototype.editorNeverEmpty = function () {
+    var content = this.editor.innerHTML.trim();
+    var previousState = this.unsavedContent;
+    if(content === '' || content === '<br>') {
+        //make sure it is completely empty
+        this.editor.innerHTML = '';
+
+        //now make the paragraph on the cursor position
+        document.execCommand('formatBlock', false, 'p');
+        if(previousState === false) {
+            this.setUnsavedStatus.call(this, false);
+        }
     }
 };
