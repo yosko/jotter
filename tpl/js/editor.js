@@ -50,9 +50,10 @@ BaseEditor.prototype = {
 
         //auto save every 30 seconds
         setInterval(function(){
-            if(this.unsavedContent && !this.currentlySaving)
+            if(this.unsavedContent && !this.currentlySaving) {
                 this.saveNote.call(this);
-        }, 30000);
+            }
+        }.bind(this), 30000);
 
         //click on save button
         this.saveButton.addEventListener('click', function (e){
