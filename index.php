@@ -95,13 +95,14 @@ if(!empty($_GET['action']) && $_GET['action'] == 'ajax') {
     // always return false if user is not authenticated
     if($user['isLoggedIn'] && ENV_CURRENT != ENV_DEMO) {
         $option = isset($_GET['option'])?$_GET['option']:false;
+        $notebookName = isset($_GET['nb'])?urlencode($_GET['nb']):false;
+        $itemPath = isset($_GET['item'])?$_GET['item']:false;
+
+        //load the complete list of notebooks
+        $notebooks = $jotter->loadNotebooks();
 
         //move an item into another directory
         if($option == 'moveItem') {
-            //load the complete list of notebooks
-            $notebooks = $jotter->loadNotebooks();
-
-            $notebookName = $_GET['nb'];
             $sourcePath = $_GET['source'];
             $destPath = $_GET['destination'];
 
@@ -128,11 +129,31 @@ if(!empty($_GET['action']) && $_GET['action'] == 'ajax') {
             }
 
             $data = !$error;
+
+        // save current note
+        } elseif($option == 'save') {
+            //only load notebook if it is owned by current user
+            if(isset($notebooks[$user['login']][$notebookName])) {
+                $notebook = $jotter->loadNotebook($notebookName, $user['login']);
+
+                $itemData = Utils::getArrayItem($notebook['tree'], $itemPath);
+                $isNote = $itemData === true;
+
+                if($isNote && isset($_POST['text'])) {
+                    if (ENV_CURRENT != ENV_DEMO) {
+                        //save the note
+                        $data = $jotter->setNoteText($itemPath, $_POST['text']);
+                    } else {
+                        $data = true;
+                    }
+                }
+            }
         }
     }
 
     header('Content-type: application/json');
     echo json_encode($data);
+    exit;
 
 //login form
 } elseif(!$user['isLoggedIn']) {
@@ -283,23 +304,6 @@ if(!empty($_GET['action']) && $_GET['action'] == 'ajax') {
             }
 
             include( DIR_TPL.'itemDelete.tpl.php' );
-
-        // save current note (via json request)
-        } elseif( !empty($_GET['action']) && $_GET['action'] == 'save' ) {
-            $success = false;
-
-            if($isNote && isset($_POST['text'])) {
-                if (ENV_CURRENT != ENV_DEMO) {
-                    //save the note
-                    $success = $jotter->setNoteText($itemPath, $_POST['text']);
-                } else {
-                    $success = true;
-                }
-            }
-
-            header('Content-type: application/json');
-            echo json_encode($success);
-            exit;
 
         //show item
         } else {

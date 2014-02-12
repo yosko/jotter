@@ -93,14 +93,17 @@ BaseEditor.prototype = {
                 
                 this.editor.parentNode.insertBefore(preview, this.editor.nextSibling);
 
-                //TODO show loading GIF
                 //send save request to server
                 var request = new XMLHttpRequest();
-                request.open('GET','?action=ajax&option=preview&note=',false);
+                var notebook = document.getElementById('notebookTitle').getAttribute('data-name');
+                var item = document.getElementById('selected').getAttribute('data-path');
+                request.open('GET','?action=ajax&option=preview&nb='+notebook+'&item='+item,false);
                 request.send();
                 response = JSON.parse(request.responseText);
 
-                //TODO replace loading GIF by HTML
+                if(response !== false) {
+                    //TODO replace loading GIF by HTML
+                }
             } else {
                 this.editor.style.display = 'block';
                 preview = document.getElementById('preview');
@@ -138,7 +141,7 @@ BaseEditor.prototype = {
 
         //send save request to server
         var request = new XMLHttpRequest();
-        request.open('POST','?action=save&nb='+notebook+'&item='+item,false);
+        request.open('POST','?action=ajax&option=save&nb='+notebook+'&item='+item,false);
         request.send(data);
         response = JSON.parse(request.responseText);
 
