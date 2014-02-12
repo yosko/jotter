@@ -117,13 +117,15 @@ function hideAllDropdowns() {
 
 function hover(ev) {
     ev.preventDefault();
-    ev.target.className = ev.target.className + ' hover';
+    if(ev.target.nodeName == 'A') {
+        ev.target.classList.add('hover');
+    }
 }
 
 function leave(ev) {
-    ev.target.className = ev.target.className.split(' ').filter(function(v) {
-        return v!='hover';
-    }).join(' ');
+    if(ev.target.nodeName == 'A') {
+        ev.target.classList.remove('hover');
+    }
 }
 
 /**
