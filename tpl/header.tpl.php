@@ -45,7 +45,7 @@ window.addEventListener('load', function (){
                     <img src="<?php echo URL_TPL; ?>img/door-open-out.png" alt="Logout">
                 </a>
             </li>
-            <li class="secondary">
+            <li class="secondary active">
                 <span>v<?php echo VERSION; ?></span>
             </li>
 <?php } ?>

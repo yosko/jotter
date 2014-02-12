@@ -76,7 +76,7 @@ h6 { font-size: 0.7em; }
     vertical-align: baseline;
 }
 .actions a.disabled { background-color: #e3dbd6; }
-.actions li.active a, .actions li a#selected { background-color: #fff1e7; }
+.actions li.active span, .actions li.active a, .actions li a#selected { background-color: #fff1e7; }
 .actions a:hover { background-color: #e3dbd6; }
 
 .actions #hidden-picture-button {
