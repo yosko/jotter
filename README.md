@@ -8,10 +8,10 @@ See [the demo](http://tools.yosko.net/demos/jotter/) or install it yourself!
 
 ## Features
 
-- WYSIWYG (What You See Is What You Get) editor
+- Markdown and WYSIWYG (What You See Is What You Get) editors
 - organize notes hierarchically
 - manage as many notebooks as you want
-- multi-user support
+- multi-user support (currently, notebooks can't be shared between users)
 - no DBMS needed. Everything is stored in flat files (JSON & Markdown)
 
 ![Jotter screenshot](http://www.yosko.net/data/images/jotter-v0.2.png)
@@ -23,15 +23,23 @@ See [the demo](http://tools.yosko.net/demos/jotter/) or install it yourself!
 
 ## Install
 
+### New install
+
 1. Upload it (or `git clone` it) on your server (let's say in `/var/www/jotter`)
 2. Go to the corresponding URL (lets say `http://www.example.com/jotter`)
+
+### Update
+
+Currently the update is quite easy:
+1. (optional) backup your `data/` directory up
+2. just overwrite app files with latest version ((or `git pull` it)
+3. That's all, folks!
 
 ## TODO
 
 - Next version:
-  - Make the wysiwyg optional (& directly write notes in Markdown)
-- Following ones:
   - remember folded/unfolded folder (will change the save format)
+- Following ones:
   - Trash bin for deleted notes
   - Keep last N versions of each note and restore it on demand
   - Option to make some notes/notebooks publicly accessible
@@ -42,6 +50,14 @@ See [the demo](http://tools.yosko.net/demos/jotter/) or install it yourself!
 
 ## Version History
 
+- v0.4 (2014-03-20)
+  - major Javascript rewrite
+  - introduced markdown editor (with help page)
+  - fixed wysiyg editor issues
+  - display version number
+  - dropdown for changing notebook now always accessible
+  - add note/directory now accessible from contextual menu
+  - fixed save shortcut not always working in Firefox
 - v0.3 (2013-11-28)
   - drag & drop to move notes/directories within a notebook
 - v0.2 (2013-11-22)
