@@ -14,7 +14,7 @@ See [the demo](http://tools.yosko.net/demos/jotter/) or install it yourself!
 - multi-user support
 - no DBMS needed. Everything is stored in flat files (JSON & Markdown)
 
-![Jotter screenshot](http://www.yosko.net/data/images/jotter-v0.1.png)
+![Jotter screenshot](http://www.yosko.net/data/images/jotter-v0.2.png)
 
 ## Requirements
 
@@ -29,10 +29,9 @@ See [the demo](http://tools.yosko.net/demos/jotter/) or install it yourself!
 ## TODO
 
 - Next version:
-  - drag & drop to move notes/directories within a notebook
+  - Make the wysiwyg optional (& directly write notes in Markdown)
 - Following ones:
   - remember folded/unfolded folder (will change the save format)
-  - Make the wysiwyg optional (& directly write notes in Markdown)
   - Trash bin for deleted notes
   - Keep last N versions of each note and restore it on demand
   - Option to make some notes/notebooks publicly accessible
@@ -43,6 +42,8 @@ See [the demo](http://tools.yosko.net/demos/jotter/) or install it yourself!
 
 ## Version History
 
+- v0.3 (2013-11-28)
+  - drag & drop to move notes/directories within a notebook
 - v0.2 (2013-11-22)
   - fold/unfold directories (not yet saved on server)
   - moved/changed some buttons for better ergonomics
