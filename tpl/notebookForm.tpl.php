@@ -18,8 +18,22 @@ $editNotebook = isset($notebook);
 <?php } else { ?>
         <p>
             <label>Editor</label>
-            <input type="radio" name="editor" id="wysiwyg" value="wysiwyg" checked="checked"><label for="wysiwyg"><abbr title="What You See Is What You Get">WYSIWYG</abbr></label>
-            <input type="radio" name="editor" id="markdown" value="markdown"><label for="markdown">Markdown</label>
+            <ul>
+                <li>
+                    <input type="radio" name="editor" id="wysiwyg" value="wysiwyg" checked="checked">
+                    <label for="wysiwyg"><abbr title="What You See Is What You Get">WYSIWYG</abbr></label>
+                </li>
+                <li>
+                    <input type="radio" name="editor" id="markdown" value="markdown">
+                    <label for="markdown">Markdown</label>
+                </li>
+            </ul>
+            <input type="checkbox" name="safe-wysiwyg" id="safe-wysiwyg" checked>
+            <label for="safe-wysiwyg">
+                Make <abbr title="What You See Is What You Get">WYSIWYG</abbr> <strong>more safe</strong>:
+                this makes sure to remove unsafe content when saving text pasted from a webpage
+                (you might loose a bit more formatting in the process).
+            </label>
         </p>
 <?php } ?>
         <input type="submit" value="Create notebook">

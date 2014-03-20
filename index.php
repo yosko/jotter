@@ -339,14 +339,15 @@ if(!empty($_GET['action']) && $_GET['action'] == 'ajax') {
         $notebook = array(
             'name' => urlencode($_POST['name']),
             'user' => $user['login'],
-            'editor' => (isset($_POST['editor']) && $_POST['editor'] == 'wysiwyg')?$_POST['editor']:'markdown'
+            'editor' => (isset($_POST['editor']) && $_POST['editor'] == 'wysiwyg')?$_POST['editor']:'markdown',
+            'safe' => isset($_POST['safe-wysiwyg'])
         );
 
         $errors['empty'] = empty($notebook['name']);
         $errors['alreadyExists'] = isset($notebooks[$user['login']][$notebook['name']]);
         if(!in_array(true, $errors)) {
             if (ENV_CURRENT != ENV_DEMO) {
-                $notebooks = $jotter->setNotebook($notebook['name'], $notebook['user'], $notebook['editor']);
+                $notebooks = $jotter->setNotebook($notebook['name'], $notebook['user'], $notebook['editor'], $notebook['safe']);
             }
 
             header('Location: '.URL.'?nb='.$notebook['name']);

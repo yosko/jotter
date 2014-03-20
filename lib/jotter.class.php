@@ -30,10 +30,12 @@ class Jotter {
      * Add or Edit a notebook
      * @param string  $name   New notebook name
      * @param string  $user   Owner's login
+     * @param string  $editor type of editor
+     * @param boolean $safe   make wysiwyg editor safe or not
      * @param boolean $public Whether the notebook should be public or private
      * @return array          List of notebooks
      */
-    public function setNotebook($name, $user, $editor, $public = false) {
+    public function setNotebook($name, $user, $editor, $safe, $public = false) {
         if(strpos($name, '..') !== false) return false;
 
         $this->loadNotebooks();
@@ -57,6 +59,7 @@ class Jotter {
                 'user'      => $user,
                 'public'    => $public,
                 'editor'    => $editor,
+                'safe'      => $safe,
                 'tree'      => array(
                     $defaultNote   => true
                 )
@@ -230,12 +233,11 @@ class Jotter {
     public function setNoteText($path, $text) {
         $absPath = $this->notebookPath.'/'.$path;
 
-        if(!isset($this->notebook['editor']) || $this->notebook['editor'] == 'wysiwyg') {
-            //convert HTML to Markdown
-            $text = new HTML_To_Markdown($text);
-
-            //turn every remaining tag to html entities
-            $text = htmlspecialchars($text, ENT_QUOTES);
+        //strict wysiwyg (only some tags allowed)
+        if((!isset($this->notebook['editor']) || $this->notebook['editor'] == 'wysiwyg')
+            && (!isset($this->notebook['safe']) || $this->notebook['safe'] == true)
+        ) {
+            $text = $this->safeHtml($text);
         }
 
         return Utils::saveFile($absPath, $text);
@@ -251,7 +253,7 @@ class Jotter {
         $content = Utils::loadFile($this->notebookPath.'/'.$path);
 
         //convert Markdown to HTML
-        if($content !== false && ($parse || !isset($this->notebook['editor']) || $this->notebook['editor'] == 'wysiwyg')) {
+        if($content !== false && $parse) {
             $content = \Michelf\MarkdownExtra::defaultTransform($content);
         }
 
@@ -284,6 +286,149 @@ class Jotter {
 
         return Utils::rmdirRecursive($absPath)
             && Utils::saveJson($this->notebookFile, $this->notebook);
+    }
+
+    /**
+     * Only keep allowed HTML tags
+     * @param  string $html HTML input
+     * @return string       HTML output
+     */
+    public function safeHtml($html) {
+        $doc = new DOMDocument();
+        $doc->loadHTML($html);
+
+        $doc = $this->safeHtmlRecursive($doc);
+
+        $html = preg_replace(
+            '/^<!DOCTYPE.+?>/',
+            '',
+            str_replace(
+                array('<html>', '</html>', '<body>', '</body>'),
+                array('', '', '', ''),
+                $doc->saveHTML()
+            )
+        );
+
+        return $html;
+    }
+
+    /**
+     * Recursive function to turn a DOMDocument element to an
+     * @param  DomDocument $doc     Dom to convert and simplify
+     * @param  DomElement  $current (for recursive purpose only) current node
+     * @param  integer     $level   (for recursive purpose only) current node level
+     * @return misc                 resulting DomDocument (and pointer to "current Node" in recursive call)
+     */
+    public function safeHtmlRecursive($doc, $current = null, $docSafe = null, $parentSafe = null, $level = 0) {
+        $root = false;
+        if($level == 0) {
+            $root = true;
+            $current = $doc;
+            $docSafe = new DOMDocument();
+            $parentSafe = $docSafe;
+        }
+
+        //remove these entirely
+        $blacklist = array(
+            'script', 'frame', 'iframe', 'frameset',
+            'applet', 'object', 'embed', 'style',
+            /*'form', 'fieldset', 'label',*/ 'input', 'textarea', 'button',
+            'legend', 'select', 'optgroup', 'option', 'datalist', 'keygen', 'output'
+        );
+
+        //keep these
+        $whiteListBlock = array(
+            'p', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'li', 'ol', 'ul', 'hr'
+        );
+        $whiteListInline = array(
+            'strong', 'em'
+        );
+
+        //turn these into <p>
+        $greyListBlock = array(
+            'blockquote', 'code', 'pre',
+            'dd', 'dt', 'dl', 'table',
+            'header', 'nav', 'aside', 'section', 'article', 'footer'
+        );
+
+        //keep these and some of their attributes
+        $specialList = array('a', 'img');
+
+        //for any other tag: remove tag and keep content
+
+        foreach ($current->childNodes as $node) {
+            $currentSafe = null;
+            $isTextNode = false;
+            $append = true;
+            $getChildren = true;
+            $tag = $node->nodeName;
+            $getChildren = $node->hasChildNodes();
+            
+            if($node->nodeType == XML_TEXT_NODE || $node->nodeType == XML_CDATA_SECTION_NODE) {
+                $isTextNode = true;
+                $getChildren = false;
+            } elseif(in_array($tag, $blacklist)) {
+                $append = false;
+                $getChildren = false;
+            } elseif(in_array($tag, $greyListBlock)) {
+                $tag = 'p';
+            } elseif(!in_array($tag, $whiteListBlock)
+                && !in_array($tag, $whiteListInline)
+                && !in_array($tag, $specialList)
+            ) {
+                $append = false;
+                $currentSafe = $parentSafe;
+            }
+
+            //append node
+            if($append) {
+                if($isTextNode) {
+                    $currentSafe = $docSafe->createTextNode( htmlentities($node->nodeValue) );
+                } else {
+                    $currentSafe = $docSafe->createElement($tag);
+                }
+
+                //handle special cases
+                if($tag == 'a') {
+                    $href = $this->safeUrl($node->getAttribute('href'));
+                    $currentSafe->setAttribute('href', $href);
+                } elseif($tag == 'img') {
+                    $src = $this->safeUrl($node->getAttribute('src'));
+                    $currentSafe->setAttribute('src', $src);
+                }
+
+                $parentSafe->appendChild($currentSafe);
+            }
+
+            //recursive call
+            if($getChildren) {
+                $this->safeHtmlRecursive($doc, $node, $docSafe, $currentSafe, $level+1);
+            }
+        }
+
+        if($level == 0) {
+            return $docSafe;
+        }
+    }
+
+    /**
+     * Only keep allowed HTML tags
+     * @param  string $html HTML input
+     * @return string       HTML output
+     */
+    public function safeUrl($url) {
+        $whiteListProtocol = array(
+            'http', 'https', 'ftp', 'mailto', 'data'
+        );
+
+        $parsed = parse_url($url);
+        if($parsed == false ||
+            isset($parsed['scheme']) && !in_array($parsed['scheme'], $whiteListProtocol)
+        ) {
+            $url = '';
+        }
+
+        return $url;
     }
 }
 

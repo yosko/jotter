@@ -207,6 +207,12 @@ textarea#editor {
 pre { white-space: pre-wrap; word-wrap: break-word; }
 
 label { display: inline-block; width: 8em; }
+input[type=checkbox], input[type=radio] {
+    vertical-align: sub;
+}
+input[type=checkbox] + label, input[type=radio] + label {
+    display: inline;
+}
 
 .success { color: blue; }
 .error { color: red; }
